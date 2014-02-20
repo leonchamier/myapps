@@ -1,15 +1,43 @@
 <!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<html>  
 <head>
 <title>Maintain Allowance</title>
+
+
 </head>
 <body onload=exeFunction('loadUp()')>
 <script type='text/JavaScript' src='standardjs.js'></script>
 <script type='text/JavaScript' src='standardsq.js'></script>
 <script type="text/JavaScript" src="startup.js"></script>
 <link rel=stylesheet type='text/css' href='standardss.css'></link>
+
+       <! J-QUERY FILES**************************>
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+    <! J-QUERY FILES**************************>
+
+<style type="text/css">
+           
+.tableHead tr td
+{
+  font-family: arial;
+  font-size:12px;
+  /*color: #0033bc;*/
+  color:blue;
+  font-weight: 600;
+  background-color: #D0D0D0;
+}
+
+input{
+  font-weight: 400;
+  font-size: 8px;
+}  
+
+
+</style>   
+
 <script>
 
 
@@ -19,6 +47,7 @@
 
 
 function loadUp() { 
+runenvironment='internet';
 
 createDateVar('effdate','D');
 //createDateVar('expdate',datefmt);
@@ -57,6 +86,7 @@ createButton(but,'exitbutton');
   table1.id[3]='t#alid';  table1.width[3]=0;
   table1.sqlselect="select alname,altype,amount,allowance.alid from allowance  where emprid="+COMPANY + " order by alname";
   fullsql="select * from allowance ";
+ 
 
   if (!allowadd){
   removeElement('newbutton');
@@ -69,6 +99,9 @@ createButton(but,'exitbutton');
   }
 
   changeContent('screen1table',applyTableDef(table1));
+  $('#table1 tr *:nth-child(4)').toggle();
+  $('#table1head tr *:nth-child(4)').toggle();
+
   showElement('workarea');
   displayForm('screen1');
 
@@ -83,7 +116,8 @@ function refresh() {
   changeContent('screen1table',applyTableDef(table1));
 }
 
-function newRecord() {
+function newRecord() { 
+
   unProtect('*form:screen2');
   clearForm('screen2');
   changeVar('altype','Percentage');
@@ -98,7 +132,9 @@ function newRecord() {
   hideElement('changebutton','deletebutton');
   showElement('addbutton');
   changeVar('effdate',todayDate('y'),'*date');
-  displayForm('screen2',40,40);
+  // displayForm('screen2',40,40);
+$.mobile.changePage("#pagetwo");
+
   basisOptions();
 }
 
@@ -107,7 +143,7 @@ function getRecord() {
   if (!sqlSelect(sqltxt,'$s',1)) return false;
   clearForm('screen2');
   changeVar('alid',$s.alid[0]); 
-  changeVar('amount',$s.amount[0]);roundField('amount',2);
+  changeVar('amount',$s.amount[0]);
   changeVar('altype',$s.altype[0]);
   changeVar('fromall',$s.fromall[0]);
   changeVar('frombasic',$s.frombasic[0]);
@@ -313,7 +349,7 @@ function updateTable1() {
 }
 
 function basisOptions() {
- 
+
  hideElement('functiondiv');
  showElement('basicrow');
  changeContent('ratelabel','Rate');
@@ -410,15 +446,17 @@ function mntRateHist() {
  displayDialog('AllowanceRateDetail.htm',obj);
   
 }
-
+$('#but').click(function() {
+    alert('Button has been clicked');
+});
 </script>
+
 
 <div id=header style="display:none"></div>
 <div id=optionarea style="display:none"></div>
 <div id=optionarea2 style="display:none"></div>
-<div id=footer><div id=msgarea></div></div>
 
-<div id=workarea style="display:none; height:690px">
+<div id=workarea style="display:none; height:6px;">
 
 
 
@@ -436,17 +474,20 @@ function mntRateHist() {
    onMouseOut=newClass('optionitem')>View</td></tr>
 </table>
 </div>
-
-<div id=divscreen1 style='display:none'>
-<form name=screen1>
-<div id=screen1table></div>
+<div data-role="page" id="pageone">
+<div id=divscreen1 style='display:xnone'>
+<form name=screen1 >
+<div id=screen1table></div> 
+<input  name="but1" id="but1" type="button" data-icon="plus"  value="New Record" onclick="newRecord()"/>
 <br>
-<span onClick='newRecord()' id=newbutton>Create New Entries</span>
+
 </form>
 </div>
+</div><!****END PAGE>
 
-<div id="divscreen2" style="display:none" class="window">
-<form name=screen2>
+<div data-role="page" id="pagetwo" >
+<div id="divscreen2" style="display:xnone" class="window">
+<form name=screen2 id=screen2>
 <div class="titleBar">Maintain Allowance</div>
 <span id=exitbutton class="ximage" onclick="exeFunction('closeForm()');refresh()"></span>
 
@@ -455,7 +496,8 @@ function mntRateHist() {
 
 <table>
 <tr><td>
-<span class=label>Allowance Code</span>&nbsp<input type=text name=alcode size=10 maxlength=10
+<br>
+<label for="alname" >Allowance Code</label><input type="text" length=6 name="alcode" id="alname" data-mini="true"
  onChange="setupper(this)">
 </td></tr><tr><td>
 <span class=label>Allowance Description</span>&nbsp<input type=text name=alname size=20 maxlength=30>
@@ -464,7 +506,7 @@ function mntRateHist() {
  class=numeric readonly onBlur="editField(this,2,'j')"> 
 </td></tr><tr><td>
 <span class=label>Basis</span>
-<select name=altype onChange="basisOptions();">
+<select id=altype  name=altype onChange="basisOptions();">
  <option value="Fixed">Fixed</option> 
  <option value="Percentage"  >Percentage(%)</option>  
  <option value="Function">Function</option>  
@@ -475,7 +517,7 @@ function mntRateHist() {
 
 </td></tr><tr><td>
 <span class=label>Type</span>
-<select name=altype2 onChange="basisOptions();">
+<select name=altype2 id=altype2 onChange="basisOptions();">
  <option value="Standard">Standard</option> 
  <option value="TimeHours">Time Sheet </option>  
 </select>
@@ -540,6 +582,7 @@ function mntRateHist() {
 </div>
 </form>
 </div>
+</div><!****END PAGE>
 
 
 </div>
