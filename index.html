@@ -50,28 +50,6 @@ runenvironment='internet';
 createDateVar('effdate','D');
 //createDateVar('expdate',datefmt);
 
-var but=new buttonDef();
-but.width=160;
-but.height=27;
-but.text='<span style="font-family:Helvetica; font-size:9pt; color:white"><img width="28" height="28" SRC="../image/Pencil 7.ico"  align="absmiddle" alt="new" />&nbspCreate New Entries</span>';
-createButton(but,'newbutton');
-
-but=new buttonDef('add');
-createButton(but,'addbutton');
-
-but=new buttonDef('save');
-createButton(but,'changebutton');
-
-but=new buttonDef('delete');
-createButton(but,'deletebutton');
-
-but=new buttonDef('cancel');
-createButton(but,'cancelbutton');
-
-but=new buttonDef('exit');
-createButton(but,'exitbutton');
-
-
   
   table1=new tableDef();
   table1.tableid='table1';
@@ -107,6 +85,7 @@ createButton(but,'exitbutton');
 
 function table1Clicked() {
   readClickedRow();
+  alert('here');
   popUpContent('optionlist1'); ispop=false;
 }
 
@@ -492,15 +471,6 @@ $('#but').click(function() {
 <input style="display:none" name=alid>
 <input style="display:none" name=taxable>
 
-<div data-role="fieldcontain">
-   <label for="select-choice-1" class="select">Shipping method:</label>
-   <select name="select-choice-1" id="select-choice-1">
-      <option value="standard">Standard: 7 day</option>
-      <option value="rush">Rush: 3 days</option>
-      <option value="express">Express: next day</option>
-      <option value="overnight">Overnight</option>
-   </select>
-</div>
 
 <table>
 <tr><td>
@@ -586,11 +556,10 @@ $('#but').click(function() {
 <br>
 
 <div class=buttonarea>
-<span style="display:none" button=ratesbutton height=30 onclick="exeFunction('mntRateHist()')">Rates</span>
-<span id=addbutton onclick="exeFunction('doAdd()')"></span>
-<span id=changebutton onclick="exeFunction('doChange()')"></span>
-<span id=deletebutton onclick="exeFunction('doDelete()')"></span>
-<span id=cancelbutton onclick="exeFunction('closeForm()');refresh();"></span>
+
+<input  name="changebutton" id="changebutton" type="button" data-icon="gear"  value="Change" onclick="doChange()"/>
+<input  name="deletebutton" id="deletebutton" type="button" data-icon="minus"  value="Delete" onclick="doDelete()"/>
+<input  name="closebutton" id="closebutton" type="button" data-icon="delete"  value="close" onclick='$.mobile.changePage("#pageone");'/>
 </div>
 </form>
 </div>
