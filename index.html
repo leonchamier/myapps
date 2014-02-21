@@ -30,11 +30,9 @@
   background-color: #D0D0D0;
 }
 
-input{
-  font-weight: 400;
-  font-size: 8px;
-}  
-
+div[data-role='fieldcontain'] {
+    width: 200px ; 
+}
 
 </style>   
 
@@ -503,7 +501,7 @@ $('#but').click(function() {
 </div>
 </td></tr><tr><td>
 <div data-role="fieldcontain">
-<span class=label>Allowance Description</span>&nbsp<input type=text name=alname size=20 maxlength=30>
+<label for="alname"> Description</label>&nbsp<input type=text name=alname size=20 maxlength=30>
 </div>
 </td></tr><tr><td>
 <span id=ratelabel class=label>Amount</span>&nbsp<input type=text name=amount size=12 maxlength=12
