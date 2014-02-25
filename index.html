@@ -1,15 +1,6 @@
 <!DOCTYPE html>
-<html>  
+<html>
 <head>
-<title>Maintain Allowance</title>
-
-
-</head>
-<body onload=exeFunction('loadUp()')>
-<script type='text/JavaScript' src='standardjs.js'></script>
-<script type='text/JavaScript' src='standardsq.js'></script>
-<script type="text/JavaScript" src="startup.js"></script>
-<link rel=stylesheet type='text/css' href='standardss.css'></link>
 
        <! J-QUERY FILES**************************>
         <meta name="viewport" content="width=device-width, initial-scale=1"> 
@@ -18,558 +9,93 @@
 	<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
     <! J-QUERY FILES**************************>
 
-<style type="text/css">
-           
-.tableHead tr td
-{
-  font-family: arial;
-  font-size:12px;
-  /*color: #0033bc;*/
-  color:blue;
-  font-weight: 600;
-  background-color: #D0D0D0;
-}
-
-div[data-role='fieldcontain'] {
-    width: 200px ; 
-}
-
-</style>   
-
+</head>
 <script>
-
-
-
-
-
-
-
-function loadUp() { 
-   mode='';
- COMPANY  =1;
-runenvironment='internet';
-
-createDateVar('effdate','D');
-//createDateVar('expdate',datefmt);
-
-  
-  table1=new tableDef();
-  table1.tableid='table1';
-  table1.tableonclick='table1Clicked()';
-  table1.tablestyle='cursor:hand';
-  table1.height=300;
-  table1.header[0]='Allowance';  table1.id[0]='t#alname';  table1.width[0]=200;  
-  table1.header[2]='Amount';  table1.id[2]='t#amount';  table1.width[2]=80;  table1.edit[2]='j:2';  
-  table1.header[1]='Basis';  table1.id[1]='t#altype';  table1.width[1]=100;  
-  table1.id[3]='t#alid';  table1.width[3]=0;
-  table1.sqlselect="select alname,altype,amount,allowance.alid from allowance  where emprid="+COMPANY + " order by alname";
-  fullsql="select * from allowance ";
- 
-
-  if (!allowadd){
-  removeElement('newbutton');
-  }
-  if (!allowchange){
-  removeElement('chgopt');
-  }
-  if (!allowdelete){
-  removeElement('delopt');
-  }
-
-  changeContent('screen1table',applyTableDef(table1));
-  $('#table1 tr *:nth-child(4)').toggle();
-  $('#table1head tr *:nth-child(4)').toggle();
-
-  showElement('workarea');
-  displayForm('screen1');
-
+function test(){
+ alert('testing');
 }
-
-function table1Clicked() {
-  readClickedRow();
-  alert('here');
-  popUpContent('optionlist1'); ispop=false;
-}
-
-function refresh() {
-  changeContent('screen1table',applyTableDef(table1));
-}
-
-function newRecord() { 
-
-  unProtect('*form:screen2');
-  clearForm('screen2');
-  changeVar('altype','Percentage');
-  changeVar('altype2','Standard');
-  changeVar('frombasic','Y');
-  changeVar('stime','Y');
-  changeVar('otime','Y');
-  changeVar('dtime','Y');
-  changeVar('ttime','Y');
-  changeVar('fortimesheet','N');
-  changeVar('tsbasis','D');
-  hideElement('changebutton','deletebutton');
-  showElement('addbutton');
-  changeVar('effdate',todayDate('y'),'*date');
-  // displayForm('screen2',40,40);
-$.mobile.changePage("#pagetwo");
-
-
-  basisOptions();
-}
-
-function getRecord() {
-  var  sqltxt = fullsql + " where " + buildSqlWhere();
-  if (!sqlSelect(sqltxt,'$s',1)) return false;
-  clearForm('screen2');
-  changeVar('alid',$s.alid[0]); 
-  changeVar('amount',$s.amount[0]);
-  changeVar('altype',$s.altype[0]);
-  changeVar('fromall',$s.fromall[0]);
-  changeVar('frombasic',$s.frombasic[0]);
-  changeVar('stime',$s.stime[0]);
-  changeVar('otime',$s.otime[0]);
-  changeVar('dtime',$s.dtime[0]);
-  changeVar('ttime',$s.ttime[0]);
-  changeVar('tsbasis',$s.tsbasis[0]);
-  changeVar('alcode',$s.alcode[0]);
-  changeVar('alname',$s.alname[0]);
-  changeVar('maxvalue',$s.maxvalue[0]);
-  changeVar('minvalue',$s.minvalue[0]);
-  changeVar('expdate',$s.expdate[0],'*date');
-  changeVar('effdate',$s.effdate[0],'*date');
-  changeVar('taxable',$s.taxable[0]);
-  changeVar('altype2',$s.altype2[0]);
-  changeVar('functionname',$s.functionname[0]);
-   if ($s.taxable[0]=='Y')     
-      document.screen2.taxablecheck.checked=true;
-   else
-      document.screen2.taxablecheck.checked=false;
-  document.screen2.fortimesheet.checked=true;
-  if ( $s.fortimesheet=='N') document.screen2.fortimesheet.checked=false;
-
-  return true;
-}
-
-function changeRecord() {
-  mode='change';
-  if (!getRecord()) {alert(sqlerr); alert(sqlcommand); return;};
-  if (numValueOf('alid') < 0) {viewRecord(); return;}
-  unProtect('*form:screen2');  
-  protect('alcode');
-  showElement('changebutton');
-  hideElement('addbutton','deletebutton');
-  displayForm('screen2',40,40);
-  basisOptions();
-}
-
-function deleteRecord() {
-  mode='delete';
-  
-  if (!getRecord()) {alert(sqlerr); return;};
-  protect('*form:screen2');
-  if (usedOnRegister()) {
-    alert('This Allowance has been used on registers cannot delete');
-    return false;
-  }
-  showElement('deletebutton');
-  hideElement('addbutton','changebutton');
-  displayForm('screen2',40,40);
-  basisOptions();
-}
-
-function usedOnRegister(){  
-  var  sqltxt ="select alid from historyallowance where alid="+numValueOf('alid')+" UNION select alid from registerallowance where alid="+numValueOf('alid');
-  sqlSelect(sqltxt,'$s',1);
-  if (sqlrcdcnt > 0)  return true;
-  else                return false;
-}
-
-function viewRecord() {
-  mode='view'
-  if (!getRecord()) {alert(sqlerr); return;};
-  basisOptions();
-  protect('*form:screen2');
-  hideElement('addbutton','changebutton','deletebutton');
-  displayForm('screen2',40,40);
-  
-}
-
-function buildSqlUpdObj() {
-  var $s=new Object();
- // $s.alid= sqlNum(valueOf('alid'));
-  $s.amount= sqlNum(valueOf('amount'));
-  $s.altype= valueOf('altype');
-  $s.fromall= valueOf('fromall');
-  $s.frombasic= valueOf('frombasic');
-  $s.stime= valueOf('stime');
-  $s.otime= valueOf('otime');
-  $s.dtime= valueOf('dtime');
-  $s.ttime= valueOf('ttime');
-  $s.alcode= valueOf('alcode');
-  $s.tsbasis= valueOf('tsbasis');
-  $s.alname= valueOf('alname');
-  $s.maxvalue= numValueOf('maxvalue');
-  $s.minvalue= numValueOf('minvalue');
-  $s.effdate= sqlNum(numValueOf('effdate'));
-  $s.expdate= sqlNum(numValueOf('expdate'));
-  $s.emprid=sqlNum(COMPANY);
-  $s.taxable= valueOf('taxable');
-  $s.functionname= valueOf('functionname');
-  $s.altype2= valueOf('altype2');
-  $s.fortimesheet='N';
-  if (document.screen2.fortimesheet.checked==true)   $s.fortimesheet='Y';
-  
-  return $s;
-}
-
-function buildSqlWhere() {
-  var str='';
-  var k_alid=numValueOfCol('t#alid');
-  var str = "alid = "+k_alid +' and emprid='+COMPANY;
-  return str;
-}
-
-function validData1() {
-    if (valueOf('alcode')=='') {
-    alert('Code cannot be blank..!!!');
-    focusOn('alcode','*hi');
-    return false;
-    }
-
-    if (valueOf('alname')=='' ){
-    alert('Allowance description cannot be blank..!!!');
-    focusOn('alname','*hi');
-    return false;
-    }
-
-  if (valueOf('altype') =='Function' && valueOf('functionname')=='') {
-    alert('Function name cannot be blank');
-    focusOn('functionname','*hi');
-    return false;
-   } 
-
-    if (numValueOf('effdate')!=0 && !validDate(numValueOf('effdate'))){
-        alert('Please enter a valid Effective Date');
-        focusOn('effdate','*hi');
-        return false;
-    }
-
-    if (numValueOf('expdate')!=0 && !validDate(numValueOf('expdate'))){
-        alert('Please enter a valid Expiry Date');
-        focusOn('expdate','*hi');
-        return false;
-    }
- 
-    if (numValueOf('expdate')!=0 && numValueOf('effdate')!=0 && (numValueOf('effdate') > numValueOf('expdate'))){
-        alert('Effective date cannot be after expiry date');
-        focusOn('expdate','*hi');
-        return false;
-    }
-
-     if (numValueOf('maxvalue') < numValueOf('minvalue')){
-        alert('Maximun value cannot be less than minimum value');
-        focusOn('maxvalue','*hi');
-        return false;
-    }
-
- 
-  return true;
-}
-
-function doAdd() {
-  if (!validData1()) return;
-  var $s=buildSqlUpdObj();
-  if (sqlInsertUnique('allowance', $s,'alid')) {
-
-     newRow('table1');
-     updateTable1();
-     //clearForm('screen2');
-   clearFields('alname','alcode','amount','effdate','expdate','minvalue','maxvalue');
-
-     say('Entry added');
-  }
-  else {alert('Error..'+sqlerr)}
-}
-
-function doChange() {
-  if (!validData1()) return;
-  var $s=buildSqlUpdObj();
-  var $sqlwhere=buildSqlWhere();
-  if (sqlUpdate('allowance', $s, $sqlwhere)) {
-     updateTable1();
-     closeForm();
-     say('Entry updated');
-  }
-  else {alert('Error..'+sqlerr)}
-}
-
-function doDelete() {
-  var $sqlwhere=buildSqlWhere();
-  if (sqlDelete('allowance',$sqlwhere)) {
-     sqlDelete('employeealw','alid='+numValueOf('alid'));  
-     sqlDelete('DepartmentAllowance','alid='+numValueOf('alid')); 
-     sqlDelete('CategoryAlW','alid='+numValueOf('alid'));         
-     sqlDelete('GroupAllowance','alid='+numValueOf('alid'));      
-     sqlDelete('DeductionAll','alid='+ numValueOf('alid'));       
-
-     deleteRow();
-     closeForm();
-     say('Entry Deleted');
-  }
-  else {alert('Error..'+sqlerr)}
-}
-
-function updateTable1() {
-  changeCol('t#alname',valueOf('alname'));
-  changeCol('t#amount',valueOf('amount'));
-  changeCol('t#altype',valueOf('altype'));
-  changeCol('t#alid',valueOf('alid'));
-  return;
-}
-
-function basisOptions() {
-
- hideElement('functiondiv');
- showElement('basicrow');
- changeContent('ratelabel','Rate');
-
- if (valueOf('altype')=='Fixed')  {
-   hideElement('percentdiv');
-   changeContent('ratelabel','Amount');
- }
- if (valueOf('altype')=='Percentage')  
-   showElement('percentdiv');
-
-
- if (valueOf('altype2')=='TimeHours'){
-     hideElement('basicrow');
-     showElement('percentdiv');
-     deleteSelectOption('altype','Percentage');
- }
- else{
-    if (textOfSelect('altype','Percentage')=='')
-        addSelectOption('altype','Percentage','Percentage(%)');
-
- }
-
- if (valueOf('altype')=='Function'){
-     hideElement('basicrow');
-     hideElement('percentdiv');
-     showElement('functiondiv');
-     //protect('altype2');
-     //changeVar('altype2','Standard');
- }else{ unProtect('altype2');}
-  
-
- if (valueOf('altype2')=='TimeHours')   {
-     hideElement('taxablespan');
-     showElement('timebasis','minmax');
-     if (valueOf('tsbasis')=='H')     showElement('percentdiv');
-     else                             hideElement('percentdiv');
-     
- }else {
-     showElement('taxablespan');
-     hideElement('timebasis','minmax');
- }
-
-
- if (valueOf('altype')=='Function' && valueOf('altype2')=='TimeHours')   {
-    showElement('fortimespan','taxablespan');
-    hideElement('timebasis');
-    hideElement('percentdiv','minmax'); 
- } else {
-    hideElement('fortimespan');
-    document.screen2.fortimesheet.checked=false;
- } 
- if (valueOf('altype2')=='TimeHours')   {
-     if (valueOf('tsbasis')=='H'){
-         showElement('percentdiv');
-     }else {
-         hideElement('percentdiv');
-     }
- }
- 
-}
-
-function chechTaxable(caller) {
-
-//if (mode!='change') return false;
-
-if (caller==1) {
- if (document.screen2.taxablecheck.checked==true) {
-   document.screen2.taxablecheck.checked=false; 
-   changeVar('taxable','N');
- }
- else {
-   document.screen2.taxablecheck.checked=true; 
-   changeVar('taxable','Y');
- }
-}
-else{
-   if (document.screen2.taxablecheck.checked==true)     
-      changeVar('taxable','Y');
-   else
-      changeVar('taxable','N');
- }
-  
-} 
-
-
-function mntRateHist() {
- var obj=new dialogDef();
- obj.top= window.dialogTop;
- obj.left = window.dialogLeft;
- obj.width=600; 
- obj.dialogparm.alid = valueOf('alid');
- obj.dialogparm.emprid = COMPANY;
- displayDialog('AllowanceRateDetail.htm',obj);
-  
-}
-$('#but').click(function() {
+</script><script>
+$('#verify').click(function() {
     alert('Button has been clicked');
 });
+
+
 </script>
+<body>
 
-
-<div id=header style="display:none"></div>
-<div id=optionarea style="display:none"></div>
-<div id=optionarea2 style="display:none"></div>
-
-<div id=workarea style="display:none; height:6px;">
-
-
-
-<div id=optionlist1 style='display:none' class='optionMenu'>
-<table border=1 cellspacing=0 cellpadding=0>
-<Col class=optionitem>
-<tr><td id=chgopt onclick=exeFunction('changeRecord()')
-   onMouseOver=newClass('optionitemm')
-   onMouseOut=newClass('optionitem')>Change</td></tr>
-<tr><td id=delopt onclick=exeFunction('deleteRecord()')
-   onMouseOver=newClass('optionitemm')
-   onMouseOut=newClass('optionitem')>Delete</td></tr>
-<tr><td id=viewopt onclick=exeFunction('viewRecord()')
-   onMouseOver=newClass('optionitemm')
-   onMouseOut=newClass('optionitem')>View</td></tr>
-</table>
-</div>
 <div data-role="page" id="pageone">
-<div id=divscreen1 style='display:xnone'>
-<form name=screen1 >
-<div id=screen1table></div> 
-<input  name="but1" id="but1" type="button" data-icon="plus"  data-transition="pop" value="New Record" onclick="newRecord()"/>
-<br>
 
-</form>
+	<div data-role="header">
+		<h1>My Title</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<p>Hello world</p>		
+       </div><!-- /content -->
+
+  <div data-role="main" class="ui-content">
+     <a href="#" class="ui-btn ui-icon-arrow-r ui-btn-icon-left">Right Arrow Button</a>
+  </div>
+
+  <a href="index.html" data-role="button" data-icon="delete">Delete</a> 
+ <input  type="button" data-icon="plus"  value="New" onclick="test()"/>
+
+<input
+    type="button"
+    name="verify"
+    id="verify"
+    data-icon="arrow-r" 
+    data-iconpos="right" 
+    data-theme="a" 
+    value="VERIFY" />
+
+   <input  type="button" data-icon="arrow-r"   value="Got to Page 2" onclick="$.mobile.changePage('#pagetwo');"/>
+</div><!-- /page -->
+
+
+<div data-role="page" id="pagetwo">
+  This is Page 2
+  <input  type="button" data-icon="arrow-r"    value="Got to Page 3" onclick="$.mobile.changePage('#page3');"/>
 </div>
-</div><!****END PAGE>
-
-<div data-role="page" id="pagetwo" >
-<div id="divscreen2" style="display:xnone" class="window">
-<form name=screen2 id=screen2>
-<div class="titleBar">Maintain Allowance</div>
-<span id=exitbutton class="ximage" onclick="exeFunction('closeForm()');refresh()"></span>
-
-<input style="display:none" name=alid>
-<input style="display:none" name=taxable>
 
 
-<table>
-<tr><td>
-<br>
-<div data-role="fieldcontain">
-<label for="alname" > Code</label><input type="text" length=6 name="alcode" id="alname" data-mini="true"
- onChange="setupper(this)">
-</div>
-</td></tr><tr><td>
-<div data-role="fieldcontain">
-<label for="alname"> Description</label>&nbsp<input type=text name=alname size=20 maxlength=30>
- 
-</div>
-
-</td></tr><tr><td>
-<span id=ratelabel class=label>Amount</span>&nbsp<input type=text name=amount size=12 maxlength=12
- class=numeric readonly onBlur="editField(this,2,'j')"> 
-
-</td></tr><tr><td>
-<span class=label>Basis</span>
-<select id=altype  name=altype onChange="basisOptions();">
- <option value="Fixed">Fixed</option> 
- <option value="Percentage"  >Percentage(%)</option>  
- <option value="Function">Function</option>  
-</select>
-</td></tr><tr><td id=functiondiv  style="display:none">
-
- <span class=label>Function name</span>&nbsp<input type=text name=functionname size=20 maxlength=20>
-
-</td></tr><tr><td>
-<span class=label>Type</span>
-<select name=altype2 id=altype2 onChange="basisOptions();">
- <option value="Standard">Standard</option> 
- <option value="TimeHours">Time Sheet </option>  
+<div data-role="page" id="page3">
+  Page 3
+  <label for="select-choice-0" class="select">Shipping method:</label>
+<select name="select-choice-0" id="select-choice-0">
+   <option value="standard">Standard: 7 day</option>
+   <option value="rush">Rush: 3 days</option>
+   <option value="express">Express: next day</option>
+   <option value="overnight">Overnight</option>
 </select>
 
-</td></tr><tr><td>
-<span class=label>Effective Date</span>&nbsp<span id=effdate></span> <img src="../image/cal.jpg" onclick="promptCal('effdate',datefmt)" border=1></img>
-</td></tr><tr><td>
-<span class=label>Expiry Date</span>&nbsp<span nolabel type=date field=expdate></span> 
+  <input  type="button" data-icon="arrow-r"    value="Got to Page 4" onclick="$.mobile.changePage('#page4');"/>
 
-</td></tr>
-</table>
-<div id=timebasis>
- <span class=label>Time Sheet Basis</span>&nbsp<select name=tsbasis  onChange="basisOptions();">
- <option value="D">Per Day</option> 
- <option value="H">Per Hour</option> </select><br>
+</div>
+<div data-role="page" id="page4">
+    We are on page 4
+  <input  type="button" data-icon="arrow-r"    value="Got to Page 5" onclick="$.mobile.changePage('#page5');"/>
 </div>
 
-<div id=percentdiv style="display:none">
-<table>
-<tr id="basicrow"><td>
-<span class=label>Apply to Basic</span>&nbsp<select name=frombasic >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr><tr><td>
-<span id=stlabel class=label>Apply to Straight Time</span>&nbsp<select name=stime >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr><tr><td>
-<span id=otlabel class=label>Apply to Over Time</span>&nbsp<select name=otime >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr><tr><td>
-<span id=dtlabel class=label>Apply to Double Time</span>&nbsp<select name=dtime >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr><tr><td>
-<span id=ttlabel class=label>Apply to Triple Time</span>&nbsp<select name=ttime >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr>
-</table></div>
-<div id=minmax style="display:none">
-<span field=minvalue></span><br>
-<span field=maxvalue></span>
-</div>
-<span id=taxablespan>
-<INPUT onclick="chechTaxable()" TYPE=CHECKBOX NAME="taxablecheck"><span onclick="chechTaxable(1)">Taxable / Deductable</span></input>
-</span>
-<br>
-<span id=fortimespan>
-<INPUT  TYPE=CHECKBOX NAME="fortimesheet"><span onclick="document.screen2.fortimesheet.checked ? document.screen2.fortimesheet.checked=false : document.screen2.fortimesheet.checked=true">For timesheet entry</span></input>
-</span>
-<br>
-<br>
 
-<div class=buttonarea>
 
-<input  name="changebutton" id="changebutton" type="button" data-icon="gear"  value="Change" onclick="doChange()"/>
-<input  name="deletebutton" id="deletebutton" type="button" data-icon="minus"  value="Delete" onclick="doDelete()"/>
-<input  name="closebutton" id="closebutton" type="button" data-icon="delete"  value="close" onclick='$.mobile.changePage("#pageone");'/>
+<div data-role="page" id="page5">
+    We are on page 5
+     <input  type="button" data-icon="arrow-r"  data-transition="pop"  value="Got to Page 6" onclick="$.mobile.changePage('#page6');"/>
 </div>
-</form>
+
+
+
+<div data-role="page" id="page6">
+  We are on page 6
 </div>
-</div><!****END PAGE>
+
 
 
 </div>
+
+
+
+
+</body>
+</html>
