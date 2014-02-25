@@ -220,7 +220,7 @@ sqlUpdateObj.prototype.removeVar = function() {
  
 //-------- End Prototype Section ------------------------
 
-function sqlSelect(sqlstring,use,rcd,useconn,sqlphppgm) {
+function sqlSelect(sqlstring,use,rcd,useconn,sqlphppgm ) {
   sqlerr='';
   if (!sqlphppgm) {$$sqlphppath=submitsqlpath}
   else {$$sqlphppath=sqlphppgm}
@@ -360,12 +360,6 @@ function searchForValueFunction(functn) {
   return '';
 }
 
-function sqlNow() {
- if (dbasetype=='access' || dbasetype=='as400') {return ':now()'}
- else {return ':getdate()'} 
-}
-
-
 function sqlInsert(file,useobj,useconn,sqlphppgm) {
   sqlerr='';
   var c=0;
@@ -434,7 +428,7 @@ function sqlInsert(file,useobj,useconn,sqlphppgm) {
              splitvalue=value.split('$^$');
              if (splitvalue.length>1) value=splitvalue[1];
              else {
-                if (splitvalue[0].sst(1,1)=='î') {
+                if (splitvalue[0].sst(1,1)==':') {
                     value=splitvalue[0].sst(2,(splitvalue[0].length-1))
                 }
                 else { 
@@ -452,7 +446,7 @@ function sqlInsert(file,useobj,useconn,sqlphppgm) {
   }
   sqlcommand += ")"; 
 
-  
+ 
   var rtn=true;
   if (sqlselecttype=='php') {
      if (!sqlphppgm) {$$sqlphppath=submitsqlpath}
@@ -480,7 +474,7 @@ function sqlInsert(file,useobj,useconn,sqlphppgm) {
          logobj.tgdate=sqlNum(todayDate());
          logobj.tgtime=sqlNum(todayTime('hm'));
          logobj.tgkey=timeStamp()+''+(Math.floor(Math.random() * (9999 - 1)) + 1);
-         sqlInsert(logfile,logobj,connect2,submitlogsqlpath); 
+         sqlInsert(logfile,logobj,connect2,submitlogsqlpath);
       } catch(e) {};
       sqlcommand=sqlcommand2; sqlerr=''; 
   }
@@ -516,6 +510,7 @@ function sqlInsertUnique(tablename,obj,idfield,cond,useconn,attempts) {
 
   return false;
 }
+
 
 
 function massSqlInsert(tablename,sqlselectobj,connect,perbatch) {
@@ -638,7 +633,6 @@ function massSqlInsert(tablename,sqlselectobj,connect,perbatch) {
 }
 
 
-
 function sqlUpdate(file,useobj,cond,useconn,sqlphppgm) {
   if (!cond) {sqlerr='"where" condition not specified'; return false;}
   sqlerr='';
@@ -691,7 +685,7 @@ function sqlUpdate(file,useobj,cond,useconn,sqlphppgm) {
           var splitvalue=value.split('$^$');
           if (splitvalue.length>1) {value=splitvalue[1];}
           else {
-             if (splitvalue[0].sst(1,1)=='î') {
+             if (splitvalue[0].sst(1,1)==':') {
                  value=splitvalue[0].sst(2,(splitvalue[0].length-1))
              }
              else {
@@ -716,44 +710,18 @@ function sqlUpdate(file,useobj,cond,useconn,sqlphppgm) {
     else {connect2=connect}
     var sqlcommand2=sqlcommand; 
     try {
-         
-        var l=fldar.length;
-        var l2=l-1; 
-        if (!isBlank(keyfld)) {
-            for (var i=0; i<keyfld.length; i++) {
-               var fld=keyfld[i].split(':');
-               var matchfound=false; 
-               fld=fld[0];
-               for (var j=0; j<l; j++) {
-                   if (fldar[j]==fld) {
-                       matchfound=true; break;
-                   }
-               }
-               if (!matchfound) {
-                  l2=l2+1;
-                  fldar[l2]=fld; 
-                }
-            }      
-        }
-        var sqltxt='select';
-        for (var i=0; i<fldar.length; i++) {
-            if (i != (fldar.length-1)) {sqltxt += " "+fldar[i]+","}
-            else {sqltxt += ' '+fldar[i]}
-        }
-
+        var sqltxt='select * ';
         if (where) {sqltxt += " from "+file+" where "+where}
         else {sqltxt += " from "+file} 
         if (sqlSelect(sqltxt,'$log',99999999,connect) && sqlrcdcnt>0) {
            logrcdcnt=sqlrcdcnt; 
         } 
-
     } catch(e) {}; 
 
     sqlcommand=sqlcommand2;
   }     
  
  
-
   if (sqlselecttype=='php') {
      if (!sqlphppgm) {$$sqlphppath=submitsqlpath}
      else {$$sqlphppath=sqlphppgm}
@@ -770,20 +738,18 @@ function sqlUpdate(file,useobj,cond,useconn,sqlphppgm) {
      var ttim=sqlNum(todayTime('hm')); 
      var logobj=new Object; 
      var logobj2=new Object;
-     var value2='';
-     var c3=0; 
-        for (var i=0; i<logrcdcnt; i++) {
-          for (j=0; j<fldar.length; j++) {
-              value=eval('$log.'+fldar[j]+"["+i+"]");
-              eval('logobj.'+fldar[j]+'=value'); 
-              c3=c3+1; 
-              if (c3<=c2) {
-                 eval('logobj2.'+fldar[j]+'=useobj.'+fldar[j]);
+     for (var i=0; i<logrcdcnt; i++) {
+          for (var p in $log) {
+	      if (p=='rcdcnt') {continue}
+              value=$log[p][i];
+              logobj[p]=value; 
+              if (useobj[p] != undefined) {
+                 logobj2[p]=useobj[p];
               }
               else {
-                 eval('logobj2.'+fldar[j]+'=value'); 
+                 logobj2[p]=value; 
               }
-          }
+	  }	   
           logobj.tgattime='B'; logobj.tgevent='U'; 
           logobj.tgusr=username;
           logobj.tgdate=tdat;
@@ -798,11 +764,11 @@ function sqlUpdate(file,useobj,cond,useconn,sqlphppgm) {
               logobj2.tgkey=rkey;
               sqlInsert(logfile,logobj2,connect2,submitlogsqlpath); 
           } 
-       }
-       delete $log;
-       sqlcommand=sqlcommand2
-       sqlerr=''; 
-    }
+     }		  
+    delete $log;
+    sqlcommand=sqlcommand2
+    sqlerr=''; 
+ }
   
   return rtn;
 }
@@ -880,7 +846,7 @@ function sqlDelete(file,cond,useconn,sqlphppgm) {
              logobj.tgdate=tdat;
              logobj.tgtime=ttim;
              logobj.tgkey=timeStamp()+''+(Math.floor(Math.random() * (9999 - 1)) + 1);
-             sqlInsert(logfile,logobj,connect2,submitlogsqlpath); 
+             if (!sqlInsert(logfile,logobj,connect2,submitlogsqlpath)); 
          }
          delete $log;
       } catch(e) {};
@@ -918,7 +884,14 @@ function tableDef(intype) {
   this.tableonclick='';
   this.tablestyle='';
   this.height=200;
-  this.headerclass='tableHead';
+  if (browsertype=='ie') {
+      this.headerclass='tableHead';
+      this.header2class='tableHead2';
+  }
+  else {
+      this.headerclass='tableHeadnonie';
+      this.header2class='tableHead2nonie';
+  }
   this.wrapperclass="tableWrap";
   this.bodyclass="tableBody"; 
   this.header=new Array();
@@ -966,7 +939,7 @@ function tableDef(intype) {
   if (this.tabletype=='*LOOKUP' || this.tabletype=='LOOKUP') {
      this.tabletype='LOOKUP';
      this.dbref=false;
-     this.alwaysrefresh=false;
+     this.alwaysrefresh=false; 
      this.lookupfldlen=-1;
      this.lookupfld='';
      this.lookupfldcase='UPPER';  //or MIXED
@@ -1004,6 +977,7 @@ function suggestDef() {
 
 
 function applyTableDef($c,how) {
+  fu$$width=17;
   if (how) sqlTabRoll($c,how);
   var height=$c.height;
   var tableid=$c.tableid
@@ -1158,19 +1132,33 @@ function applyTableDef($c,how) {
       if (!$c.width[i] || isNaN($c.width[i])) {
          $c.width[i]=132;
       }
-  }
+      if ($c.width[i] > 0) {fu$$width += $c.width[i]}
+   }
 
  for (i=0; i<len; i++) {
       var width=$c.width[i]; 
       if ($c.width[i]!=-1) {
-         txt +='<col id='+tableid+'$ha'+i+' width='+width+'>';
-         if ($c.resizeablecolumns) {txt += '<col width=2>'};
+         txt +='<col id='+tableid+'$ha'+i+' width='+width+'px>';
+         if ($c.resizeablecolumns) {txt += '<col width=2px>'};
+
+         //Ensure column displayed if width was previously set to zero
+         if (browsertype!='ie') {
+            if ($c.headstyle[i]=='display:none') {$c.headstyle[i]='';}
+            if ($c.style[i]=='display:none') {$c.style[i]='';}
+         }
+
       }
       else {
-         txt += "<col style=display:'none'>";
-         if ($c.resizeablecolumns) {txt += "<col style=display:'none'>"};
-         $c.headstyle[i]='';
-         $c.style[i]='';
+         txt += "<col style=display:none>";
+         if ($c.resizeablecolumns) {txt += "<col style=display:none>"};
+         if (browsertype=='ie') { 
+           $c.headstyle[i]='';
+           $c.style[i]='';
+         }
+         else {
+          $c.headstyle[i]='display:none';
+          $c.style[i]='display:none';
+         }
       }
       if (!($c.header[i]) && colcnt>=(i+1)) {
          if (!$c.matchonid) {$c.header[i]=$$sqlcol[i].toUpperCase();}
@@ -1178,8 +1166,8 @@ function applyTableDef($c,how) {
       }
   }
 
-  if ($c.resizeablecolumns) {txt += '<col width=17> <tr BGCOLOR=#336699>'}
-  else {txt += '<col width=15> <tr BGCOLOR=#336699>'}
+  if ($c.resizeablecolumns) {txt += '<col width=17px> <tr BGCOLOR=#336699>'}
+  else {txt += '<col width=15px> <tr BGCOLOR=#336699>'}
   
   for (i=0; i<len; i++) {
       if ($c.id[i]) {txt +='<td id="'+$c.id[i]+'" align=center';}
@@ -1197,7 +1185,7 @@ function applyTableDef($c,how) {
   }
   txt += '<td class=emptycol></td></tr></table></span>'
   txt += '<table cellpadding=0 cellspacing=0 border=0><tr><td><div id='+tableid+'$wrap class="'+$c.wrapperclass+'" style="height:'+height+'px;">'
-  txt += '<TABLE ID="'+tableid+'" STYLE="table-layout:fixed';
+  txt += '<TABLE ID="'+tableid+'" class="'+$c.header2class+'" STYLE="';
   if ($c.tablestyle !='') {
      txt += '; '+$c.tablestyle;
   }
@@ -1213,8 +1201,8 @@ function applyTableDef($c,how) {
       var width=$c.width[i];
       if (!isNaN($c.width[i])) width=$c.width[i];
       if ($c.width[i]!=-1) {
-         txt +='<col id='+tableid+'$hb'+i+' width='+width+'>';
-         if ($c.resizeablecolumns) {txt += '<col width=2>'};
+         txt +='<col id='+tableid+'$hb'+i+' width='+width+'px>';
+         if ($c.resizeablecolumns) {txt += '<col width=2px>'};
       }
       else {
         txt += "<col style='display:none'>";
@@ -1676,6 +1664,7 @@ function keySqlSelectResult(obj,keyarray,returntype) {
 
 }
 
+
 function getKSSRkey(obj) {
 
   var pr='';
@@ -1719,9 +1708,9 @@ function getKSSRdata(obj,key) {
  
   for (p in obj) {
        if (p != '$keycount') {
-	       for (p2 in obj[p]) {rtnobj[p2]=[]}
-	 	  break;
-	   }
+	   for (p2 in obj[p]) {rtnobj[p2]=[]}
+	   break;
+       }
   }
 
   if (!obj[key]) {return rtnobj}
@@ -1729,12 +1718,12 @@ function getKSSRdata(obj,key) {
   var x=-1;
   var ky='';
   while (datafound) {
-       x++
-       if (x==0) {ky=key}
-	   else {ky=key+'_key'+x}
-	   if (!obj[ky]) {return rtnobj}
-	   for (p2 in obj[ky]) {rtnobj[p2][rtnobj.rcdcnt]=obj[ky][p2]}
-       rtnobj.rcdcnt ++;  
+         x++
+         if (x==0) {ky=key}
+         else {ky=key+'_key'+x}
+         if (!obj[ky]) {return rtnobj}
+         for (p2 in obj[ky]) {rtnobj[p2][rtnobj.rcdcnt]=obj[ky][p2]}
+         rtnobj.rcdcnt ++;  
   }
 }  
 
@@ -1826,7 +1815,6 @@ function wrapSqlResultCol() {
 }
 
 
-
 function keySqlSuggest(fld,keyobj,keyfld,vlu) {
   if (!keyfld) {var keyfld=fld}
   
@@ -1878,8 +1866,6 @@ function keySqlSuggest(fld,keyobj,keyfld,vlu) {
        }        
   }
 
-
-
  function getLastOk(keyobj,vlu) {
    var matchfound=false;
    for (var i=vlu.length-1; i>=0 && !matchfound; i--) {
@@ -1921,7 +1907,7 @@ function sqlLookUp($t) {
      divnewform.id=lkupformdiv;
      divnewform.className="window";
      divnewform.style.display="none";
-     var inner='<form name="'+lkupform+'">';
+     var inner='<form name="'+lkupform+'" onsubmit="return false">';
      inner += '<div class="titleBar"></div>';
      inner += '<img SRC="../image/closewin_icon.gif"  alt="close"  class="ximage" onClick="closeForm(); evalSpecial('+"'"+$t.oncancel+"'"+')"></img>';
      inner += '<div id="'+lkupdiv+'"></div></form>';
@@ -1952,7 +1938,7 @@ function sqlLookUp($t) {
         prefix += '<span id='+lkuphtmlspan+'>'+$t.lookuphtml+'</span>'; 
         if ($t.lookupfldlen>0) {
            prefix=$t.lookupfldtxt+'<br>';
-           prefix += '<input name =' +$t.lookupfld+ ' type=text size='+$t.lookupfldlen+' value="'+valueOf($t.lookupfld)+'" onkeypress="initiateLookup()">';
+           prefix += '<input id =' +$t.lookupfld+ ' type=text size='+$t.lookupfldlen+' value="'+valueOf($t.lookupfld)+'" onkeypress="initiateLookup(event)">';
         }
         prefix += '&nbsp<button onclick="exeFunction('+"'sqlLookUp()'"+')">Go</button><br><br>'; 
        // if (isBlank(valueOf($t.lookupfld)) && $t.lookupfldlen !=0) $t.sqlselect='';
@@ -1977,10 +1963,10 @@ function sqlLookUp($t) {
        $t.sqlrcdcnt=500;
      }
 
-  var lhtml=prefix+applyTableDef($t)+suffix;
+  var lhtml=prefix+applyTableDef($t)+suffix; 
   $t.sqlselect=sqlselstmt;
   $t.refresh=false;
-  changeContent(lkupdiv,lhtml);
+  changeContent(lkupdiv,lhtml); 
 
    if ($t.lookupfldlen>=0) {
      if ($t.sqltotcnt > 0 && $t.sqltotcnt >= $t.sqlrcdcnt) {
@@ -2016,8 +2002,8 @@ function sqlLookUp($t) {
 }
 
 
-function initiateLookup() {
-  if (enterKey()) {
+function initiateLookup(e) {
+  if (enterKey(e)) {
    exeFunction('sqlLookUp()');
   }
 }
@@ -2122,7 +2108,7 @@ function suggestRtnValue() {
 }                                                             
         
 
-function sqlRtnValue() { 
+function sqlRtnValue() {
 
   if (arguments.length>0) {
     
@@ -2139,8 +2125,9 @@ function sqlRtnValue() {
           if (obj.className == "datefield") { 
               var dte="d3#$"+intoflds[i];
               obj=document.getElementById(dte);
-              if (obj.dt.sst(1,1)=='d') {
-                  var fmt=obj.dt.sst(2,1);
+              var dtval=obj.attributes.getNamedItem('dt').value;
+              if (dtval.sst(1,1)=='d') { 
+                 var fmt=dtval.sst(2,1);
                   changeVar(intoflds[i],numeric(ttxt).chgDateFmt('Y',fmt));
               }
           }
@@ -2169,6 +2156,9 @@ function applySelectList($l,sel,sqlresult) {
   var txtfld='';
   var obj=document.getElementById(sel);
   if (obj==null) return false;
+  if ($l.sqlresult && !sqlresult) {
+      sqlresult=$l.sqlresult;  
+  }
   if (!sqlresult) {
       if (!(sqlSelect($l.sqlselect,'$r',$l.sqlrcdcnt,$l.sqlconnect))) return false; 
   }
@@ -2357,6 +2347,7 @@ function logOnUsr(user,passwrd,useconn) {
   return true; 
 }
 
+
 function checkPassWord(user,passwrd,usecon) {
   var str='$user'
   if (!useconn) {var useconn=conn}
@@ -2375,6 +2366,7 @@ function checkPassWord(user,passwrd,usecon) {
   }
   return true; 
 }
+
 
 function passWordOk(passwrd) {
 
@@ -2471,8 +2463,8 @@ function getUsrData(useconn) {
                   return false;
               }
           }
-      addLock('LOGON',$user.usrid[0]);
       }
+      addLock('LOGON',$user.usrid[0]);
   } 
 
 
@@ -2628,11 +2620,13 @@ function doOption(obj,optionid,fnctn) {
           }
            
           if (isBlank($oo.optmode[0]) || $oo.optmode[0]=='0') {
+
               var ifrmobj= new iframeDialogDef();
               if ($oo.optpgm[0].split('/').length > 1) {
                 ifrmobj.passglobalparms = false;
-              }       
-              displayIframeDialog($oo.optpgm[0],$oo.optdsc[0],ifrmobj); 
+              }
+
+             displayIframeDialog($oo.optpgm[0],$oo.optdsc[0],ifrmobj); 
           }
           else {
              if ($oo.optmode[0]=='1') {diaobj.type='modal'}
@@ -2726,8 +2720,8 @@ function sqlSelectPhp(sqlselect,use,rcds) {
   } 
 
   var rtnrows=section[1].split('~~'); 
-  var rlen=rtnrows.length-1; 
-  var vlu='';   
+  var rlen=rtnrows.length-1;
+  var vlu;    
   for (var i=0; i<rlen; i++) {
       rtncolumn=rtnrows[i].split('^^'); 
       //var clen=rtncolumn.length-1;
@@ -2737,9 +2731,9 @@ function sqlSelectPhp(sqlselect,use,rcds) {
               eval(useobj+"."+$$sqlcol[i2]+"[i]=rtncolumn[i2].trim()"); 
           }
           else {
-              vlu=parseFloat(rtncolumn[i2]); 
-              if (isNaN(vlu)) {vlu=0} 
-              eval(useobj+"."+$$sqlcol[i2]+"[i]=vlu"); 
+              vlu=parseFloat(rtncolumn[i2]);
+              if (isNaN(vlu)) {vlu=0}
+              eval(useobj+"."+$$sqlcol[i2]+"[i]=vlu");
           }
       }
   } 
@@ -2861,6 +2855,10 @@ function getDbTableAttr(table) {
  catch(e) {} 
  return obj;
 }
+
+
+
+
 
 
 function tableToCsv(tableid) {
@@ -3094,8 +3092,7 @@ function releaseLock(entity) {
   }
   if (qrywhere=='') {return true}
   sqlwhere=' and lcksession='+sessionid;
-  if (!sqlDelete('systablock',qrywhere)) {  return false;}
-
+  if (!sqlDelete('systablock',qrywhere)) {return false}
   return true;
 }
 
@@ -3137,17 +3134,18 @@ function checkLock(entity,id) {
       lockapp=$tablck.lckapp[0];
       locksession=numeric($tablck.lcksession);
       delete $tablck;
-      return true
+      return true;
   }
   return false; 
 }
 
 //--- End File Locking Simulation
 
+
 function getServer(val) { //val='date', 'time', 'fulldate'
 
   val=val.toLowerCase();
-
+ 
   if (val=='date' || val=='time' || val=='fulldate') {
       return serverDate();
   }
@@ -3156,10 +3154,10 @@ function getServer(val) { //val='date', 'time', 'fulldate'
 
 function serverDate() {
 
-   var sqltxt='';
+   var sqltxt;
    $$sqlcolhold=clone($$sqlcol); 
-   sqlrcdcnthold=sqlrcdcnt;
-   
+   sqlrcdcnthold=sqlrcdcnt; 
+
    if (dbasetype=='access' || dbasetype=='as400') {
        sqltxt='SELECT now() as dt FROM token';
    }
@@ -3261,4 +3259,3 @@ function serverDate() {
  }
 
 }
-
