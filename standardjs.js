@@ -34,9 +34,9 @@ else {
        if (iframeparms.username) username=iframeparms.username;
        if (iframeparms.globaldialogparm) {
           if (iframeparms.globaldialogparm.passglobalparms==true) {
-              globaldialogparm=iframeparms.globaldialogparm; 
+              globaldialogparm=iframeparms.globaldialogparm;
           }
-       } 
+       }
        if (iframeparms.dialogparm) dialogparm=iframeparms.dialogparm;
        if (iframeparms.dataLog) dataLog=iframeparms.dataLog;
        if (iframeparms.dataDic) dataDic=iframeparms.dataDic;
@@ -47,13 +47,13 @@ else {
 var caller=window.location.href.split('.');
 calltype=caller[caller.length-1].toLowerCase();
 
-if (window.location.href.split(':')[0]!='file'){
-    if(calltype !='hta' && username =='') {
-       while (true){            
-         window.close(); 
-       }
-    }    
-}
+//if (window.location.href.split(':')[0]!='file'){
+//    if(calltype !='hta' && username =='') {
+//       while (true){            
+//         window.close(); 
+//       }
+//    }    
+//}
 
 
 //var xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -77,7 +77,7 @@ var CGIrtnmsg="";
 var CGIrtndata="";
 var CGIwaitonreturn=false;
 var CGIlockscreen=true;
-var urlparm={};
+var urlparm="";
 var inlurlstring=document.URL;
 var path="";
 var inpath="";
@@ -150,6 +150,13 @@ var applicationname=window.location.pathname;
 var datefmt='d';
 var timefmt='a';
 
+browsertype='ie';
+if (navigator.userAgent.indexOf("Firefox") != "-1") {browsertype='ff'}
+else {
+     if (navigator.userAgent.indexOf("Safari") != "-1") {
+         browsertype='sf';
+     } 
+}
 //  --- Some default button settings --
 //var buttonareacolor=['#54CADD:#125080','#125080:#4881B5'];
 //var buttonareapercent=[50,50];
@@ -157,6 +164,11 @@ var timefmt='a';
 var buttonareacolor=['#A6DDF2:#558EC3','#558EC3:#4A78A9','#4A78A9:#558EC3','#558EC3:#A6DDF2'];
 var buttonareapercent=[30,20,30,20];     
 var buttonborder='1px solid #2D4F7D'; 
+
+if (browsertype=='sf') {
+ buttonareacolor=['#558EC3:#A6DDF2','#558EC3:#4A78A9','#A6DDF2:#558EC3'];
+ buttonareapercent=[30,40,30];
+} 
 
 var domove=false;
 //var x,y;
@@ -176,6 +188,7 @@ var popcalcode='';
 var newrowpos=-9;
 var undoclickrow=false; 
 var sortorder='ascend';
+var fu$$width=0;
 
 eval(function(p,a,c,k,e,d){e=function(c){return c};if(!''.replace(/^/,String)){while(c--){d[c]=k[c]||c}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('0.1=\'2\';',3,3,'globaldialogparm|accesscode|nopass'.split('|'),0,{}))
 
@@ -304,7 +317,8 @@ Number.prototype.chgDateFmt = function(ffmt,tfmt) {
   if (tfmt=='M') {
      todate=''+month+day+year;
   } 
-  return numeric(todate); 
+  //return numeric(todate);
+  return todate; 
 }
 
 //-------- End Prototype Section ------------------------
@@ -363,103 +377,113 @@ function topIt() {
   } catch (e3) {}
 }
 
-  setInterval("topIt()",100);
-
-
-function mouseDown() {
-
-try {
-
-var extformobj=document.getElementById('divextform');
-if (extformobj==null) {
-var divextform=document.createElement('div');
-    divextform.id="divextform";
-    divextform.className="importWindow";
-    divextform.style.display="none";
-    divextform.innerHTML='<form name="extform"> <div id="extformdata"></div></form>'
-    document.getElementsByTagName('body')[0].appendChild(divextform);
-//  workarea.appendChild(divextform);
-}
-
-getForm();
-//*
-//*
-} catch (e) {};
-
-}
-
-
-function moveMouse()
-{
- 
- if (domove)
- {
-  
-  var newx=tx + event.clientX-x;
-  var newy=ty + event.clientY-y;
+ll=0;
+function topIt2() {
   try {
-      //if (newx<optionarea.offsetWidth) newx=optionarea.offsetWidth;
-      //if (newy<header.offsetHeight) newy=header.offsetHeight;
-      if (newx<0) newx=0;
-      if (newy<0) newy=0;
+   pagebottomleft.style.height=document.body.clientHeight-pageheader.offsetHeight;
+   pagebottomleft.style.top=pageheader.offsetHeight;
+   pagebottomright.style.top=pageheader.offsetHeight;
+   pagebottomright.style.left=pagebottomleft.offsetWidth;
+   pagebottomright.style.width=document.body.clientWidth-pagebottomleft.offsetWidth;
+   pagebottomright.style.height=document.body.clientHeight-pageheader.offsetHeight;
+  } catch (e) {}
+}
+
+function mouseDown(e) {
+
+ try {
+      //var extformobj=document.getElementById('divextform');
+      //if (extformobj==null) {
+      //    var divextform=document.createElement('div');
+      //    divextform.id="divextform";
+      //    divextform.className="importWindow";
+      //    divextform.style.display="none";
+      //    divextform.innerHTML='<form name="extform" onSubmit="return false"> <div id="extformdata"></div></form>'
+      //    document.getElementsByTagName('body')[0].appendChild(divextform);
+      //}
+
+      getForm(e);
+
   } catch (e) {};
 
-  var xxdif=newx-numeric(mobj.style.left);
-  var yydif=newy-numeric(mobj.style.top);
-  mobj.style.left = newx;
-  mobj.style.top  = newy;
-
-//* try {
-//*  mfobj.style.left = newx;
-//*  mfobj.style.top  = newy;
-//*  }
-//*catch (e) {}
-
-  return false;
-}
 }
 
 
-function selectMouse()
-{
-var moveit=false;
-var fobj = event.srcElement;
-var uclass;
+function moveMouse(e) {
+ 
+ if (!domove) {return}
 
-if (fobj.id=='cover' || fobj.id=='divcover') return
+ var newx='';
+ var newy='';
+ if (!window.event) {
+     newx=$tx + e.clientX-$mvx;
+     newy=$ty + e.clientY-$mvy;
+ }
+ else {
+     newx=$tx + event.clientX-$mvx;
+     newy=$ty + event.clientY-$mvy;
+ }
+ try {
+      if (newx<0) newx=0;
+      if (newy<0) newy=0;
+ } catch (e) {};
 
-while (fobj.tagName != 'BODY')
-{
-  uclass=fobj.className.toUpperCase(); 
-  if (uclass=="MOVEIT" || uclass=="TITLEBAR" || uclass=="TITLEBARI") moveit=true;
-  if (uclass.search("WINDOW")!=-1) break;
-  fobj = fobj.parentNode;
+ var xxdif=newx-numeric(mobj.style.left);
+ var yydif=newy-numeric(mobj.style.top);
+ mobj.style.left = newx+'px';
+ mobj.style.top  = newy+'px';
+
+ return false;
+
 }
 
-if (moveit==false) {fobj = event.srcElement}
-if (fobj.className.toUpperCase().search("WINDOW")!=-1) {
-    moveit=true;
-} 
-if (fobj.nomove != undefined) {moveit=false}  
 
-  if (moveit)
-  {
-    mobj = fobj;
-//* try {mfobj = document.getElementById('iframe'+mobj.id)} catch (e) {};
-    tx = parseInt(mobj.style.left+0,10);
-    ty = parseInt(mobj.style.top+0,10);
-    domove = true;
-    x =  event.clientX;
-    y =  event.clientY;
-    mobj.style.cursor='move';
-    //document.onmousemove=moveMouse;
-    return false;
+function selectMouse(e) {
+  var moveit=false;
+  var fobj;
+  if (!window.event) {fobj=e.target}
+  else {fobj = event.srcElement}
+  var uclass;
+
+  if (fobj.id=='cover' || fobj.id=='divcover') return;
+
+  while (fobj.tagName != 'BODY') {
+         uclass=fobj.className.toUpperCase(); 
+         if (uclass=="MOVEIT" || uclass=="TITLEBAR" || uclass=="TITLEBARI") moveit=true;
+         if (uclass.search("WINDOW")!=-1) break;
+         fobj = fobj.parentNode;
+  }
+
+  if (moveit==false) {
+      if (!window.event) {fobj=e.target}
+      else {fobj = event.srcElement}
+  }
+  if (fobj.className.toUpperCase().search("WINDOW")!=-1) {
+      moveit=true;
+  } 
+  if (attributeValue(fobj,'nomove') != undefined) {moveit=false}  
+
+  if (moveit) {
+      mobj = fobj;
+      $tx = parseInt(mobj.style.left+0,10);
+      $ty = parseInt(mobj.style.top+0,10);
+      domove = true;
+      if (window.event) {
+          $mvx =  event.clientX;
+          $mvy =  event.clientY;
+      }
+      else {
+          $mvx =  e.clientX;
+          $mvy =  e.clientY;
+      }
+      mobj.style.cursor='move';
+      return false;
   }
 }
 
 
-function mouseUp()
-{ 
+function mouseUp() {
+
 try {up$Pos()} catch(e) {}
 if (popcount != 0 && ispop==false) {
     for (var j=1; j<=popcount; j++) {
@@ -546,17 +570,18 @@ function startDebug() {
    try {createdbghtml();} catch(e) {}
 }
 
-function onKeyPress () {
-
-if (wincount!=0) {
-getForm();
-if (winform[wincount] != focusform) {focusform=winform[wincount]; return false;}
-}
-
-var keycode = window.event.keyCode;
-if (keycode == 13 && event.srcElement.tagName !='TEXTAREA') return false;
- 
-//return true;
+function onKeyPress (e) {
+  if (wincount!=0) {
+      getForm(e);
+      if (winform[wincount] != focusform) {focusform=winform[wincount]; return false;}
+  }
+  var keycode = getKeyCode(e);
+  if (keycode == 13) {
+      var obj;
+      if (!window.event) {obj=e.target}
+      else {obj=event.srcElement}
+      if (obj.tagName !='TEXTAREA') {return false;}
+  } 
 }
 
 function dialogDef() {
@@ -575,7 +600,7 @@ function dialogDef() {
   this.loadfrmtps=loadfrmtps;
   this.allowmultiple='no'; //applies to type=modeless
   this.passglobalparms=true;
-
+  
   // Internal - Do not change properties
   this.id=""; 
   dialognbr += 1;
@@ -583,8 +608,6 @@ function dialogDef() {
  // End-Internal
 
 }
-
-
 
 
 function displayDialog(exturl,dobj) {
@@ -597,7 +620,7 @@ function displayDialog(exturl,dobj) {
   parms.allowdelete=allowdelete;
   parms.allowchange=allowchange; 
   if (dobj.passglobalparms) {
-    parms.globaldialogparm=globaldialogparm;
+      parms.globaldialogparm=globaldialogparm;
   }
   parms.dataLog=dataLog;
   parms.dataDic=dataDic;
@@ -672,7 +695,7 @@ function iframeDialogDef() {
   this.loadfrmtps=loadfrmtps;
   this.passglobalparms=true;
 }
- 
+
 
 function displayIframeDialog(exturl,tabtext,dobj) {
   if (!tabtext) {
@@ -728,7 +751,7 @@ function iframeTabsDef(nbr) {
   this.tabstyle=new Array();
   this.tabdatastyle=new Array();
   for (var i=0; i<maxtabs; i++) {
-      this.tabstyle[i]="width:120; overflow:hidden; background-color:#cce2fb"; 
+      this.tabstyle[i]="width:120px; overflow:hidden; background-color:#cce2fb"; 
       this.tabdatastyle[i]="text-align:center; width:100%; height:100%";
   }
 }
@@ -744,9 +767,11 @@ function createIframeTabs(ifobj,container,hide) {
   if (ifobj.background) {
      background='background: '+ifobj.background; 
   }
-  var txt="<div id=diviframetabsform style='margin:0'><form name=iframetabsform style='margin:0; padding:0'>";
+  var exitbuttop=18; 
+  if (browsertype != 'ie') {exitbuttop=24}
+  var txt="<div id=diviframetabsform style='margin:0'><form name=iframetabsform id=iframetabsform onsubmit='return false' style='margin:0; padding:0'>";
   txt += "<div id=iframetabsformtab style='position:relative; margin:0; padding:0; height:100%; width:100%;"+background+"' tabselectcolor='"+ifobj.tabcolorselect+"' class=tabswrap>";
-  txt += "<span id=closecurrenttab style='position:absolute; top:-18; right:0' onclick=removeIframeTab()>X</span>";
+  txt += "<span id=closecurrenttab style='position:absolute; top:-"+exitbuttop+"px; right:0' onclick=removeIframeTab()>X</span>";
   for (var i=0; i<maxtabs; i++) {
       //txt += "<div id=iftab#"+(i+1)+" class=tab style='"+ifobj.tabstyle[i]+"'><span id=ifx#"+(i+1)+"></span></div>";
       txt += "<div id=iftab#"+(i+1)+" class=tab style='"+ifobj.tabstyle[i]+"'></div>";
@@ -756,7 +781,7 @@ function createIframeTabs(ifobj,container,hide) {
       //txt += "<iframe id=iframe#"+(i+1)+" application='yes' style='"+ifobj.iframestyle[i]+"'></iframe></div>";
       txt += "<iframe id=iframe#"+(i+1)+" application='yes' scrolling='auto' height=98% width=98%></iframe></div>";
   }
-  txt += "</div></form></div>";
+  txt += "</div></form></div>"; 
   obj.innerHTML=txt; 
 
   //var obji=document.getElementById('diviframetabsform');
@@ -791,7 +816,7 @@ function displayInIframeTab(url,text) {
  for (var i=1; i<=tabcount; i++) {
      if (urlarray[i]==url) {
         usetab='iftab#'+i;
-        tabfound=true;
+        tabfound=true; 
         break
      }
  }
@@ -808,20 +833,17 @@ function displayInIframeTab(url,text) {
        alert('New tab not added...close at least one tab');
        return; 
     }
-    tabcount ++;
+    tabcount ++; 
     usetab='iftab#'+tabcount;
     var useframe='iframe#'+tabcount; 
     var el=document.getElementById(useframe); 
     el.src=url; 
     urlarray[tabcount]=url;
-    //text = "<span class=ximageif id=ifx#"+tabcount+" onmouseup='removeIframeTab()'>X</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+text; 
-    //text +="<span style='margin:2px' id=ifx#"+tabcount+" class=ximage onmouseup='removeIframeTab()'>X</span>"; 
-    //text +="&nbsp&nbsp<span title='close' onmousedown='removeIframeTab("+tabcount+")' class=xtabimage><span>";
     changeContent(usetab,text); 
   }
  //showElement("ifx#"+tabcount);
- showElement(usetab,'closecurrenttab');
- showTab(usetab);
+ showElement(usetab,'closecurrenttab'); 
+ showTab(usetab); 
 
 }
 
@@ -848,10 +870,6 @@ function removeIframeTab() {
   var ele=document.getElementById('iframe#'+nbr).contentWindow.document.getElementById('$com$element')
   if (ele) {
       lockapp=ele.app;
-      if (ele.allowexit=='no') {
-          if (ele.msg) {alert(msg); return false}
-          else {alert('This Tab cannot be closed at this time'); return false}
-      }
   }
 
   for (var j=1; j<=maxtabs; j++) {
@@ -909,7 +927,7 @@ function removeIframeTab() {
 
   if (tabcount>0) { 
      if (tabremove!=currenttabobj) {
-        tabSelect(currenttabobj.id);
+        tabSelect(currenttabobj);
      }
      else { 
         if (nbr>1) {
@@ -924,14 +942,10 @@ function removeIframeTab() {
   }
   else {
           hideElement('iftab#'+maxtabs+'data','closecurrenttab'); 
-  } 
-   
-  try {
-       if (lockapp) {
-           releaseAppLock(lockapp);
-       } 
-  } 
-  catch(e) {}
+  }    
+
+  try {if (lockapp) {releaseAppLock(lockapp)}} catch(e) {}
+
 }
 
 
@@ -947,11 +961,11 @@ optmenu=bodyhtml;
 
 function getPosition(e) {
  try {
-    e = e || window.event;
+    e = e || window.event; 
     var cursor = {x:0, y:0};
     if (e.pageX || e.pageY) {
         cursor.x = e.pageX;
-        cursor.y = e.pageY;
+        cursor.y = e.pageY; 
     }
     else {
         var de = document.documentElement;
@@ -967,15 +981,16 @@ function getPosition(e) {
 }
 
 
-function onClick()
-{
+function onClick(e) {
 
 try {
 
-var workitem=event.srcElement;
+var workitem;
+if (!window.event) {workitem=e.target}
+else {workitem=event.srcElement}
 
 try {
-  var obj = workitem.parentNode;
+  var obj = workitem.parentNode; 
   if ((obj.tagName == 'TD' || obj.tagName == 'TR') && (!undoclickrow)) {
      var trobj = obj.parentNode;
      if (obj.tagName == 'TR') trobj = obj;
@@ -1048,8 +1063,7 @@ if (optmenu == "") return;
 
 
 
-function displayForm(form)
-{
+function displayForm(form) {
 
 if (exitOnConcurrent()) {return false}
 
@@ -1088,6 +1102,7 @@ if (windowbgcolor!='') {
 if (windowbgfade!='') {
   try {
   coverobj.style.filter="alpha(opacity="+windowbgfade+")";
+  coverobj.style.opacity=numeric(windowbgfade)/100;
   } catch (e) {}
 }
 
@@ -1103,22 +1118,37 @@ if (windowbgfade!='') {
 var oclass=obj.className
 var toppos=parseInt(obj.style.top+0,10);
 var leftpos=parseInt(obj.style.left+0,10);
- 
+
 if (arguments.length==1 && toppos==0 && leftpos==0) {
  try {
   obj.style.display=''; 
   var workarea=document.getElementById('workarea');
   if (!workarea) {workarea=document.getElementsByTagName('body')[0]};
-  try {    
-      toppos=workarea.offsetHeight-obj.offsetHeight-header.offsetHeight-footer.offsetHeight; 
+  var fth=0;
+  var hdh=0;
+  if (window.event) {
+      var wkh=workarea.offsetHeight;
+      var obh=obj.offsetHeight; 
+      try {fth=footer.offsetHeight;} catch(e) {}
+      try {var hdh=header.offsetHeight;} catch(e) {};
+  }
+  else {
+      var wkh=workarea.scrollHeight;
+      var obh=obj.scrollHeight; 
+      try {var fth=footer.scrollHeight} catch(e) {};
+      try {var hdh=header.scrollHeight} catch(e) {}
+  }  
+  try {  
+      toppos=wkh-obh-hdh-fth; 
       leftpos=workarea.offsetWidth-obj.offsetWidth-optionarea.offsetWidth-optionarea2.offsetWidth;
-      toppos=toppos/2+header.offsetHeight; 
+      toppos=toppos/2+hdh; 
       leftpos=leftpos/2+optionarea.offsetWidth;
   } 
   catch(e) {
-      toppos=(workarea.offsetHeight-obj.offsetHeight)/2; 
-      leftpos=(workarea.offsetWidth-obj.offsetWidth)/2; 
+      toppos=(wkh-obh)/2; 
+      leftpos=(workarea.offsetWidth-obj.offsetWidth)/2;  
   }
+
   if (toppos<5) {toppos=5}
   if (leftpos<5) {leftpos=5}
   obj.style.display='none';
@@ -1151,9 +1181,13 @@ if (oclass != 'exportWindow' && (oclass.toUpperCase().search("WINDOW")!=-1)) {
   obj.style.top=toppospx;
   obj.style.left=leftpospx;
 
-  showElement('divcover',division);
-  obj.style.height=obj.offsetHeight;
-  obj.style.width=obj.offsetWidth;
+  showElement('divcover',division); 
+  //if (obj.offsetHeight>obj.style.height) {
+      obj.style.height=obj.offsetHeight;
+  //}
+  //if (obj.offsetWidth>obj.style.width) { 
+     obj.style.width=obj.offsetWidth;
+  //}
 
   focusform=form;
   try {if (oclass.toUpperCase()=='TABSWINDOW') constructTabs(form)} catch (e) {};
@@ -1162,7 +1196,6 @@ if (oclass != 'exportWindow' && (oclass.toUpperCase().search("WINDOW")!=-1)) {
      wincount=wincount+1;
      winform[wincount]=form;
   }
-
   return;
 }
 
@@ -1250,7 +1283,7 @@ function returnToForm(toform) {
 function focusOn(focusfld) {
  var focusdata=focusfld.split(':');
  focusfld=focusdata[0];
- var obj=document.getElementById(focusfld);
+ var obj=document.getElementById(focusfld); 
  if (!obj) return;
  if (obj.className=='datefield') {
      focusfld='d1#$'+focusfld;
@@ -1259,7 +1292,7 @@ function focusOn(focusfld) {
  if (focusdata.length==1) {
 
   try {
-     document.getElementById(focusfld).focus();
+     document.getElementById(focusfld).focus(); 
       if (arguments.length>1)
       {
       if (arguments[1]=='*highlight' || arguments[1]=='*hi')
@@ -1465,8 +1498,10 @@ if (fvalue=="") fvalue="0";
 if (isNaN(fvalue)) {
  if (!hideedit) {
   alert("Oops!  That does not appear to be a valid number");
-  fieldname.focus();
-  fieldname.select();
+  //fieldname.focus();
+  //fieldname.select();
+  f$n$$ame=fieldname;
+  setTimeout("f$n$$ame.select(); f$n$$ame.focus()", 1);
  }
   hideedit=false;
   return false;
@@ -1481,8 +1516,10 @@ for (i = 0; i < len; i++)
       if (c2>flen) {
        if (!hideedit) {
         alert('Oops..too many digits entered. Enter no more than '+flen+' digits');
-        fieldname.focus();
-        fieldname.select();
+        //fieldname.focus();
+        //fieldname.select();
+        f$n$$ame=fieldname;
+        setTimeout("f$n$$ame.select(); f$n$$ame.focus()", 1);
         hideedit=false;
         return false;
        }
@@ -1511,8 +1548,10 @@ if (dotpos != -1)
  {
    if (!hideedit) {
     alert ("Oops!  Please enter a number with up to " + decimal + " decimal places");
-    fieldname.focus();
-    fieldname.select();
+    //fieldname.focus();
+    //fieldname.select();
+    f$n$$ame=fieldname;
+    setTimeout("f$n$$ame.select(); f$n$$ame.focus()", 1);
    }
   hideedit=false;
   return false;
@@ -1636,6 +1675,7 @@ if (editcode=="S")  // Start-Editcode(S)
    if (mn.length==1) {mn='0'+mn} 
    fieldvalue=hr+':'+mn+ampm;
 }
+
  if ((fieldvalue=="" || fieldvalue==" ") && editcode != 'N') fieldvalue="0";
  if (fieldvalue=="0.00" && editcode=="J") {
      fieldvalue=".00";
@@ -1644,10 +1684,10 @@ if (editcode=="S")  // Start-Editcode(S)
     if (editcode=='N' && numeric(fieldvalue)==0) {fieldvalue=''};
  }
 
-if ((editcode=="Y" || editcode=="D" || editcode=="M" || editcode=="T" || editcode=="A" || editcode=="D") && numeric(fieldvalue)==0) {
+ if ((editcode=="Y" || editcode=="D" || editcode=="M" || editcode=="T" || editcode=="A" || editcode=="D") && numeric(fieldvalue)==0) {
      fieldvalue='';
-}
- 
+ }
+  
 fieldname.value=fieldvalue;
 
 }
@@ -1675,29 +1715,52 @@ function upperVar() {
   }
 }  
 
-
-
-function keyPressedToUpper() {
-  var key = window.event.keyCode;
-  if ((key > 0x60) && (key < 0x7B))
-  window.event.keyCode = key-0x20;
+function keyPressedToUpper(e) {
+  if (browsertype=='ie') { 
+      var key=getKeyCode(e); 
+      if ((key > 0x60) && (key < 0x7B)) {
+          window.event.keyCode = key-0x20; 
+      }
+  }
+  else { 
+      ff$o$b$j=e.target;
+      setTimeout('fireFoxUp()', 1);
+  }
+  return;
 }
 
 
-
-function enterKey()
-{
-if (eventKey()=='13') {
-return true;
-}
-return false;
+function fireFoxUp() {
+   ff$o$b$j.value=ff$o$b$j.value.toUpperCase();
+   ff$o$b$j='';
 }
 
+function getKeyCode(e) {
+  if (window.event) {
+      return window.event.keyCode; 
+  }
+  if (e.keyCode) {
+      return e.keyCode;
+  }
+  if (e.which) {
+      return e.which; 
+  }
+}
 
-function acceptEnter() {
- var sobj=event.srcElement;
+function enterKey(evt) {
+ if (getKeyCode(evt)=='13') {
+     return true;
+ }
+ return false;
+}
+
+
+function acceptEnter(evt) {
+ var sobj;
+ if (window.event) {sobj=event.srcElement}
+ else {sobj=evt.target}
  if (sobj.tagName=='textarea') return;
- if (eventKey()=='13') {
+ if (enterKey(evt)) {
     try {
         if (sobj.upper) {sobj.value=sobj.value.toUpperCase();}
         else {
@@ -1708,9 +1771,10 @@ function acceptEnter() {
             }
         }  
     } catch(e) {}
-    for (var i=0; i<arguments.length; i++) {
+    for (var i=1; i<arguments.length; i++) {
         if (isVisible(arguments[i])) {
-           document.getElementById(arguments[i]).click();
+           if (browsertype != 'sf') {document.getElementById(arguments[i]).click();}
+           else {eval(attributeValue(document.getElementById(arguments[i]),'onclick'));}
            return;
         }
     } 
@@ -1718,36 +1782,34 @@ function acceptEnter() {
 }
 
 
-function getForm() {
+function getForm(e) {
+  var csr=getPosition(e); 
+  ypos=csr.y; 
+  xpos=csr.x; 
+  selectMouse(e); 
 
- ypos=getPosition(e).y;
- xpos=getPosition(e).x;
- selectMouse();
+  try {
+       clickedrow=-1;
+       clickedtable="";
 
-try {
+       try {
+            var prevobj;
+            if (!window.event) {prevobj=e.target.parentNode;}
+            else {prevobj=event.srcElement.parentNode}
+       } catch (e) {return}
 
-clickedrow=-1;
-clickedtable="";
+       for (var i=0; i < 10; i++) {
+            if (prevobj.tagName=='TR' && clickedrow==-1) {clickedrow=prevobj.rowIndex;}
+            if (prevobj.tagName=='TABLE' && clickedtable=="") clickedtable=prevobj.id
+            try {
+                 if (prevobj.tagName=='FORM' || prevobj.tagName=='BODY') {i=11;}
+                 else {prevobj=prevobj.parentNode};
+            } catch (e) {i=11}
+       }
 
-try {
-var prevobj=event.srcElement.parentNode;
-} catch (e) {return}
+       try {if (prevobj.tagName=='FORM') {focusform=prevobj.name}} catch (e) {}
 
-for (var i=0; i < 10; i++)
-{
-
- if (prevobj.tagName=='TR' && clickedrow==-1) {clickedrow=prevobj.rowIndex;}
- if (prevobj.tagName=='TABLE' && clickedtable=="") clickedtable=prevobj.id
-
- try {
-     if (prevobj.tagName=='FORM' || prevobj.tagName=='BODY') {i=11;}
-      else {prevobj=prevobj.parentNode};
- } catch (e) {i=11}
-}
-
-try {if (prevobj.tagName=='FORM') {focusform=prevobj.name}} catch (e) {}
-
-} catch (e2) {}
+  } catch (e2) {}
 
 }
 
@@ -1816,7 +1878,7 @@ function addRow (tableid) {
     }
   }
   try {
-   if (doscroll.toUpperCase()=='*SCROLL') {rows[currentrow].scrollIntoView(true)}
+   if (doscroll.toUpperCase()=='*SCROLL') {rows[currentrow].scrollIntoView(false)}
   } catch (e){};
 
   return row.rowIndex;
@@ -2060,34 +2122,6 @@ if (eof == true) {eof=eofsaved; return false;}
 else {eof=eofsaved; return true};
 }
 
-
-function valueOfCol(fld) {
- usehtml=false; 
- fld=fld.split(':');
- if (fld.length>1) {
-     if (fld[1]=='html') {
-         usehtml=true;
-     }
- }
- fld=fld[0];
- var obj=document.getElementsByName(fld); 
- if (obj == null) return;
-
- if (obj[0].tagName != "TD") {
-    try {return(obj[currentrow].value);} catch (e) {return}
-    return;
- }
- for (var i=0; i<headcol.length; i++) {
-      if (headcol[i].id==fld) {
-          if (!usehtml) {
-              if (headcol[i].fldtype && headcol[i].fldtype=='numeric') {return numeric(col[i].innerText)}
-              else {return(col[i].innerText)};
-          }
-          return col[i].innerHTML;
-      }
- }
-}
-
 function readObjRow(obj) {
 
  eof=false;
@@ -2121,27 +2155,91 @@ function readObjRow(obj) {
 
 }
 
-function changeCol(from, tovalue, type)
-{
- var obj=document.getElementsByName(from);
- if (obj == null) return;
- if (type) {
-    type=''+type;
-    type=type.toLowerCase();
-    if (type=='date') {type='*date'}  
+function valueOfCol(fld) {
+ usehtml=false; 
+ fld=fld.split(':');
+ if (fld.length>1) {
+     if (fld[1]=='html') {
+         usehtml=true;
+     }
  }
- if (obj[0].tagName != "TD") {
-    //try {obj[currentrow].value=tovalue;} catch (e) {return}
-    try {
-         var$_object=true;
-         changeVar(obj[currentrow],tovalue);
-    }    catch(e) {var$_object=false; return}
-    return;
+ fld=fld[0];
+
+ var intable=false;
+
+ for (var i=0; i<headcol.length; i++) {
+      if (headcol[i].id==fld) {
+          intable=true;
+          if (!usehtml) {
+              if (headcol[i].fldtype && headcol[i].fldtype=='numeric') {
+                  if (browsertype != 'ie') {
+                        return numeric(col[i].textContent); 
+                  }
+                  else {
+                        return numeric(col[i].innerText);
+                  }
+             }
+              else {
+                    if (browsertype != 'ie') {return col[i].textContent}
+                    else {return(col[i].innerText)};
+              } 
+          }
+          return col[i].innerHTML;
+      }
  }
 
-   for (var i=0; i<headcol.length; i++)
+ if (!intable) {
+     var obj=document.getElementsByName(fld); 
+     if (obj == null) return;
+     if (obj[0].tagName != "TD") {
+        try {return(obj[currentrow].value);} catch (e) {return}
+        return;
+     }
+ }
+
+}
+
+function timeValueOfCol(fld) {
+  var vlu=valueOfCol(fld); 
+  tvlu=vlu.split(':');
+  if (tvlu.length==1) {return numeric(tvlu)}
+  var hr=tvlu[0];
+  var ampm=tvlu[1].sst(3,2).toLowerCase();
+  if (ampm != 'am' && ampm != 'pm') {return numeric(vlu)}
+  var min=tvlu[1].sst(1,2);  
+  if (ampm=='pm') {
+      hr=numeric(hr)+12;
+      if (hr==24) {hr=12}
+      return numeric(hr+''+min); 
+  }
+  else {
+     if (hr=='12' && min=='00') {
+         hr=24;
+         return numeric(hr+''+min); 
+     }
+     if (hr=='12' && min!='00') {return min}
+     return numeric(hr+''+min);
+  }
+}
+
+function dateValueOfCol(fld) {
+  var vlu=valueOfCol(fld); 
+  var dvlu=vlu.split('/');
+  if (dvlu[0].length==4 || dvlu.length==1) {return numeric(vlu)}
+  return numeric(vlu).chgDateFmt('D'); // Note this does not facilitate mm/dd/yyyy format as yet  
+}
+
+function changeCol(from, tovalue, type)
+{
+  var obj=document.getElementsByName(from);
+  if (obj == null) return;
+
+  var intable=false;
+  for (var i=0; i<headcol.length; i++)
    if (headcol[i].id==from) {
-      col[i].innerHTML=tovalue+'&'; 
+      intable=true;
+      if (browsertype=='ie') {col[i].innerHTML=tovalue+'&'}
+      else {col[i].innerHTML=tovalue} 
       try {
           var i2=i;
           if (col[i+1] && col[i+1].className=='columnseparator2') {i2=i/2}
@@ -2150,13 +2248,27 @@ function changeCol(from, tovalue, type)
       } catch(e) {};
       return;
    }
-}
+
+   if (!intable) {
+       var obj=document.getElementsByName(from);
+       if (obj == null) return;
+       if (type) {
+           type=''+type;
+           type=type.toLowerCase();
+           if (type=='date') {type='*date'}  
+       }
+       try {
+           var$_object=true;
+           changeVar(obj[currentrow],tovalue,type);
+       }   catch(e) {var$_object=false; return}
+   }
+ }
 
 
 
 function setColAttr(clumn, attr, tto)
 {
-  var obj=document.getElementsByName(clumn);
+  var obj=document.getElementById(clumn);
   if (obj == null) return;
 
   for (var i=0; i<headcol.length; i++)
@@ -2167,12 +2279,16 @@ function setColAttr(clumn, attr, tto)
 
 
 
-function eventKey() {
-var keycode=0;
-if (window.event) keycode = window.event.keyCode;
-return(keycode);
+function eventKey(evt) {
+ return(getKeyCode(evt)); 
 }
 
+
+function attributeValue(obj,item) {
+  try {
+    return obj.attributes.getNamedItem(item).value; 
+  }  catch(e) {return undefined}
+}
 
 var$_object=false;
 
@@ -2195,17 +2311,17 @@ function changeVar(invar, newvalue, fldtype) {
     }
     catch (e) {fld.value=newvalue}
 
-    if (fld.fldtype=='numeric' && fld.editcode) {
-        fld.value=edit(newvalue,fld.decimal,fld.editcode,fld.length);
+    if (attributeValue(fld,'fldtype')=='numeric' && fld.attributes.getNamedItem('editcode')) {
+        fld.value=edit(newvalue,attributeValue(fld,'decimal'),attributeValue(fld,'editcode'),attributeValue(fld,'length'));
     } 
     else {
-       if (fld.fldtype == 'char') {
+       if (attributeValue(fld,'fldtype')== 'char') {
            if (istext==false) {fld.value=''+fld.value};
-           var len=numeric(fld.length);
+           var len=numeric(attributeValue(fld,'length'));
            if (len<fld.value.length) {
               try {fld.value=fld.value.sst(1,len)} catch(e){} 
            }
-           if (fld.upper != undefined) {fld.value=fld.value.toUpperCase()} 
+           if (fld.attributes.getNamedItem('upper') != undefined) {fld.value=fld.value.toUpperCase()} 
        } 
     }
  }
@@ -2216,12 +2332,12 @@ function changeVar(invar, newvalue, fldtype) {
       var d1obj=document.getElementById(d1); if (!d1obj) return;
       var d2obj=document.getElementById(d2); if (!d2obj) return;
       var d3obj=document.getElementById(d3); if (!d3obj) return;
-      if (d3obj.dt.sst(1,1)=='d') {
+      if (d3obj.attributes.getNamedItem('dt').value.sst(1,1)=='d') {
          if (fldtype=='date' || fldtype=='*date') {
-            var fmt=d3obj.dt.sst(2,1);
+            var fmt=d3obj.attributes.getNamedItem('dt').value.sst(2,1);
             newvalue=numeric(newvalue).chgDateFmt('Y',fmt);
          }
-         if (d1obj.size==4) {
+         if (d1obj.attributes.getNamedItem('size').value==4) {
             newvalue=editWord(newvalue,'    /  /  ').split('/')
          }	
          else {
@@ -2264,7 +2380,7 @@ function changeVar(invar, newvalue, fldtype) {
            if (newvalue.length>1) {d2obj.value=newvalue[1]};
            if (newvalue.length>0) {d1obj.value=newvalue[0]}; 
            if (d2obj.value>'59') {d2obj.value='59'} 
-           if (d3obj.dt=='ts') {
+           if (d3obj.attributes.getNamedItem('dt').value=='ts') {
              var hr=numeric(d1obj.value);
              if (hr>24) {hr=24}
              if (hr>=12) {
@@ -2322,8 +2438,8 @@ function valueOf(invar) {
   if (!obj) return '';
   if (obj.className!='datefield') { 
     try {
-       var fldvalue=document.getElementById(invar).value;
-       if (obj.fldtype=='numeric') {fldvalue=numeric(fldvalue)} 
+       var fldvalue=document.getElementById(invar).value; 
+       try {if (obj.attributes.getNamedItem('fldtype').value=='numeric') {fldvalue=numeric(fldvalue)}} catch(e) {} 
        return fldvalue;
     } catch (e) {return '';}
   }
@@ -2333,9 +2449,9 @@ function valueOf(invar) {
     var d3='d3#$'+invar;
     var d1obj=document.getElementById(d1); if (!d1obj) return '';
     var d2obj=document.getElementById(d2); if (!d2obj) return '';
-    var d3obj=document.getElementById(d3); if (!d3obj) return '';
-    if (d3obj.dt.sst(1,1)=='d') {
-        var fmt=d3obj.dt.sst(2,1);
+    var d3obj=document.getElementById(d3); if (!d3obj) return ''; 
+    if (d3obj.attributes.getNamedItem('dt').value.sst(1,1)=='d') {
+        var fmt=d3obj.attributes.getNamedItem('dt').value.sst(2,1);
         if (fmt=='y') {return numeric(d1obj.value+''+d2obj.value+''+d3obj.value)}
         if (fmt=='m') {return numeric(d3obj.value+''+d1obj.value+''+d2obj.value)}
         return numeric(d3obj.value+''+d2obj.value+''+d1obj.value);
@@ -2343,7 +2459,7 @@ function valueOf(invar) {
     else {
       var hr=numeric(d1obj.value);
       var min=numeric(d2obj.value);
-      if (d3obj.dt == 'ts') {
+      if (d3obj.attributes.getNamedItem('dt').value == 'ts') {
         if (d3obj.value=='PM') {
           hr=hr+12;
           if (hr==24) {hr=12}
@@ -2404,13 +2520,18 @@ function neverShow() {
 }
 
 function changeContent(element, htmltext) {
- htmltext +='&';
- if (element=='*import') element='divextform';
-  try {
-   document.getElementById(element).innerHTML=htmltext;
-   } catch (e) {document.getElementById(element).innerText=htmltext;}
- return;
+if (browsertype=='ie') {htmltext +='&';}
+if (browsertype!='ie' && fu$$width>0) {
+    var elewidth=fu$$width;
+    fu$$width=0;
+    try {document.getElementById(element).style.width=elewidth+'px'} catch(e) {}
 }
+if (element=='*import') element='divextform';
+try {
+  document.getElementById(element).innerHTML=htmltext;
+  } catch (e) {document.getElementById(element).innerText=htmltext;}
+return;
+ }
 
 function assignContent(element, element2) {
   if (element=='*import') element='divextform';
@@ -2422,8 +2543,13 @@ function assignContent(element, element2) {
 function contentOf(element,type) {                            
 if (!type) var type='text'                                    
 if (element=='*import') element='divextform';                 
-if (!type || type=='text' || type=='*text')                   
-   return document.getElementById(element).innerText;         
+if (!type || type=='text' || type=='*text')  
+   if (browsertype=='ie') {                 
+      return document.getElementById(element).innerText;         
+   }
+   else {
+      return document.getElementById(element).textContent;
+   }
 else                                                         
    return document.getElementById(element).innerHTML;         
 }                                                            
@@ -2521,7 +2647,7 @@ function  checkCol(chkfld) {
 
 function popUpContent(content) {
 var parent="";
-var toppos=ypos;
+var toppos=ypos; 
 var leftpos=xpos;
 var offset=0;
 var transform='';
@@ -2537,7 +2663,7 @@ try {
 catch (e) {}
 var ref = '*CURSOR';
 var posn = '*UNDER';
-if (arguments.length>1) ref=arguments[1].toUpperCase();
+if (arguments.length>1) ref=arguments[1];
 if (arguments.length>2) posn=arguments[2].toUpperCase();
 
 try {
@@ -2666,7 +2792,7 @@ for (var i=0; i<arguments.length; i++)
   if (element.length==1) form=focusform;
      else form=element[1];
   try {
-   obj=document.getElementById(form);
+   obj=document.getElementsByName(form)[0];
   } catch (e) {alert('required form - '+form+' - not found'); return}
 
    for (var j=0; j<obj.length; j++) {
@@ -2674,7 +2800,7 @@ for (var i=0; i<arguments.length; i++)
           try {obj[j].disabled=true} catch (e2) {};
       } 
       try {
-          calfld=obj[j].name.split('d1#$')[1];
+          calfld=obj[j].id.split('d1#$')[1];
           try {document.getElementById(calfld+'_calendar').style.visibility='hidden';} catch(e){};
           try {document.getElementById(calfld+'_search').style.visibility='hidden';} catch(e){};
       } catch(e) {};
@@ -2746,12 +2872,12 @@ for (var i=0; i<arguments.length; i++)
   if (element.length==1) form=focusform;
      else form=element[1];
   try {
-   obj=document.getElementById(form);
+   obj=document.getElementsByName(form)[0];
   } catch (e) {alert('required form - '+form+' - not found'); return}
 
    for (var j=0; j<obj.length; j++)
-   { 
-   if (obj[j].protected != undefined) {continue} 
+   {
+   if (attributeValue(obj[j],'protected') != undefined) {continue} 
    if (obj[j].tagName != 'BUTTON') {
     try {obj[j].readOnly=false} catch (e) {};
     try {obj[j].disabled=false} catch (e2) {};
@@ -2776,7 +2902,7 @@ for (var i=0; i<arguments.length; i++)
    if (obj.tagName != 'BUTTON') {
       try {document.getElementById(element[0]+'_calendar').style.visibility='visible'} catch(e) {};
       try {document.getElementById(element[0]+'_search').style.visibility='visible'} catch(e) {};
-      if (obj.protected != undefined) {return}
+      if (attributeValue(obj,'protected') != undefined) {return}
       if (obj.className != "datefield") {  
          try {obj.disabled=false} catch (e2) {};
          if ((obj.tagName == 'INPUT' || obj.tagName == 'TEXTAREA') && obj.className != 'outputastext') {
@@ -2866,19 +2992,20 @@ for (var i=0; i<arguments.length; i++)
 
 
 function clearForm(form) {
- var formtoclear=document.getElementById(form);
+ var formtoclear=document.getElementsByName(form)[0];
   for (var i=0; i<formtoclear.length; i++)
   {
    if (formtoclear[i].tagName != 'TD' && formtoclear[i].tagName != 'BUTTON' && formtoclear[i].type != 'checkbox' &&  formtoclear[i].type != 'radio' && formtoclear[i].type != 'button')
    try {
        formtoclear[i].value=""; 
-       if (formtoclear[i].className=='subdatefield' && formtoclear[i].name.sst(1,4)=='d3#$') {
+       if (formtoclear[i].className=='subdatefield' && formtoclear[i].id.sst(1,4)=='d3#$') {
           var objp=formtoclear[i].parentNode.parentNode; 
           changeVar(objp.id,''); 
        }
        if (formtoclear[i].className=='numeric') {formtoclear[i].value=0}
    } catch (e) {}
   }
+ 
 }
 
 
@@ -3059,6 +3186,7 @@ function editDate(value,fmt) {
  } catch(e) {return ''}
 }
 
+
 function editTime(value,fmt) {
  if (isBlank(value)) { value=0;} 
  if (!fmt) {var fmt='A'}
@@ -3073,10 +3201,11 @@ function editTime(value,fmt) {
  } catch(e) {return false}
 }
 
-function newClass(newclass) {
-try {
-   event.srcElement.className=newclass;} catch (e) {}
-return;
+function newClass(obj,newclass) {
+  try {
+       obj.className=newclass;
+  } catch (e) {}
+  return;
 }
 
 function exit() {
@@ -3095,7 +3224,7 @@ function viewSource() {
     htmltxt='<div id="divsource" class="window" style="display:none; top:50; left:20; z-index:100000">';
     htmltxt=htmltxt+'<div class="titleBar">View Source</div>'
     htmltxt=htmltxt+'<img SRC="../image/closewin_icon.gif"  alt="close"  class="ximage" onClick="hideElement(divsrc); clearSourceTxt()"> </img>';
-//  htmltxt=htmltxt+'<form name="source">';
+//  htmltxt=htmltxt+'<form name="source" onsubmit="return false">';
     htmltxt=htmltxt+'<textarea id=sourcetxt readonly cols=120 rows=40 wrap=virtual style="font-family:garmond"></textarea>';
     htmltxt=htmltxt+'<br>';
     htmltxt=htmltxt+'<BUTTON onclick="hideElement(divsrc); clearSourceTxt()">Close</button>';
@@ -3106,14 +3235,13 @@ function viewSource() {
         document.getElementsByTagName('body')[0].appendChild(divform);
   //    workarea.appendChild(divform);
   }
-
   var txt=unescape(document.body.innerHTML);
    // txt=url.replace(/&gt/g, ">");
    // txt=url.replace(/&lt/g, "<");
   changeVar('sourcetxt',txt);
   showElement('divsource');
 
- } catch (e) {}
+ } catch (e) {alert(e.message)}
 
 }
 
@@ -3367,7 +3495,7 @@ var invalue='';
       else {
            invalue=arguments[1];
       }
-      for (i=0; i<obj.length; i++) {
+      for (var i=0; i<obj.length; i++) {
           if (obj[i].value==invalue) {
              return (obj[i].text);
           }
@@ -3410,7 +3538,7 @@ function createTabsForm(container) {
      iswindow=true;
  }
  var txt="<div id='div"+tabform.name+"' class= '"+tabform.formclass+"' style='"+tabform.formstyle+"'>"; 
- txt += "<form name='"+tabform.name+"'style='padding:0; margin:0;'>"; 
+ txt += "<form name='"+tabform.name+"' id='"+tabform.name+"' onsubmit='return false' style='padding:0; margin:0;'>"; 
  if (iswindow) {
      txt += "<div class=titlebar id="+tabform.name+"title ></div>";
      txt += "<img src='../image/closewin_icon.gif'  alt='close'  class=ximage onClick=closeForm()><br>";
@@ -3485,7 +3613,6 @@ function constructTabs(form) {
     obj.onmouseup=function () {}
   }
 
-
   var spacing=4;
   var divobjar = new Array();
   var divobjarlen=0;
@@ -3515,7 +3642,8 @@ function constructTabs(form) {
             obj.style.display='';
             top=0-obj.offsetHeight;
             obj.style.top=top;
-            addToClick(obj); 
+            obj.onclick=function() {tabSelect(this.id.strip('data'))};
+            //obj.onclick=function () {tabSelect(obj.id.strip('data'))};
             if (i==0) {
                obj.style.left=spacing;
                objprv=obj;
@@ -3561,26 +3689,27 @@ function constructTabs(form) {
   if (form.className.toLowerCase()=='tabswindow') {form.className='window'}
   //form.className='window';
 
-  firstobj.click();
+  //try {firstobj.click()} catch(e) {alert(e.message)}
+  tabSelect(firstobj.id.strip('data'));
 
 }
 
 
-function tabSelect() {
-  var tabselectcolor='';
-  var srcobj=event.srcElement;
-  if (checkTabStatus(srcobj.id)==false) {return false} 
-  if (srcobj.tagName=='IMG') {srcobj=srcobj.parentNode;}
-  var tabobj=srcobj.parentNode;
-  if (tabobj.tabselectcolor) {
-     tabselectcolor=tabobj.tabselectcolor; 
+function tabSelect(srcobj) {
+  if (typeof srcobj=='string') {
+      srcobj=document.getElementById(srcobj);
   } 
+  if (checkTabStatus(srcobj.id)==false) {return false} 
+  var tabselectcolor='';
+  if (srcobj.tagName=='IMG') {srcobj=srcobj.parentNode;}
+  var tabobj=srcobj.parentNode; 
+  tabselectcolor=attributeValue(tabobj,'tabselectcolor'); 
   //if (tabselectcolor) {
      //srcobj.style.backgroundColor=tabselectcolor;
   //}
   //tabobj.style.backgroundColor=srcobj.style.backgroundColor;
-  var divobj=tabobj.getElementsByTagName('div');
-  var obj2=srcobj.id+'data';
+  var divobj=tabobj.getElementsByTagName('div'); 
+  var obj2=srcobj.id+'data'; 
   obj2=document.getElementById(obj2);
   if (!obj2) return;
   obj2.style.top=10;
@@ -3619,18 +3748,21 @@ function tabSelect() {
 }
 
 function showTab(tabname) {
-  var tabsts=checkTabStatus(tabname);
-  if (tabsts==false) {return false}
-  var obj=document.getElementById(tabname);
-  if (obj!=null) {
-     if (obj.className=='tab') {
-        var parentobj=obj.parentNode;
-        if (isVisible(parentobj.id)) {
-           obj.click();
-        }
-     }
-  }
-  return true;
+ var tabsts=checkTabStatus(tabname);
+ if (tabsts==false) {return false}
+ try {
+   var obj=document.getElementById(tabname);
+   if (obj!=null) {
+      if (obj.className=='tab') {
+         var parentobj=obj.parentNode;
+         if (isVisible(parentobj.id)) {
+            //obj.click();
+            tabSelect(obj.id.strip('data'));
+         }
+      }
+   }
+ } catch(e) {}
+ return true;
 }
 
 
@@ -3653,12 +3785,13 @@ function checkTabStatus(tabname) {
       } catch(e) {alert(e.message); return false}
       if (tabrtn==false) {
           currenttab=previoustab;
-          previoustab=pt; 
+          previoustab=pt;
           return false;
       }
   } 
   return true;
 }
+
 
 
 function showElementTab(element) {
@@ -4011,11 +4144,44 @@ if (!isNaN(width)) {
 
 
 
-function exeFunction(string,text,nodefault) {
+function exeFunction2(string,text,nodefault) {
+  exefstring=string;
+  exeftext=text;
+  exefnodefault=nodefault;
   changeCursor('wait');
+  if (exeftext) {say(exeftext);}
+  else {var text='*none'}
+  setTimeout(function() {functionExe()},1);
+  return true;
+}
+
+function functionExe2() {
+  var string=exefstring;
+  var text=exeftext;
+  var nodefault=exefnodefault;
+  try {eval(string)}
+  catch(e) {changeCursor('default'); say(''); alert(e.message); return}
+  if (!nodefault || nodefault=='undefined') {changeCursor('default')};
+  if (text!='*none') {say('');} 
+}
+
+function exeFunction(string,text,nodefault) {
+  var $delay$time=1;
+  switch (browsertype)
+  {
+    case 'sf': $delay$time=20;
+            break;
+    case 'ff': $delay$time=50;
+            break;
+    case 'ie': $delay$time=1;
+            break;
+    default:  $delay$time=1;
+  } 
   if (text) {say(text);}
   else {var text='*none'}
-  setTimeout('functionExe("'+string+'","'+text+'","'+nodefault+'")',10);
+  setTimeout('functionExe("'+string+'","'+text+'","'+nodefault+'")',$delay$time);
+  changeCursor('wait'); 
+  return true;
 }
 
 function functionExe(string,text,nodefault) {
@@ -4026,15 +4192,16 @@ function functionExe(string,text,nodefault) {
 }
 
 
+function autoJump(e,field,full) {
 
-function autoJump(field,full) {
-
- var key = window.event.keyCode; 
+ var key = getKeyCode(e); 
  if ((key==null) || (key==0) || (key==8) || (key==9) || (key==13) || (key==16) || (key==27) || (key==37) || (key==38) || (key==39) || (key==40)) {
-    return;
+     return;
  }
+
  if (field) {
-     var obj = event.srcElement;
+     //var obj = event.srcElement;
+     var obj=e.target? e.target : e.srcElement; 
      if (obj.value.length==obj.size) {
         if (full) {
            var f2='d2#$'+full; 
@@ -4063,10 +4230,10 @@ function autoJump(field,full) {
 
 
 
-function numbersOnly(field) {
+function numbersOnly(e) {
 
- var key = window.event.keyCode;
- var keychar = String.fromCharCode(key);
+ var key=getKeyCode(e);
+ var keychar = String.fromCharCode(key); 
 
  // control keys
  if ((key==null) || (key==0) || (key==8) || (key==9) || (key==13) || (key==27)) {
@@ -4082,8 +4249,7 @@ function numbersOnly(field) {
 }
 
 
-function setToNbr() {
- var obj = event.srcElement;
+function setToNbr(obj) {
  if (isBlank(obj.value)) return
  while (obj.value.length<obj.size) {
        obj.value='0'+obj.value;
@@ -4304,7 +4470,6 @@ function hoursDuration(strdate,enddate,timstart,timend) {
      
  }
 
-
  var strtimch=''+strtim;
  if (strtimch.length==3) {strtimch='0'+strtimch;}
  if (strtimch.length==2) {strtimch='00'+strtimch;}
@@ -4339,9 +4504,11 @@ function hoursDuration(strdate,enddate,timstart,timend) {
 }
 
 
-function createDateVar(el,fmt,protected) {
+function createDateVar(el,fmt,protected,onlyread) {
  var protect='';
+ var readonlytxt='';
  if (protected != undefined) {protect=" protected='yes' "}
+ if (onlyread != undefined) {readonlytxt=" readonly "}
  if (!fmt) {
     var fmt='y';
  }
@@ -4353,24 +4520,24 @@ function createDateVar(el,fmt,protected) {
  var d2='d2#$'+el;
  var d3='d3#$'+el;
  var w1='3em';
- var w2='1.4em';
- var w3='1.4em';
+ var w2='1.5em';
+ var w3='1.5em';
  var s1='4';
  var s2='2';
  var s3='2';
 
  if (fmt!='y') {
-    w1='1.4em';
+    w1='1.5em';
     w3='3em';
     s1='2';
     s3='4';
  }
 
  
- var txt="<span id="+el+"inner fldval=''; style='background-color:white; border:2px inset; overflow:hidden; padding:0; padding-right:1px; padding-top:1.5px; padding-left:2px'>";
- txt += "<input class=subdatefield "+protect+"name="+d1+" size="+s1+" maxlength="+s1+" onKeyPress='return numbersOnly()' onKeyUp=autoJump('"+d2+"','"+el+"') onBlur=$setDateSubFld(this,'"+el+"') onfocus=intlFocus('"+el+"') style='border:none; padding:0; width:"+w1+"'>/&nbsp";
- txt += "<input class=subdatefield "+protect+"name="+d2+" size="+s2+" maxlength="+s2+" onKeyPress='return numbersOnly()' onKeyUp=autoJump('"+d3+"') onBlur=$setDateSubFld(this,'"+el+"') onfocus=intlFocus('"+el+"') style='border:none; padding:0; width:"+w2+"'>/&nbsp";
- txt += "<input dt='d"+fmt+"' class=subdatefield "+protect+"name="+d3+" size="+s3+" maxlength="+s3+" onKeyPress='return numbersOnly()' onBlur=$setDateSubFld(this,'"+el+"') onfocus=intlFocus('"+el+"') style='border:none; padding:0; width:"+w3+"'></span>";
+ var txt="<span id="+el+"inner fldval='' style='background-color:white; border:2px inset; padding:0; padding-right:1px; padding-top:1.5px; padding-left:2px'>";
+ txt += "<input class=subdatefield "+protect+readonlytxt+"name="+d1+" id="+d1+" size="+s1+" maxlength="+s1+" onKeyPress='return numbersOnly(event)' onKeyUp=autoJump(event,'"+d2+"','"+el+"') onBlur=$setDateSubFld(this,'"+el+"') onfocus=intlFocus('"+el+"') style='border:none; padding:0; width:"+w1+"'>/&nbsp";
+ txt += "<input class=subdatefield "+protect+readonlytxt+"name="+d2+" id="+d2+" size="+s2+" maxlength="+s2+" onKeyPress='return numbersOnly(event)' onKeyUp=autoJump(event,'"+d3+"') onBlur=$setDateSubFld(this,'"+el+"') onfocus=intlFocus('"+el+"') style='border:none; padding:0; width:"+w2+"'>/&nbsp";
+ txt += "<input dt='d"+fmt+"' class=subdatefield "+protect+readonlytxt+"name="+d3+" id="+d3+" size="+s3+" maxlength="+s3+" onKeyPress='return numbersOnly(event)' onBlur=$setDateSubFld(this,'"+el+"') onfocus=intlFocus('"+el+"') style='border:none; padding:0; width:"+w3+"'></span>";
  changeContent(el,txt);
 
 // Below is work being done to allow autovalidation of a date field. To test, copy the source into a text file remove the comment, etc.
@@ -4378,9 +4545,9 @@ function createDateVar(el,fmt,protected) {
 //       if the calendar on the new date is clicked  
 //<SPAN id=nwdate class=datefield type="date">
 //   <SPAN style="BORDER-BOTTOM: 2px inset; BORDER-LEFT: 2px inset; PADDING-BOTTOM: 0px; BACKGROUND-COLOR: white; PADDING-LEFT: 2px; PADDING-RIGHT: 1px; OVERFLOW: hidden; BORDER-TOP: 2px inset; BORDER-RIGHT: 2px inset; PADDING-TOP: 1px">
-//     <INPUT onblur=$setDateSubFld(this,'nwdate') onfocus="$in$dtf$=10" style="BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; WIDTH: 1.4em; PADDING-RIGHT: 0px; BORDER-TOP: medium none; BORDER-RIGHT: medium none; PADDING-TOP: 0px" class=subdatefield onkeypress="return numbersOnly()" onkeyup="autoJump('d2#$nwdate','nwdate')" name=d1#$nwdate maxLength=2 size=2>/&nbsp;
-//     <INPUT onblur=$setDateSubFld(this,'nwdate') onfocus="$in$dtf$=10" style="BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; WIDTH: 1.4em; PADDING-RIGHT: 0px; BORDER-TOP: medium none; BORDER-RIGHT: medium none; PADDING-TOP: 0px" class=subdatefield onkeypress="return numbersOnly()" onkeyup="autoJump('d3#$nwdate')" name=d2#$nwdate maxLength=2 size=2>/&nbsp;
-//     <INPUT onblur=$setDateSubFld(this,'nwdate') onfocus="$in$dtf$=10" style="BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; WIDTH: 3em; PADDING-RIGHT: 0px; BORDER-TOP: medium none; BORDER-RIGHT: medium none; PADDING-TOP: 0px" class=subdatefield onkeypress="return numbersOnly()" name=d3#$nwdate maxLength=4 size=4 dt="dd">
+//     <INPUT onblur=$setDateSubFld(this,'nwdate') onfocus="$in$dtf$=10" style="BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; WIDTH: 1.4em; PADDING-RIGHT: 0px; BORDER-TOP: medium none; BORDER-RIGHT: medium none; PADDING-TOP: 0px" class=subdatefield onkeypress="return numbersOnly(event)" onkeyup="autoJump('d2#$nwdate','nwdate')" name=d1#$nwdate maxLength=2 size=2>/&nbsp;
+//     <INPUT onblur=$setDateSubFld(this,'nwdate') onfocus="$in$dtf$=10" style="BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; WIDTH: 1.4em; PADDING-RIGHT: 0px; BORDER-TOP: medium none; BORDER-RIGHT: medium none; PADDING-TOP: 0px" class=subdatefield onkeypress="return numbersOnly(event)" onkeyup="autoJump('d3#$nwdate')" name=d2#$nwdate maxLength=2 size=2>/&nbsp;
+//     <INPUT onblur=$setDateSubFld(this,'nwdate') onfocus="$in$dtf$=10" style="BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; WIDTH: 3em; PADDING-RIGHT: 0px; BORDER-TOP: medium none; BORDER-RIGHT: medium none; PADDING-TOP: 0px" class=subdatefield onkeypress="return numbersOnly(event)" name=d3#$nwdate maxLength=4 size=4 dt="dd">
 //   </SPAN>&nbsp;
 //   <IMG id=nwdate_calendar onmouseover="$in$dtf$=55;" onmouseout="$in$dtf$=0;" onclick="promptCal('nwdate')" border=1 align=middle src="../image/cal.jpg"></IMG>
 //</SPAN>
@@ -4394,27 +4561,23 @@ function $setDateSubFld(obj,fld) {
 }
 
 function $dateFieldOnChange(fld) {
+ try {
   eval('var $in$dtf$ = '+fld+'$in$dtf$');
   if ($in$dtf$==0) {
       var df=valueOf(fld);
-      eval('var ff='+fld+'inner.fldval');
-      eval(fld+'inner.fldval=""');
-      //if (df !=0) {
-      //    if (!validDate(valueOf(fld))) {
-      //        alert('invalid date');
-      //        focusOn(fld);
-      //        return false;
-      //    }
-      //} 
+      eval('var ff='+fld+'inner.fldval'); 
+      eval(fld+'inner.fldval=""'); 
       if (ff != df) {
-          eval('var fchg='+fld+'.onchange'); eval(fchg);
+          eval('var fchg='+fld+'.ondatechange'); eval(fchg);
+          //var fchg=attributeValue(fld,'onchange'); eval(fchg);
       }
   }
+ } catch(e) {alert(e.message)}
 }
 
 function intlFocus(fld) {
   eval(fld+'$in$dtf$=10');
-  eval('var ff='+fld+'inner.fldval');
+  eval('var ff='+fld+'inner.fldval'); 
   if (!ff) {
       if (ff != '0') {
         eval(fld+'inner.fldval=valueOf("'+fld+'")');
@@ -4423,9 +4586,11 @@ function intlFocus(fld) {
 }
 
 
-function createTimeVar(el,fmt,protected) {
+function createTimeVar(el,fmt,protected,onlyread) {
  var protect='';
+ var readonlytxt='';
  if (protected != undefined) {protect=" protected='yes' "}
+ if (onlyread != undefined) {readonlytxt=" readonly "}
  if (!fmt) {
     var fmt='s';
  }
@@ -4436,21 +4601,21 @@ function createTimeVar(el,fmt,protected) {
  var d1='d1#$'+el;
  var d2='d2#$'+el;
  var d3='d3#$'+el;
- var w1='1.4em';
- var w2='1.4em';
+ var w1='1.5em';
+ var w2='1.5em';
  var w3='3em'; 
  var s1='2';
  var s2='2';
  var s3='4';
 
- var txt="<span id="+el+"inner fldval=''; style='background-color:white; border:2px inset; overflow:hidden; padding:0; padding-right:1px; padding-top:1.5px; padding-left:2px'>";
- txt += "<input class=subdatefield "+protect+"name="+d1+" size="+s1+" maxlength="+s1+" onKeyPress='return numbersOnly()' onKeyUp=autoJump('"+d2+"') onBlur=$setTimeSubFld(this,'"+el+"') onfocus=intlFocusTime('"+el+"') style='border:none; padding:0; width:"+w1+"'><b>:</b>&nbsp";
- txt += "<input class=subdatefield "+protect+"name="+d2+" size="+s2+" maxlength="+s2+" onKeyPress='return numbersOnly()' onKeyUp=autoJump('"+d3+"') onBlur=$setTimeSubFld(this,'"+el+"') onfocus=intlFocusTime('"+el+"') style='border:none; padding:0; width:"+w2+"'>";
+ var txt="<span id="+el+"inner fldval='' style='background-color:white; border:2px inset; padding:0; padding-right:1px; padding-top:1.5px; padding-left:2px'>";
+ txt += "<input class=subdatefield "+protect+readonlytxt+"id="+d1+" name="+d1+" size="+s1+" maxlength="+s1+" onKeyPress='return numbersOnly(event)' onKeyUp=autoJump(event,'"+d2+"') onBlur=$setTimeSubFld(this,'"+el+"') onfocus=intlFocusTime('"+el+"') style='border:none; padding:0; width:"+w1+"'><b>:</b>&nbsp";
+ txt += "<input class=subdatefield "+protect+readonlytxt+"id="+d2+" name="+d2+" size="+s2+" maxlength="+s2+" onKeyPress='return numbersOnly(event)' onKeyUp=autoJump(event,'"+d3+"') onBlur=$setTimeSubFld(this,'"+el+"') onfocus=intlFocusTime('"+el+"') style='border:none; padding:0; width:"+w2+"'>";
  if (fmt=='s') {
-     txt += "&nbsp<select dt='ts' class=subdatefield "+protect+"name="+d3+" onBlur=$setTimeSubFld(this,'"+el+"') onfocus=intlFocusTime('"+el+"') style='border:none; padding:0'><option value=AM>AM</option><option value=PM>PM</option></select>";
+     txt += "&nbsp<select dt='ts' class=subdatefield "+protect+readonlytxt+"id="+d3+" name="+d3+" onBlur=$setTimeSubFld(this,'"+el+"') onfocus=intlFocusTime('"+el+"') style='border:none; padding:0'><option value=AM>AM</option><option value=PM>PM</option></select>";
  }
  else {
-     txt += "<input dt='tm' class=subdatefield name="+d3+" style='display:none'>";
+     txt += "<input dt='tm' class=subdatefield id="+d3+" name="+d3+" style='display:none'>";
  }
  changeContent(el,txt);
 }
@@ -4542,10 +4707,9 @@ function promptCal(target,fmt,code) {
  target=target.split(':');
  if (target.length>1) {poppos=target[1]}
  target=target[0]; 
- var targetvalue=document.getElementById(target);
+ var targetvalue=document.getElementById(target); 
  if (!targetvalue) return;
- olddatetargetvalue=valueOf(target);
-
+ olddatetargetvalue=valueOf(target); 
  popcalfmt='*y';
  if (arguments.length>1) {
      if (arguments[1].toUpperCase()=='*D' || arguments[1].toUpperCase()=='D') {
@@ -4573,7 +4737,7 @@ function promptCal(target,fmt,code) {
     var d1obj=document.getElementById(d1); if (!d1obj) return;
     var d2obj=document.getElementById(d2); if (!d2obj) return;
     var d3obj=document.getElementById(d3); if (!d3obj) return;
-    datfldfmt=d3obj.dt.sst(2,1); 
+    datfldfmt=d3obj.attributes.getNamedItem('dt').value.sst(2,1); 
     popcalfmt='*'+datfldfmt;
     if (!isBlank((d1obj.value+d2obj.value+d3obj.value))) {
         targetvalue=d1obj.value+'/'+d2obj.value+'/'+d3obj.value;
@@ -4648,7 +4812,7 @@ function promptCal(target,fmt,code) {
   for (var intLoop = 0; intLoop < cal$days.length; intLoop++) {
       txt += "<TD style=background-color:orange>" + cal$days[intLoop] + "</TD>";
   }
-  txt += '</TR></THEAD><TBODY ID="dayList" ALIGN=CENTER style="cursor:arrow" ONCLICK=getClickedDate()>';
+  txt += '</TR></THEAD><TBODY ID="dayList" ALIGN=CENTER style="cursor:arrow" ONCLICK=getClickedDate(event)>';
   // Generate grid for individual days.
   for (var intWeeks = 0; intWeeks < 6; intWeeks++) {
       txt += "<TR>";
@@ -4658,9 +4822,9 @@ function promptCal(target,fmt,code) {
       txt += "</TR>";
   }
   txt +='</TBODY></TABLE>';
-  txt +='<div class=popcalcancel onclick="hidePopUp();">Cancel</div>';
-  txt +='</div>'
-  changeContent('divpopcal',txt);
+  txt +='<div class=popcalcancel onclick="hidePopUp()">Cancel</div>';
+  //txt +='</div>';
+  changeContent('divpopcal',txt); 
   new$calendar(); 
   if (poppos=='*center' || poppos=='center') {
       showElement('divpopcal');
@@ -4678,10 +4842,10 @@ function promptCal(target,fmt,code) {
       } 
       hideElement('divpopcal');
   }
-  thisdiv.style.top=ypos; thisdiv.style.left=xpos;
+  thisdiv.style.top=ypos+'px'; thisdiv.style.left=xpos+'px';;
   popUp('divpopcal');
-  thisdiv.style.width="0";
-  thisdiv.style.height="0";
+  //thisdiv.style.width="0px";
+  //thisdiv.style.height="0px";
 }
 
  
@@ -4706,11 +4870,11 @@ function new$calendar() {
       document.all.popcalmonth.selectedIndex, 1);
    var day = -1;
    var startDay = newCal.getDay();
-   var daily = 0;
+   var daily = 0; 
    if ((today.year == newCal.getFullYear()) && (today.month == newCal.getMonth()))
-      day = today.day;
+      day = today.day; 
    // Cache the popcalendar table's tBody section, dayList.
-   var tableCal = document.all.popcalendar.tBodies.dayList;
+   var tableCal = document.all.popcalendar.tBodies.dayList;  
    var intcal$daysinmth = getCal$Days(newCal.getMonth(), newCal.getFullYear());
    for (var intWeek = 0; intWeek < tableCal.rows.length; intWeek++)
       for (var intDay = 0; intDay < tableCal.rows[intWeek].cells.length; intDay++) {
@@ -4723,31 +4887,36 @@ function new$calendar() {
          // Highlight the current day.
          cell.className = (day == daily) ? "today" : "";
          // Output the day number into the cell.
-         if ((daily > 0) && (daily <= intcal$daysinmth))
-            cell.innerText = daily++;
-         else
+         if ((daily > 0) && (daily <= intcal$daysinmth)) {
+            cell.innerText = daily;
+            cell.textContent = daily;
+            daily++;  
+         }
+         else {
             cell.innerText = "";
+            cell.textContent=""
+         }  
        }
 
 }
 
-function getClickedDate() {
+function getClickedDate(e) {
    var sDate;
 // This code executes when the user clicks on a day
 // in the popcalendar.
-   if ("TD" == event.srcElement.tagName) {
+   var tg=e.target? e.target.tagName : e.srcElement.tagName;
+   if ("TD" == tg) {
       // Test whether day is valid.
-     if ("" != event.srcElement.innerText) {
-        var m=valueOf('popcalmonth');
-        var d=event.srcElement.innerText;
+     var d=e.target? e.target.textContent : e.srcElement.innerText;
+     if (d != "") {
+        var m=valueOf('popcalmonth'); 
         if (numeric(m) < 10) m='0'+m;
         if (numeric(d) < 10) d='0'+d;
-    //  if (m.length=1) m='0'+m;
-        sDate = document.all.popcalyear.value+"/"+m+ "/"+ d;
+    //  if (m.length=1) m='0'+m; 
+        sDate = document.all.popcalyear.value+"/"+m+ "/"+ d; 
         if (popcalfmt=='*d') {sDate = d + "/"+m+ "/"+ document.all.popcalyear.value;}
         if (popcalfmt=='*m') {sDate = m + "/"+d+ "/"+ document.all.popcalyear.value;}
-      
-	changeVar(datetarget,sDate);
+	changeVar(datetarget,sDate); 
         if (popcalcode !='') {try {eval(popcalcode)} catch(e) {}};
      }
    }
@@ -4776,8 +4945,8 @@ function popUp(id) {
      popupid=id;
      allowpopup=true;
      showElement(id);
-     obj.style.top=ypos;
-     obj.style.left=xpos;
+     obj.style.top=ypos+'px';
+     obj.style.left=xpos+'px'; 
   }
 }
 
@@ -4785,12 +4954,13 @@ function hidePopUp() {
   try {hideElement(popupid)} catch (e) {}
   if (popupid=='divpopcal') {
       try {
-         focusOn(datetarget);
+         focusOn(datetarget); 
          if (olddatetargetvalue != valueOf(datetarget)) {
-             eval(datetarget+'inner.fldval=""');
-             eval('var fchg='+datetarget+'.onchange'); eval(fchg);
+             eval(datetarget+'inner.fldval=""'); 
+             fchg=document.getElementById(datetarget).ondatechange;
+             eval(fchg); 
          }
-      } catch(e) {}
+      } catch(e) {alert(e.message)}
   }
   popupid='';
 }
@@ -4798,6 +4968,7 @@ function hidePopUp() {
 // -------------- Start Fancy Buttons
 
 function buttonDef(type) {
+ if (!type) {var type='submit';}
  this.text='Submit';
  this.width=120;
  this.height=22;
@@ -4806,6 +4977,7 @@ function buttonDef(type) {
  this.areacolor=buttonareacolor;
  this.areapercent=buttonareapercent;
  this.hovereffect='fade';
+ this.type=type;
 
  //******************************************************************************************************** 
  // Valid Types: exit, add, recycle, delete, print,cancel, change, edit, refresh, accept, save, apply, back
@@ -4918,7 +5090,24 @@ function buttonDef(type) {
 
 function createButton(but,div) {
  var butobj=document.getElementById(div);
- if (!butobj) return;
+ if (!butobj) {return;}
+
+ var butname = 'but'+(Math.floor(Math.random() * (99999999 - 1)) + 1);
+
+ //if (browsertype=='iex') {
+ //    but.height=numeric(but.height)+'px';
+ //    but.width=numeric(but.width)+'px';
+ //    if (butobj.innerHTML) {but.text=butobj.innerHTML}
+ //    //butobj.innerHTML="<button class=noniebutton id="+butname+" style='width:"+but.width+"; height:"+but.height+"'>"+but.text+"</button>";
+ //    if (but.type != 'exit') { 
+ //         butobj.innerHTML="<button class=noniebutton id="+butname+" style='height:"+but.height+"'>"+but.text+"</button>";
+ //    }
+ //    else {
+ //         butobj.innerHTML="<button class=nonieexitbutton id="+butname+" style='width:"+but.width+"; height:"+but.height+"px'>"+but.text+"</button>";
+ //    }
+ //   return;
+ //}
+
 
 var dummy$$but=document.getElementById('dummy$$but');
 if (dummy$$but==null) {
@@ -4927,14 +5116,15 @@ if (dummy$$but==null) {
     document.getElementsByTagName('body')[0].appendChild(dummy$$but);
 }
 
- var butname = 'but'+(Math.floor(Math.random() * (99999999 - 1)) + 1);
  var gradienttype='0';
+ var ffgradienttype='top'; 
+ var sfgradienttype='90deg';
  var ele=but.areacolor.length;
  dummy$$but.innerHTML='';
  but.areaalign=but.areaalign.toUpperCase();
- if (but.areaalign!='HORIZONTAL') gradienttype='1';
+ if (but.areaalign!='HORIZONTAL') {gradienttype='1'; ffgradienttype='left'; sfgradienttype='45deg'}
  if (ele<but.areapercent.length) ele=but.areapercent.length;
- var txt='<div class=fancydatawrap style="cursor:hand; border:'+but.border;
+ var txt='<div class=fancydatawrap style="cursor:pointer; border:'+but.border;
  if (but.width) txt += '; width:'+but.width;
  if (but.width) txt += '; height:'+but.height;
  txt += '" onmousedown=chg$$But("in",this,"'+butname+'")';
@@ -4948,12 +5138,23 @@ if (dummy$$but==null) {
      if (but.areaalign=='HORIZONTAL')
         txt +='<div class=fancycolor style="'
      else
-        txt +='<span class=fancycolor style="height:100%;'
+        txt +='<div class=fancycolor style="height:100%;';
      if (but.areacolor[x]) {
         var colors=but.areacolor[x].split(':');
         if (colors.length==1) {txt +='background-color:'+colors[0];}
         else {
-            txt += ' filter:progid:DXImageTransform.Microsoft.Gradient (GradientType='+gradienttype+', StartColorStr=' +colors[0]+' endColorStr=' +colors[1]+')';
+            if (browsertype=='ie') {
+                txt += ' filter:progid:DXImageTransform.Microsoft.Gradient (GradientType='+gradienttype+', StartColorStr=' +colors[0]+' endColorStr=' +colors[1]+')';
+            }
+            else {
+                if (browsertype=='ff') {
+                    txt += '; background: -moz-linear-gradient('+ffgradienttype+', '+colors[0]+', '+colors[1]+')';
+                }
+                else { 
+                    txt += '; background-image: -webkit-linear-gradient('+sfgradienttype+', '+colors[0]+', '+colors[1]+')';
+                    
+                }
+            }
         }
      }
      if (but.areaalign=='HORIZONTAL') {
@@ -4962,21 +5163,43 @@ if (dummy$$but==null) {
      }
      else  {
         if (but.areapercent[x]) txt +='; width:'+but.areapercent[x]+' %';
-        txt +='"></span>';
+        txt +='"></div>';
      }
  }
  if (!isBlank(butobj.innerHTML)) {but.text=butobj.innerHTML};
- txt += '<div class=fancydata id='+butname+'>'+but.text+'</div></div>';
+ if (browsertype!='ie' && but.type.toUpperCase() !='EXIT') {txt += '<div style="position:absolute; width:'+but.width+'px;"><div class=fancydatanonie id='+butname+'>'+but.text+'</div></div></div>';} 
+ else {txt += '<div class=fancydata id='+butname+'>'+but.text+'</div></div>';}
  dummy$$but.innerHTML=txt;
  var butobjdata=document.getElementById(butname);
  var top=but.height-butobjdata.offsetHeight-3;
  var left=but.width-butobjdata.offsetWidth;
- butobjdata.style.top=top/2;
- butobjdata.style.left=left/2;
+ if (browsertype=='ie') {
+   butobjdata.style.top=top/2;
+   butobjdata.style.left=left/2;
+   butobj.style.width=0;
+ }
+ else {
+   if (but.height<= 30) { 
+      var toppadamt=0;
+      var offsetdiff=but.height-butobjdata.offsetHeight;
+      if (offsetdiff > 4) {
+        toppadamt=(but.height/2)-(butobjdata.offsetHeight/2);
+        toppadamt=toppadamt.toFixed(0);
+        if (toppadamt > 5) {toppadamt = 5;} 
+        butobjdata.style.paddingTop=toppadamt+'px';
+      }
+   }
+   if (but.type.toUpperCase()=='EXIT') {
+      butobjdata.style.top=top/2;
+      butobjdata.style.left=left/2;
+      butobj.style.width=0;
+      butobj.style.right=40;
+   }
+ }
  butobj.innerHTML=dummy$$but.innerHTML
- butobj.style.width=0;
  dummy$$but.innerHTML='';
 }
+
 
 function chg$$But(dir,obj,dtaId)
 {
@@ -5066,11 +5289,12 @@ function getFormVar(useform) {
   var formarray=new Array();
   if (useform) form=useform;
   else form=currentform;
-  obj=document.getElementById(form);
+  obj=document.getElementsByName(form)[0];
    
   if (obj==null) {alert('required form - '+form+' - not found'); return ''}
 
   for (var j=0; j<obj.length; j++) {
+      if (attributeValue(obj[j],'dummy') != undefined) {continue} 
       if (obj[j].className=='subdatefield') {
           if (obj[j].name.sst(1,4)=='d1#$') {
               formarray[index]=obj[j].name.split('d1#$')[1];
@@ -5136,19 +5360,19 @@ function assignSelectVar(selfrom,selto,dft) {
 
 function getUrlParms() {
   var urlprms=new Object();
-  //var qString = unescape(top.location.search.substring(1));
+  var getVars = new Array();
   var qString = unescape(document.location.search.substring(1));
   var pairs = qString.split('&');
   for (var i in pairs) {
       var nameval = pairs[i].split('=');
       if (nameval.length>1) {
-         eval('urlprms.'+nameval[0]+'= nameval[1]');
+         urlprms[nameval[0]]= nameval[1];
       }
   } 
   return urlprms;
-} 
-               
-urlparm=getUrlParms(); 
+}                
+
+urlparm=getUrlParms();
 
 function searchCol(tabl,column,val,matchtype,startatrow) { 
 
@@ -5169,17 +5393,14 @@ function searchCol(tabl,column,val,matchtype,startatrow) {
  readRow(); 
  while (!eof) {
    if (valuetype=='char') {
-      cmpval=valueOfCol(column).trim()
+      cmpval=valueOfCol(column).trim();
       if (len !=0) {cmpval=cmpval.sst(1,len).toUpperCase()}
    }
    else {cmpval=numValueOfCol(column);}
    
    if (cmpval==val) {
       var obj=rows[currentrow]; 
-      
-      if (currentrow==0) {rows[currentrow].scrollIntoView(true);}
-      else {rows[currentrow-1].scrollIntoView(true);}  
-
+      obj.scrollIntoView(false);      
       //try {
          //if (currentrow==0) {rows[currentrow].focus();}
          //else {rows[currentrow-1].focus();}  
@@ -5342,9 +5563,15 @@ function saveVar() {
 
   if (element[0]=='*form') {
      form=element[1];
-     obj=document.getElementById(form);
+     //obj=document.getElementById(form);
+
+     try {
+       obj=document.getElementsByName(form)[0];
+     } catch (e) {alert('required form - '+form+' - not found'); return}  
+
      if (obj) {
         for (var j=0; j<obj.length; j++) {
+		    if (attributeValue(obj[j],'dummy') != undefined) {continue} 
             if ((obj[j].tagName == 'INPUT' || obj[j].tagName == 'TEXTAREA' || obj[j].tagName=='SELECT') && obj[j].className !='subdatefield') {
                eval("this."+obj[j].name+"=obj[j].value"); 
             }
@@ -5402,6 +5629,8 @@ saveVar.prototype.restoreVar = function() {
      form=element[1]
      obj=document.getElementById(form);
      if (obj) {
+	 	for (var j=0; j<obj.length; j++) { //NEW NEW
+	    if (attributeValue(obj[j],'dummy') != undefined) {continue} 
         try {
             if (obj[i].className !='datefield') {
                eval("obj[i].value=this."+obj[i].name);
@@ -5415,6 +5644,7 @@ saveVar.prototype.restoreVar = function() {
             }
         } catch(e) {}
      }
+	}
   }
   else {
        obj=document.getElementById(element[0]);
@@ -5543,10 +5773,10 @@ function clone(obj) {
 
 
 // Start email functions
+
 function isValidEmail(str) {
   return (str.indexOf(".") > 0) && (str.indexOf("@") > 0);
 }
-
 
 function emailDef() {
   this.to=''; //address1; address2;..addressn..
@@ -5642,17 +5872,17 @@ function ajaxCall(pgm,urlp){
  catch (e){
       ajaxerror='Unspecified error on ajaxCall function\n'+e.message;
       return 
- }  
+ }
 }
 
 
 function ajaxReturn() {
   if (xmlHttp.readyState == 4) {
-     if (xmlHttp.status != 200) { 
+     if (xmlHttp.status != 200) {
          ajaxerror=xmlHttp.statusText;
-     } 
-     if (xmlHttp.status == 200) { 
-         ajaxresponse = xmlHttp.responseText; 
+     }
+     if (xmlHttp.status == 200) {
+         ajaxresponse = xmlHttp.responseText;
      }
   }
 } 
@@ -5684,7 +5914,7 @@ function parseLineCsv(linecsv) {
 
   for (var i=0;i<linecsv.length;i++) { 
     if (linecsv[i].match(/"$/)) {  
-      if (linecsv[i].match(/^"/)  && linecsv[i].length > 1) {
+      if (linecsv[i].match(/^"/) && linecsv[i].length > 1) {
         linecsv[i] = linecsv[i].replace(/^"|"$/g,"");
       }
       else {
@@ -5725,8 +5955,9 @@ function makeFields(fieldspan) {
   var flds;
   if (fieldspan) {
       fieldspan=document.getElementById(fieldspan); 
-      if (fieldspan.tagName=='SPAN' && fieldspan.field !=undefined) {
-          var fobj=fieldspan; 
+      if (fieldspan.tagName=='SPAN' && attributeValue(fieldspan,'field') !=undefined) {
+          var fobj=fieldspan.attributes; 
+          var cfobj=fieldspan;
           makeAllFields();
       }
       return;
@@ -5739,16 +5970,15 @@ function makeFields(fieldspan) {
   var slttxt='';
   var slt='';
 
-  //attr=flds[0].attributes; alert(attr.getNamedItem("field").value);
-
   for (i=0; i<flds.length;i++) { 
-
-    var fobj=flds[i]; 
-    if (fobj.field!=undefined) {makeAllFields()}
+    var fobj=flds[i].attributes;
+    var cfobj=flds[i]; 
+    if (attr('field')!=undefined) {makeAllFields()}
     else {
-       if (fobj.button != undefined) {makeAllButtons()}
+       if (attr('button') != undefined) {makeAllButtons()}
     }
   } 
+
 
   function makeAllFields() {
 
@@ -5772,6 +6002,8 @@ function makeFields(fieldspan) {
 //.nocalendar  {Calendar not to be displayed for date field} 
 //.select      {field create as a select field. Use a string of ordered pairs to show the values/text set
 //              Example: select='1:One, 2:Two' eq. <select><option value=1>One</value><option value=2>Two</option></select>} 
+//.readonly
+//.editmask
 
     var fnam='';
     var f='';
@@ -5790,47 +6022,49 @@ function makeFields(fieldspan) {
     var upper2='';
     var upflag=0;
     var fieldclasstxt=''; 
+	var readonlytxt='';
+    if (attr('readonly') != undefined) {readonlytxt += ' readonly '}
     var evnts=['onchange','onkeypress','onkeyup','onkeydown','onmousedown','onmouseover','onmouseout','onclick'];
 
-    if (fobj.fieldclass != undefined) {fieldclasstxt=" class="+fobj.fieldclass}
+    if (attr('fieldclass') != undefined) {fieldclasstxt=" class="+attr('fieldclass')}
 
-    if (fobj.output != undefined && fobj.output=='text') {fieldclasstxt=" class= outputastext"}
+    if (attr('output') != undefined && attr('output')=='text') {fieldclasstxt=" class= outputastext"}
 
-    var txt="<input type=text name="+fobj.field+fieldclasstxt; 
-    if (fobj.output != undefined) {txt += ' protected=yes ';}
+    var txt="<input type=text name="+attr('field')+" id="+attr('field')+fieldclasstxt+readonlytxt; 
+    if (attr('output') != undefined) {txt += ' protected=yes ';}
 
-    if (fobj.ref != undefined) {fnam=fobj.ref}
-    else {fnam=fobj.field}
+    if (attr('ref') != undefined) {fnam=attr('ref')}
+    else {fnam=attr('field')}
     f=clone(getFieldAttr(fnam)); 
     if (!f) {f=new Object()} 
-    
-    fnam=fobj.field;
+   
+    fnam=attr('field');
 
-    if (fobj.label)    {f.desc=fobj.label}
-    if (fobj.type)     {f.type=fobj.type}
-    if (fobj.length) {
-       ld=fobj.length.split(',');
+    if (attr('label'))    {f.desc=attr('label')}
+    if (attr('type'))     {f.type=attr('type')}
+    if (attr('length')) {
+       ld=attr('length').split(',');
        f.length=ld[0];
        if (ld[1]) {f.decimal=ld[1]}
     }
-    if (fobj.decimal)  {f.decimal=fobj.decimal}
-    if (fobj.editcode) {f.editcode=fobj.editcode} 
+    if (attr('decimal'))  {f.decimal=attr('decimal')}
+    if (attr('editcode')) {f.editcode=attr('editcode')} 
 
     if (!f.type)   {f.type='char'}
     if (!f.length) {f.length=20}
 
-    if (fobj.labelclass==undefined) {f.labelclass='label'}
-    else {f.labelclass=fobj.labelclass}
-    if (fobj.labelwidth==undefined) {f.labelwidth=''}
-    else {f.labelwidth=" style='width:"+fobj.labelwidth+"'";} 
+    if (attr('labelclass')==undefined) {f.labelclass='label'}
+    else {f.labelclass=attr('labelclass')}
+    if (attr('labelwidth')==undefined) {f.labelwidth=''}
+    else {f.labelwidth=" style='width:"+attr('labelwidth')+"'";} 
 
-    if (fobj.nolabel != undefined) {
+    if (attr('nolabel') != undefined) {
        // Do nothing
     }
     else {
-       if (fobj.label != undefined) {
-           //if (fobj.label) {
-               txt1 = "<span id="+fnam+"_label class="+f.labelclass+f.labelwidth+">"+fobj.label+"</span>";
+       if (attr('label') != undefined) {
+           //if (attr('label')) {
+               txt1 = "<span id="+fnam+"_label class="+f.labelclass+f.labelwidth+">"+attr('label')+"</span>";
            //}
        }
        else {
@@ -5841,50 +6075,70 @@ function makeFields(fieldspan) {
 
     }
 
+	if (attr('editmask') != undefined) {
+	    txt='';
+	    if (attr('search') != undefined) {
+            txt += "&nbsp&nbsp<img id="+fnam+"_search src='../image/lookup.gif' onClick="+attr('search')+"></img>"; 
+        }
+	    cfobj.innerHTML=txt1+editMask(fnam,f,attr('editmask'),readonlytxt)+txt;
+        if (attr('output') != undefined) {protect(attr('field'))}
+		return;
+	}	
+	
+
+    if (f.type=='date' || f.type=='time') {
+        cfobj.ondatechange=attributeValue(cfobj,'onchange');
+        cfobj.onchange='';
+    }
+
+
     if (f.type=='date') {
-        fobj.id=fobj.field;
-        createDateVar(fobj.field,datefmt,fobj.output);
-        txt=fobj.innerHTML;
-        if (fobj.output == undefined && fobj.nocalendar == undefined) {
-            txt += "&nbsp<img id="+fnam+"_calendar src='../image/cal.jpg' onclick=promptCal('"+fobj.id+"') align=middle border=1></img>";
+        cfobj.id=attr('field');
+        createDateVar(attr('field'),datefmt,attr('output'),attr('readonly'));
+        txt=cfobj.innerHTML;
+        if (attr('output') == undefined && attr('nocalendar') == undefined) {
+            txt += "&nbsp<img id="+fnam+"_calendar src='../image/cal.jpg' onclick=promptCal('"+cfobj.id+"') align=middle; border=1></img>";
         }
-        if (fobj.search != undefined) {
-            txt += "&nbsp&nbsp<img id="+fnam+"_search src='../image/lookup.gif' onClick="+fobj.search+"></img>"; 
+        if (attr('search') != undefined) {
+            txt += "&nbsp&nbsp<img id="+fnam+"_search src='../image/lookup.gif' onClick="+attr('search')+"></img>"; 
         }
-        fobj.innerHTML=txt1+txt;
-        if (fobj.output != undefined) {protect(fobj.field)}
+        cfobj.innerHTML=txt1+txt;
+        if (attr('output') != undefined) {protect(attr('field'))}
         return;
     }
 
+ 
     if (f.type=='time') {
-        fobj.id=fobj.field;
-        createTimeVar(fobj.field,timefmt);
-        txt=fobj.innerHTML;
-        if (fobj.search != undefined) {
-            txt += "&nbsp&nbsp<img id="+fnam+"_search src='../image/lookup.gif' onClick="+fobj.search+"></img>"; 
+        cfobj.id=attr('field');
+        createTimeVar(attr('field'),timefmt,attr('output'),attr('readonly'));
+        txt=cfobj.innerHTML;
+        if (attr('search') != undefined) {
+            txt += "&nbsp&nbsp<img id="+fnam+"_search src='../image/lookup.gif' onClick="+attr('search')+"></img>"; 
         }
-        fobj.innerHTML=txt1+txt;
-        if (fobj.output != undefined) {protect(fobj.field)}
+        cfobj.innerHTML=txt1+txt;
+        if (attr('output') != undefined) {protect(attr('field'))}
         return;
     }
 
-    if (fobj.select != undefined) {
-        var slttxt="<select name="+fobj.field+fieldclasstxt;
+    if (attr('select') != undefined) {
+        txt="<select name="+attr('field')+" id="+attr('field')+fieldclasstxt+readonlytxt;
+		assignFieldEvents();
         if (f.type=='numeric') {slttxt += " class=numeric fldtype=numeric";}
-        slttxt += ">";
+        txt += ">";
         slt='';
-        var pairs=fobj.select.split(',');
+        var pairs=attr('select').split(',');
         for (j=0; j<pairs.length; j++) {
            slt=pairs[j].split(':');
-           if (slt.length>1) {slttxt += '<option value='+slt[0].trim()+'>'+slt[1].trim()+'</option>';}
-           else {slttxt += '<option value='+slt[0].trim()+'>'+slt[0].trim()+'</option>';}   
+           if (slt.length>1) {txt += '<option value='+slt[0].trim()+'>'+slt[1].trim()+'</option>';}
+           else {txt += '<option value='+slt[0].trim()+'>'+slt[0].trim()+'</option>';}   
         }
-        slttxt += '</select>';
-        fobj.innerHTML=txt1+slttxt;
-        assignFieldEvents();
-        if (fobj.output != undefined) {protect(fobj.field)}
+        txt += '</select>';
+		cfobj.innerHTML=txt1+txt;
+        if (attr('output') != undefined) {protect(attr('field'))}
         return;
     }
+
+    assignFieldEvents();
 
     len=numeric(f.length);
     if (f.type=='numeric' || f.decimal) { 
@@ -5897,62 +6151,62 @@ function makeFields(fieldspan) {
         txt += " length="+len+" size="+(len+(len-deci)/3)+nbr+onblur+">"; 
     }
     else {
-       if (fobj.upper != undefined) {upflag=1; upper=" upper='yes' onkeypress=keyPressedToUpper() "; upper2=" onblur='this.value=this.value.toUpperCase()' "}
-       if (fobj.textarea==undefined && len<80) {
+       if (attr('upper') != undefined) {upflag=1; upper=" upper='yes' onkeypress='keyPressedToUpper(event)'"; upper2=" onblur='this.value=this.value.toUpperCase()' "}
+       if (attr('textarea')==undefined && len<80) {
            txt += " length="+len+" fldtype=char size="+(len+2)+" maxlength="+len+nbr+onblur+upper+upper2+">"; 
        }
        else {
-           if (fobj.cols) {c=numeric(fobj.cols)} 
-           if (fobj.rows) {r=numeric(fobj.rows)} else {r=len/c+1}
-           txt="<textarea name="+fobj.field+" rows="+r+" cols="+c+upper+" length="+len+" fldtype=char onkeyup='return limitTextLength(this,"+len+")' onblur='setTextLength(this,"+len+","+upflag+")'></textarea>";  
+           if (attr('cols')) {c=numeric(attr('cols'))} 
+           if (attr('rows')) {r=numeric(attr('rows'))} else {r=len/c+1}
+           txt="<textarea name="+attr('field')+" id="+attr('field')+" rows="+r+" cols="+c+upper+" length="+len+" fldtype=char onkeyup='return limitTextLength(this,"+len+")' onblur='setTextLength(this,"+len+","+upflag+")'"+readonlytxt+"></textarea>";  
        }
     }
 
-    if (fobj.search != undefined) {
-        txt += "&nbsp&nbsp<img id="+fnam+"_search src='../image/lookup.gif' onClick="+fobj.search+"></img>"; 
+    if (attr('search') != undefined) {
+        txt += "&nbsp&nbsp<img id="+fnam+"_search src='../image/lookup.gif' onClick="+attr('search')+"></img>"; 
     }
 
-    fobj.innerHTML=txt1+txt;
-    assignFieldEvents()
-    if (fobj.output != undefined) {protect(fobj.field)}
+    cfobj.innerHTML=txt1+txt;
+    //assignFieldEvents()
+    if (attr('output') != undefined) {protect(attr('field'))}
  
 
-   function assignFieldEvents() {
-     var z=0;
-     try {
-          fldobj=document.getElementById(fobj.field);
-          for (z=0; z<evnts.length; z++) {
-              var evnt = fobj[evnts[z]];
-              if (evnt) {
-                  if (typeof evnt != 'function') {eval("fldobj[evnts[z]] = function() {"+fobj[evnts[z]]+"}")}
-                  else {fldobj[evnts[z]] = function() {evnt}}
-                  fobj[evnt]=function(){};
-              }
-         }
-     } catch(e) {}
-   }
+    function assignFieldEvents() {
+      var evnt;
+      for (z=0; z<evnts.length; z++) {
+           evnt=attr(evnts[z]);
+           if (evnt && evnt!=undefined) {
+              txt += ' '+evnts[z]+'="'+evnt+'" ';
+              eval('cfobj.'+evnts[z]+'=""');
+           }
+       }
+    }
 
 
+  } //End "makeAllFields"
 
+  function attr(fld) {
+    try {
+      return fobj.getNamedItem(fld).value; 
+    } catch(e) {return undefined}
   }
-
 
   function makeAllButtons() {
    var type='submit';
-   if (fobj.type != undefined) {
-       type=fobj.type; 
+   if (attr('type') != undefined) {
+       type=attr('type'); 
    }
    btn=new buttonDef(type);
-   fobj.id=fobj.button;
-   if (fobj.text != undefined) {btn.text=fobj.text}
-   if (fobj.width != undefined) {btn.width=fobj.width}
-   if (fobj.height != undefined) {btn.height=fobj.height}
-   if (fobj.border != undefined) {btn.border=fobj.border}
-   if (fobj.areacolor != undefined) {btn.areacolor=fobj.areacolor}
-   if (fobj.areaalign != undefined) {btn.areaalign=fobj.areaalign}
-   if (fobj.areapercentage != undefined) {btn.areapercentage=fobj.areapercentage}
-   if (fobj.hovereffect != undefined) {btn.hovereffect=fobj.hovereffect}
-   createButton(btn,fobj.id);
+   cfobj.id=attr('button');
+   if (attr('text') != undefined) {btn.text=attr('text')}
+   if (attr('width') != undefined) {btn.width=attr('width')}
+   if (attr('height') != undefined) {btn.height=attr('height')}
+   if (attr('border') != undefined) {btn.border=attr('border')}
+   if (attr('areacolor') != undefined) {btn.areacolor=attr('areacolor')}
+   if (attr('areaalign') != undefined) {btn.areaalign=attr('areaalign')}
+   if (attr('areapercentage') != undefined) {btn.areapercentage=attr('areapercentage')}
+   if (attr('hovereffect') != undefined) {btn.hovereffect=attr('hovereffect')}
+   createButton(btn,cfobj.id);
 
   }
 
@@ -5988,17 +6242,160 @@ function limitPasteTextLength(obj,len) {
 
 
 function fieldHTML(fldattr) {
- var dynmfld=document.createElement("<span id=dyn#m#fld "+fldattr+"></span>");
+ var dynmfld=document.createElement("span"); 
  document.getElementsByTagName('body')[0].appendChild(dynmfld); 
- makeFields('dyn#m#fld');  
- var txt=dynmfld.innerHTML;
- if (dynmfld.id != 'dyn#m#fld') {
-     txt="<span id="+dynmfld.id+" class=datefield type="+dynmfld.type+">"+txt+"</span>"; 
+ dynmfld.innerHTML="<span id=dyn$m$fld "+fldattr+"></span>"; 
+ makeFields('dyn$m$fld');  
+ var txt=dyn$m$fld.innerHTML;
+ if (dyn$m$fld.id != 'dyn$m$fld') {
+     txt="<span id="+dynmfld.id+" class=datefield type="+attributeValue(dynmfld,'type')+">"+txt+"</span>"; 
  }
  document.getElementsByTagName('body')[0].removeChild(dynmfld);
  delete dynmfld;
  return txt; 
 }
+
+function setMarkFieldValue(obj) {
+  var f=obj.id.split('@@_@@')[0];
+  var t=document.getElementById(f);
+  if (!t) {return}
+  var found=true;
+  var txt='';
+  var x=0;
+  var v='';
+  while (found) {
+    found=document.getElementById(f+'@@_@@'+x);
+    if (found) {
+	    v=found.value;
+		while (v.length<found.size) {
+			   if (t.className=='numeric') {v ='0'+v}
+			   else {v += ' '}
+		}	
+	    txt += v
+	}	
+	x++;
+  }
+  t.value=txt; 
+}
+
+function splitMarkFieldValue(f) {
+  var f=document.getElementById(f);
+  var id=f.id;
+  var fval=''+f.value; 
+  isnumeric=false;
+  if (f.className=='numeric') {isnumeric=true}
+  if (isnumeric) {
+      while (fval.length<f.size) {
+             fval='0'+fval;
+      }
+  }
+  var x=0;
+  var y=0;
+  while (f) {
+     f=document.getElementById(id+'@@_@@'+y); 
+	 if (!f) {break}
+	 f.value=fval.substr(x,f.size); 
+	 if (isnumeric) {
+	     var p=0;
+		 vl='';
+	     for (p=0; p<f.size; p++) {
+		      if (f.value.charAt(p)=='0' && vl=='') {}
+			  else {vl += f.value.charAt(p)}
+		 }
+		 f.value=vl;
+	 }
+	 x += f.size;
+	 y ++;
+  }
+}
+
+
+function maskAutoJump(obj,to) {
+ var key = window.event.keyCode; 
+ if ((key==null) || (key==0) || (key==8) || (key==9) || (key==13) || (key==16) || (key==27) || (key==37) || (key==38) || (key==39) || (key==40)) {
+    return;
+ }
+ if (obj.value.triml().length==obj.size) {
+     focusOn(to);
+ }
+}
+
+function editMask(fnam,obj,fmat,readonlytxt) {
+  var txt=[];
+  var fld=[];
+  var fldlen=0;
+  var fmttxt='';
+  var fullsize=0;
+  var f=0;
+  var i=0;
+  var chr;
+  var istxt=false;
+  var isfld=false;
+  var firsttype='char';
+    
+  for (var f=0; f<fmat.length; f++) {
+       chr=fmat.charAt(f);
+       if (chr==' ') {
+	      if (f==0 || istxt) {
+		      isfld=true;
+			  istxt=false; 
+			  fldlen=0;
+			  if (f>0) {
+			      txt.push(fmttxt);
+				  fmttxt='';
+			  }
+			  if (f==0) {firsttype='dec'}
+		  }
+          fldlen++; fullsize++;		  
+      }
+	  else {
+	  	  if (f==0 || isfld) {
+		      istxt=true;
+			  isfld=false;
+			  if (f>0) {
+			      fld.push(fldlen);
+				  fldlen=0;
+              }
+		  }
+		  if (chr=='&') {chr='&nbsp;'}
+          fmttxt += chr;			  
+	  }
+  }
+  if (fldlen) {fld.push(fldlen)}
+  if (fmttxt) {txt.push(fmttxt)}
+  var s=fld.length;
+  var string='';
+  
+  var interpret=function(len,n,obj) {
+      if (obj.type=='numeric') {
+          return "<input class=numeric dummy=1 id="+fnam+"@@_@@"+n+" size="+len+" maxlength="+len+" style='font-size:95%; font-family: fixed,monospace; border:none; margin:0px; widthx:"+(len*0.74)+"em' onKeyPress='return numbersOnly()' onkeyUp=maskAutoJump(this,'"+fnam+"@@_@@"+(n+1)+"') onchange=setMarkFieldValue(this)"+readonlytxt+">";
+      }
+     else {
+         return "<input id="+fnam+"@@_@@"+n+" dummy=1 size="+len+" maxlength="+len+" style='font-size:95%; font-family: fixed,monospace; border:none; margin:0px; widthx:"+(len*0.95)+"em' onkeyUp=maskAutoJump(this,'"+fnam+"@@_@@"+(n+1)+"') onchange=setMarkFieldValue(this)"+readonlytxt+">";
+    }
+  }
+  
+  if (txt.length<s) {s=txt.length}
+  for (i=0; i<s; i++) {
+       if (firsttype=='char') {
+	       string += txt[i]+interpret(fld[i],i,obj); 
+	   }
+	   else {
+	       string += interpret(fld[i],i,obj)+txt[i];
+       }	   
+  }   
+  if (txt.length>s) {string += txt[s]}
+  if (fld.length>s) {string += interpret(fld[s],s,obj)}
+  
+  if (obj.type=='numeric') {string += "<input type=hidden id="+fnam+" name="+fnam+" class=numeric fldtype=numeric mask=1 size="+fullsize+" length="+fullsize+">"}
+  else {string += "<input id="+fnam+" name="+fnam+" type=hidden fldtype=char mask=1 length="+fullsize+">"}
+    
+  //changeContent('result',string);
+  return "<span id="+fnam+"@@wrap@@ dummy=1 style='border:2px inset; font-family:monospace,fixed; background-color:white; color:blue; overflow:hidden; padding:0; padding-right:1px; padding-top:1.5px; padding-left:2px; white-space:nowrap'>"+string+"</span>";
+ 
+}
+
+
 
 
 function addLoadEvent(func,where) {
@@ -6025,14 +6422,22 @@ function addLoadEvent(func,where) {
 function breakString(string,len) {
   var n=-1;
   var txt=[''];
+  var btxt='';
   var increment=false;
   var long;
   var separator='';
-  string = '' + string;
+  var i=0;
+  var k=0;
+  string=''+string;
   if (!len || isNaN(len)) {
       txt[0]=string;
       return txt;
   }
+  for (i=0; i<len; i++) {
+       btxt += ' ';
+  }
+  string=string.split('<br>').join(btxt);
+  string=string.trimr();
   var words=string.split(' '); 
   for (var i=0; i<words.length; i++) {
        if (words[i].length>len) {
@@ -6074,6 +6479,71 @@ function appendExternalScript(src,where) {//where='head','body'
   } catch(e) {}; 
 }
 
+
+function afterLoading() {
+
+ var i=0;
+ try {
+      if (header.style) {setInterval("topIt()",100)}
+ } catch(e) {} 
+
+// if (browsertype != 'ie') {
+     try {
+          if (pageheader.style) {
+              if (!pagebottomright.style.height) {
+                  pagebottomright.style.height='98%';
+              }
+              setInterval("topIt2()",100)
+          }
+     } catch(e) {} 
+ //}
+
+ //Ensure clicking a form button does not submit the form
+ try { 
+      var forms=document.getElementsByTagName('FORM');
+      for (i=0; i<forms.length; i++) {
+           forms[i].onsubmit=function() {return false}
+           if (!forms[i].id) {forms[i].id=forms[i].name}
+      }
+ } catch(e) {}
+
+ //Ensure that all "<input" fields have IDs
+ try { 
+      var inputs=document.getElementsByTagName('INPUT');
+      for (var i=0; i<inputs.length; i++) {
+           if (!inputs[i].id) {inputs[i].id=inputs[i].name};
+      }
+ } catch(e) {}
+
+
+ //Ensure that all "<select" fields have IDs
+ try { 
+      var inputs=document.getElementsByTagName('SELECT');
+      for (var i=0; i<inputs.length; i++) {
+           if (!inputs[i].id) {inputs[i].id=inputs[i].name};
+      }
+ } catch(e) {}
+
+
+//Ensure that all "<textarea" fields have IDs
+ try { 
+      var inputs=document.getElementsByTagName('TEXTAREA');
+      for (var i=0; i<inputs.length; i++) {
+           if (!inputs[i].id) {inputs[i].id=inputs[i].name};
+      }
+ } catch(e) {}
+
+
+//Ensure Buttons are given the correct ClassName
+ try { 
+      var inputs=document.getElementsByTagName('BUTTON');
+      for (var i=0; i<inputs.length; i++) {
+           if (browsertype=='ie') {inputs[i].className='buttonie';}
+           else {inputs[i].className='buttonother';}
+      }
+ } catch(e) {} 
+
+}
 
 function createComElement() {
  //Create element to do further communication with parent,sibling 
@@ -6127,8 +6597,11 @@ function executeFreeTxt() {
 function loadEvents() {
   executeFreeTxt(); 
   makeFields();
+  afterLoading();
   createComElement();
   setConcurrentStatus();
+  try {topIt()} catch(e) {}
+  try {topIt2()} catch(e) {}
 }
 
 addLoadEvent(loadEvents,'*top');
@@ -6140,7 +6613,6 @@ function dialogMsgDef() {
  this.title=': Message';
  this.bodystyle=''; 
 }
-
 
 function dialogMsg(message,dial) {
   var d=new dialogDef(); 
@@ -6168,21 +6640,19 @@ function itemList(ar) {
  return txt;
 }
 
+function checkAuthority(process,requestdesc) {
 
-function checkAuthority(process,requestdesc,requestparms) {
 
-
-  var sqltxt = "select aprvtype from sysprocaprv where proccode = "+ process.sqlWrap();
+  var sqltxt = "select aprvtype, procname from sysprocaprv where proccode = "+ process.sqlWrap();
   if (!sqlSelect(sqltxt,'$$prc',1)) {
     alert(sqlerr);
     return false;
   }   
-
   if ($$prc.rcdcnt ==0) {
      alert('Process not found.');
      return false;
   }
-
+  var processname=$$prc.procname[0]; 
 
   var insobj =new Object();
   var approveid = timeStamp();
@@ -6191,8 +6661,6 @@ function checkAuthority(process,requestdesc,requestparms) {
   insobj.sendusrid = username;
   insobj.senddate = todayDate();
   insobj.sendtime = todayTime('hm');
-  insobj.reqdesc = requestdesc;
-  insobj.sendparms = requestparms;
   insobj.requeststs = 'R';
   insobj.aprvtype = $$prc.aprvtype[0];
 
@@ -6213,7 +6681,7 @@ function checkAuthority(process,requestdesc,requestparms) {
       insobj.respdate = todayDate();
       insobj.resptime = todayTime('hm');  
       
-      if (!writeToRequestApprovalTable(insobj)) {
+      if (!writeToRequestApprovalTable(insobj,requestdesc)) {
         return false;
       }
   
@@ -6222,13 +6690,13 @@ function checkAuthority(process,requestdesc,requestparms) {
     else {
       //show  log on window for approving officer to login.  
       var obj=new dialogDef();
-      obj.height=200;
-      obj.width=385;
-      obj.top= window.dialogTop;
-      obj.left = window.dialogLeft;
+      obj.height=450;
+      obj.width=728;
       obj.dialogparm.proccode=process;
       obj.dialogparm.aprvtype=$$prc.aprvtype[0];
       obj.dialogparm.appvid=approveid;
+	  obj.dialogparm.requestdesc=requestdesc;
+	  obj.dialogparm.processname=processname;
 
       var rtnparm=displayDialog('processAuthentication.htm',obj);
 
@@ -6242,7 +6710,7 @@ function checkAuthority(process,requestdesc,requestparms) {
       insobj.respdate = todayDate();
       insobj.resptime = todayTime('hm');     
       
-      if (!writeToRequestApprovalTable(insobj)) {
+      if (!writeToRequestApprovalTable(insobj,requestdesc)) {
         return false;
       }
       
@@ -6252,18 +6720,18 @@ function checkAuthority(process,requestdesc,requestparms) {
   else {
   //Approval is done remotely (using another option)
 
-    if (!writeToRequestApprovalTable(insobj)) {
+    if (!writeToRequestApprovalTable(insobj,requestdesc)) {
         return false;
     }
   
     var obj=new dialogDef();
-    obj.height=240;
-    obj.width=425;
-    obj.top= window.dialogTop;
-    obj.left = window.dialogLeft;
+    obj.height=244;
+    obj.width=429;
     obj.dialogparm.proccode=process;
     obj.dialogparm.aprvtype=$$prc.aprvtype[0];
     obj.dialogparm.appvid=approveid;
+	obj.dialogparm.requestdesc=requestdesc;
+	obj.dialogparm.processname=processname;
 
     var rtnparm=displayDialog('processAuthentication.htm',obj);
 
@@ -6314,13 +6782,27 @@ function checkAuthority(process,requestdesc,requestparms) {
   }
 }
 
-function writeToRequestApprovalTable(obj) {
+function writeToRequestApprovalTable(obj,desc) {
 
   if (!sqlInsert('sysapprovalreq',obj)) {
-    alert(sqlerr);
-    return false;
+       alert(sqlerr);
+       return false;
   }
-
+  var len=225;
+  var f=getFieldAttr('reqdesc');
+  if (f) {len=f.length}
+  var n=0;
+  desc=desc.trim();  
+  desc=desc.match(RegExp('.{1,'+len+'}','g'));
+  var $upd=new sqlSelectResult('appvid','dtlnbr','reqdesc'); 
+  for (k=0; k<desc.length; k++) {
+       n=addSqlSelectRow($upd);
+       $upd.appvid[n]=numeric(obj.appvid);
+       $upd.dtlnbr[n]=k+1;
+       $upd.reqdesc[n]=desc[k];
+  }
+  if (!massSqlInsert('SYSAPRREQDTL',$upd)) {alert(sqlerr); return false}
+  
   return true;
 }
 
@@ -6328,7 +6810,7 @@ function writeToRequestApprovalTable(obj) {
 function exitOnConcurrent() {      
   var concurses=globaldialogparm.concurrent;
   if (concurses=='no' && !isBlank(username)) { 
-      var sqltxt="select lcktable from systablock where lcktable='LOGON' and lckuser="+username.sqlWrap()+" and lcksession="+sessionid;
+      var sqltxt="select lcktable from systablock where lcktable='LOGON' and lckuser="+username.sqlWrap()+" and lcksession ="+sessionid;
       if (sqlSelect(sqltxt,'$ls',1)) {
           if (sqlrcdcnt==0) {
               globaldialogparm.exitapp=true;
@@ -6367,14 +6849,31 @@ function stripInvalidXMLChar(str) {
 }
 
 
-function encode(str) {
+function encode(str,maxlen) {
   
   str = str.split('&').join('&amp;');
   str = str.split('<').join('&lt;');
   str = str.split('>').join('&gt;');
   str = str.split('"').join('&quot;');
   str = str.split("'").join('&#39;');
-
+  
+  if (maxlen) { 
+      if (str.length>maxlen) {
+	      str=str.sst(1,maxlen);
+	      var words=str.split('&');
+	      if (words.length>1) {
+		      var lastword=words[words.length-1];
+	          if (lastword.indexOf(';')== -1) { 
+		          str='';
+		          for (var i=0; i < words.length-1; i++) {
+		               if (i==0) {str += words[i]}
+                       else {str += '&' + words[i]}
+                  }
+             }		   
+         }
+     }			   
+  }
+  
   return str;
 }
 
