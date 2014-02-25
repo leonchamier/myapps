@@ -1,60 +1,278 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+<title>Maintain Vessel</title>
 </head>
+<body onload=exeFunction('loadUp()')>
+<script type='text/JavaScript' src='../pcstools/standardjs.js'></script>
+<script type='text/JavaScript' src='../pcstools/standardsq.js'></script>
+<script type="text/JavaScript" src="startup.js"></script> 
+<link rel=stylesheet type='text/css' href='../pcstools/standardss.css'></link>
+<style type="text/css">
+           
+
+.qbut
+{
+ cursor:hand;
+  border-color: #696 #363 #363 #696;   
+   filter:progid:DXImageTransform.Microsoft.Gradient   
+   (GradientType=0,StartColorStr='#ffffff',EndColorStr='#5C5C5C');  
+  color:#050;  
+  border:0px ;  
+ }
+
+
+.qbut2
+{
+ cursor:hand;
+  border-color: #696 #363 #363 #696;   
+   filter:progid:DXImageTransform.Microsoft.Gradient   
+   (GradientType=0,StartColorStr='#ffffff',EndColorStr='#645158');  
+  color:#fff;  
+  border:0px ;  
+  font-size:12px;
+  font-weight:bold;
+  padding-left:1px;
+  padding-right:1px;
+ }
+
+
+</style>
+
+
 <script>
-function test(){
- alert('testing');
+submitsqlpath="http://192.168.9.52/WebDevLogistics/applications/phpsql.php";
+
+ mode='';
+
+
+
+
+function loadUp() {
+
+var but=new buttonDef();
+but.width=160;
+but.height=27;
+but.text='<span style="font-family:Helvetica; font-size:9pt; color:white"><img width="28" height="28" SRC="../image/Pencil 7.ico"  align="absmiddle" alt="new" />&nbspCreate New Entries</span>';
+createButton(but,'newbutton');
+
+but=new buttonDef('add');
+createButton(but,'addbutton');
+
+but=new buttonDef('save');
+createButton(but,'changebutton');
+
+but=new buttonDef('delete');
+createButton(but,'deletebutton');
+
+but=new buttonDef('cancel');
+createButton(but,'cancelbutton');
+
+but=new buttonDef('exit');
+createButton(but,'exitbutton');
+
+  var table1=new tableDef();
+  table1.tableid='table1';
+  table1.tableonclick='table1Clicked()';
+  table1.tablestyle='cursor:hand';
+  table1.height=300;
+  table1.header[0]='Code';  table1.id[0]='t#code';  table1.width[0]=100;  
+  table1.header[1]='Vessel Name';  table1.id[1]='t#vesselname';  table1.width[1]=400;  
+  table1.header[2]="Lloyd's No.";  table1.id[2]='t#lloydno';  table1.width[2]=100;  
+  table1.header[3]='vid';  table1.id[3]='t#vid';  table1.width[3]=0;
+  table1.sqlselect="select code,vesselname,lloydno,vid from Vessel";
+  fullsql="select code,vesselname,lloydno from Vessel";
+
+  if (!allowadd){
+  removeElement('newbutton');
+  }
+  if (!allowchange){
+  removeElement('chgopt');
+  }
+  if (!allowdelete){
+  removeElement('delopt');
+  }
+
+  changeContent('screen1table',applyTableDef(table1));
+  showElement('workarea');
+  displayForm('screen1');
+
 }
-</script><script>
-$('#verify').click(function() {
-    alert('Button has been clicked');
-});
+function refresh(){
+  changeContent('screen1table',applyTableDef(table1));
+  searchCol('table1','t#vid',valueOf('vid'),'full',''); 
+}
+
+function table1Clicked() {
+  readClickedRow();
+  popUpContent('optionlist1'); ispop=false;
+}
+
+function newRecord() {
+  unProtect('*form:screen2');
+  clearForm('screen2');
+  hideElement('changebutton','deletebutton');
+  showElement('addbutton');
+  displayForm('screen2',40,40);
+}
+
+function getRecord() {
+  var  sqltxt = fullsql + " where " + buildSqlWhere();
+  if (!sqlSelect(sqltxt,'$s',1)) return false;
+  clearForm('screen2');
+  changeVar('code',$s.code[0]);
+  changeVar('vesselname',$s.vesselname[0]);
+  changeVar('lloydno',$s.lloydno[0]);
+  return true;
+}
+
+function changeRecord() {
+  if (!getRecord()) {alert(sqlerr); return;};
+  unProtect('*form:screen2');
+  showElement('changebutton');
+  hideElement('addbutton','deletebutton');
+  displayForm('screen2',40,40);
+}
+
+function deleteRecord() {
+  if (!getRecord()) {alert(sqlerr); return;};
+  protect('*form:screen2');
+  showElement('deletebutton');
+  hideElement('addbutton','changebutton');
+  displayForm('screen2',40,40);
+}
+
+function viewRecord() {
+  if (!getRecord()) {alert(sqlerr); return;};
+  protect('*form:screen2');
+  hideElement('addbutton','changebutton','deletebutton');
+  displayForm('screen2',40,40);
+}
+
+function buildSqlUpdObj() {
+  var $s=new Object();
+  $s.code= valueOf('code');
+  $s.vesselname= valueOf('vesselname');
+  $s.lloydno= valueOf('lloydno');
+  return $s;
+}
+
+function buildSqlWhere() {
+  var str='';
+  var k_vid=numValueOfCol('t#vid');
+  var str = "vid = "+k_vid;
+  return str;
+}
+
+function validData1() {
+  return true;
+}
+
+function doAdd() {
+  if (!validData1()) return;
+  var $s=buildSqlUpdObj();
+  if (sqlInsert('Vessel', $s)) {
+     var  sqltxt = "select vid from vessel where vesselname='" + valueOf('vesselname')+"'";
+     sqlSelect(sqltxt,'$v',1); 
+     changeVar('vid',$v.vid[0]);
+
+     newRow('table1');
+     updateTable1();
+     clearForm('screen2');
+     say('Entry added');
+  }
+  else {alert('Error..'+sqlerr)}
+}
+
+function doChange() {
+  if (!validData1()) return;
+  var $s=buildSqlUpdObj();
+  var $sqlwhere=buildSqlWhere();
+  if (sqlUpdate('Vessel', $s, $sqlwhere)) {
+     updateTable1();
+     closeForm();
+     say('Entry updated');
+  }
+  else {alert('Error..'+sqlerr)}
+}
+
+function doDelete() {
+  var $sqlwhere=buildSqlWhere();
+  if (sqlDelete('Vessel',$sqlwhere)) {
+     deleteRow();
+     closeForm();
+     say('Entry Deleted');
+  }
+  else {alert('Error..'+sqlerr)}
+}
+
+function updateTable1() {
+  changeCol('t#vid',valueOf('vid'));
+  changeCol('t#code',valueOf('code'));
+  changeCol('t#vesselname',valueOf('vesselname'));
+  changeCol('t#lloydno',valueOf('lloydno'));
+  return;
+}
+
 </script>
-<body>
 
-<div data-role="page" id="pageone">
+<div id=header style="display:none"></div>
+<div id=optionarea style="display:none"></div>
+<div id=optionarea2 style="display:none"></div>
+<div id=footer><div id=msgarea></div></div>
 
-	<div data-role="header">
-		<h1>My Title</h1>
-	</div><!-- /header -->
-
-	<div data-role="content">	
-		<p>Hello world</p>		
-       </div><!-- /content -->
-
-  <div data-role="main" class="ui-content">
-     <a href="#" class="ui-btn ui-icon-arrow-r ui-btn-icon-left">Right Arrow Button</a>
-  </div>
-
-  <a href="index.html" data-role="button" data-icon="delete">Delete</a> 
- <input  type="button" data-icon="plus"  value="New" onclick="test()"/>
-
-<input
-    type="button"
-    name="verify"
-    id="verify"
-    data-icon="arrow-r" 
-    data-iconpos="right" 
-    data-theme="a" 
-    value="VERIFY" />
-
-</div><!-- /page -->
+<div id=workarea style="display:none">
 
 
-<div data-role="page" id="pagetwo">
 
+<div id=optionlist1 style='display:none' class='optionMenu'>
+<table border=1 cellspacing=0 cellpadding=0>
+<Col class=optionitem>
+<tr><td id=chgopt onclick=exeFunction('changeRecord()')
+   onMouseOver=newClass('optionitemm')
+   onMouseOut=newClass('optionitem')>Change</td></tr>
+<tr><td id=delopt onclick=exeFunction('deleteRecord()')
+   onMouseOver=newClass('optionitemm')
+   onMouseOut=newClass('optionitem')>Delete</td></tr>
+<tr><td id=viewopt onclick=exeFunction('viewRecord()')
+   onMouseOver=newClass('optionitemm')
+   onMouseOut=newClass('optionitem')>View</td></tr>
+</table>
 </div>
 
-<label for="select-choice-0" class="select">Shipping method:</label>
-<select name="select-choice-0" id="select-choice-0">
-   <option value="standard">Standard: 7 day</option>
-   <option value="rush">Rush: 3 days</option>
-   <option value="express">Express: next day</option>
-   <option value="overnight">Overnight</option>
-</select>
+<div id=divscreen1 style='display:none'>
+<form name=screen1>
+<div id=screen1table></div>
+<br>
+<span onClick='newRecord()' id=newbutton>Create New Entries</span>
+</form>
+</div>
+
+<div id="divscreen2" style="display:none" class="window">
+<form name=screen2>
+<div class="titleBar"></div>
+<span id=exitbutton class="ximage" onclick="exeFunction('closeForm()')"></span>
+<input name=vid style="display:none" >
+<table>
+<tr><td>
+<span class=label>code</span>&nbsp<input type=text name=code size=10 maxlength=10
+ onChange="setupper(this)">
+</td></tr><tr><td>
+<span class=label>Vessel Name</span>&nbsp<input type=text name=vesselname size=50 maxlength=50
+ onChange="setupper(this)">
+</td></tr><tr><td>
+<span class=label>Lloyd No</span>&nbsp<input type=text name=lloydno size=20 maxlength=20
+ onChange="setupper(this)">
+</td></tr>
+</table><br>
+<div class=buttonarea>
+<span id=addbutton onclick="exeFunction('doAdd()')"></span>
+<span id=changebutton onclick="exeFunction('doChange()')"></span>
+<span id=deletebutton onclick="exeFunction('doDelete()')"></span>
+<span id=cancelbutton onclick="exeFunction('closeForm()')"></span>
+</div>
+</form>
+</div>
 
 
-</body>
-</html>
+</div>
