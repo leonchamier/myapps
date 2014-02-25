@@ -1,27 +1,54 @@
-
-<html>  
+<!DOCTYPE html>
+<html>
 <head>
-<title>Maintain Allowance</title>
+<title>Maintain Vessel</title>
 </head>
 <body onload=exeFunction('loadUp()')>
 <script type='text/JavaScript' src='../pcstools/standardjs.js'></script>
 <script type='text/JavaScript' src='../pcstools/standardsq.js'></script>
-<script type="text/JavaScript" src="startup.js"></script>
+<script type="text/JavaScript" src="startup.js"></script> 
 <link rel=stylesheet type='text/css' href='../pcstools/standardss.css'></link>
+<style type="text/css">
+           
+
+.qbut
+{
+ cursor:hand;
+  border-color: #696 #363 #363 #696;   
+   filter:progid:DXImageTransform.Microsoft.Gradient   
+   (GradientType=0,StartColorStr='#ffffff',EndColorStr='#5C5C5C');  
+  color:#050;  
+  border:0px ;  
+ }
+
+
+.qbut2
+{
+ cursor:hand;
+  border-color: #696 #363 #363 #696;   
+   filter:progid:DXImageTransform.Microsoft.Gradient   
+   (GradientType=0,StartColorStr='#ffffff',EndColorStr='#645158');  
+  color:#fff;  
+  border:0px ;  
+  font-size:12px;
+  font-weight:bold;
+  padding-left:1px;
+  padding-right:1px;
+ }
+
+
+</style>
+
+
 <script>
+submitsqlpath="http://192.168.9.52/WebDevLogistics/applications/phpsql.php";
+
+ mode='';
 
 
-  mode='';
-
- COMPANY  =1; 
 
 
-function loadUp() { 
-
-runenvironment='internet';
-
-createDateVar('effdate','D');
-//createDateVar('expdate',datefmt);
+function loadUp() {
 
 var but=new buttonDef();
 but.width=160;
@@ -44,19 +71,17 @@ createButton(but,'cancelbutton');
 but=new buttonDef('exit');
 createButton(but,'exitbutton');
 
-
-  
-  table1=new tableDef();
+  var table1=new tableDef();
   table1.tableid='table1';
   table1.tableonclick='table1Clicked()';
   table1.tablestyle='cursor:hand';
   table1.height=300;
-  table1.header[0]='Allowance';  table1.id[0]='t#alname';  table1.width[0]=200;  
-  table1.header[2]='Amount';  table1.id[2]='t#amount';  table1.width[2]=80;  table1.edit[2]='j:2';  
-  table1.header[1]='Basis';  table1.id[1]='t#altype';  table1.width[1]=100;  
-  table1.id[3]='t#alid';  table1.width[3]=0;
-  table1.sqlselect="select alname,altype,amount,allowance.alid from allowance  where emprid="+COMPANY + " order by alname";
-  fullsql="select * from allowance ";
+  table1.header[0]='Code';  table1.id[0]='t#code';  table1.width[0]=100;  
+  table1.header[1]='Vessel Name';  table1.id[1]='t#vesselname';  table1.width[1]=400;  
+  table1.header[2]="Lloyd's No.";  table1.id[2]='t#lloydno';  table1.width[2]=100;  
+  table1.header[3]='vid';  table1.id[3]='t#vid';  table1.width[3]=0;
+  table1.sqlselect="select code,vesselname,lloydno,vid from Vessel";
+  fullsql="select code,vesselname,lloydno from Vessel";
 
   if (!allowadd){
   removeElement('newbutton');
@@ -69,10 +94,13 @@ createButton(but,'exitbutton');
   }
 
   changeContent('screen1table',applyTableDef(table1));
-
   showElement('workarea');
   displayForm('screen1');
 
+}
+function refresh(){
+  changeContent('screen1table',applyTableDef(table1));
+  searchCol('table1','t#vid',valueOf('vid'),'full',''); 
 }
 
 function table1Clicked() {
@@ -80,198 +108,77 @@ function table1Clicked() {
   popUpContent('optionlist1'); ispop=false;
 }
 
-function refresh() {
-  changeContent('screen1table',applyTableDef(table1));
-}
-
 function newRecord() {
   unProtect('*form:screen2');
   clearForm('screen2');
-  changeVar('altype','Percentage');
-  changeVar('altype2','Standard');
-  changeVar('frombasic','Y');
-  changeVar('stime','Y');
-  changeVar('otime','Y');
-  changeVar('dtime','Y');
-  changeVar('ttime','Y');
-  changeVar('fortimesheet','N');
-  changeVar('tsbasis','D');
   hideElement('changebutton','deletebutton');
   showElement('addbutton');
-  changeVar('effdate',todayDate('y'),'*date');
   displayForm('screen2',40,40);
-  basisOptions();
 }
 
 function getRecord() {
   var  sqltxt = fullsql + " where " + buildSqlWhere();
   if (!sqlSelect(sqltxt,'$s',1)) return false;
   clearForm('screen2');
-  changeVar('alid',$s.alid[0]); 
-  changeVar('amount',$s.amount[0]);roundField('amount',2);
-  changeVar('altype',$s.altype[0]);
-  changeVar('fromall',$s.fromall[0]);
-  changeVar('frombasic',$s.frombasic[0]);
-  changeVar('stime',$s.stime[0]);
-  changeVar('otime',$s.otime[0]);
-  changeVar('dtime',$s.dtime[0]);
-  changeVar('ttime',$s.ttime[0]);
-  changeVar('tsbasis',$s.tsbasis[0]);
-  changeVar('alcode',$s.alcode[0]);
-  changeVar('alname',$s.alname[0]);
-  changeVar('maxvalue',$s.maxvalue[0]);
-  changeVar('minvalue',$s.minvalue[0]);
-  changeVar('expdate',$s.expdate[0],'*date');
-  changeVar('effdate',$s.effdate[0],'*date');
-  changeVar('taxable',$s.taxable[0]);
-  changeVar('altype2',$s.altype2[0]);
-  changeVar('functionname',$s.functionname[0]);
-   if ($s.taxable[0]=='Y')     
-      document.screen2.taxablecheck.checked=true;
-   else
-      document.screen2.taxablecheck.checked=false;
-  document.screen2.fortimesheet.checked=true;
-  if ( $s.fortimesheet=='N') document.screen2.fortimesheet.checked=false;
-
+  changeVar('code',$s.code[0]);
+  changeVar('vesselname',$s.vesselname[0]);
+  changeVar('lloydno',$s.lloydno[0]);
   return true;
 }
 
 function changeRecord() {
-  mode='change';
-  if (!getRecord()) {alert(sqlerr); alert(sqlcommand); return;};
-  if (numValueOf('alid') < 0) {viewRecord(); return;}
-  unProtect('*form:screen2');  
-  protect('alcode');
+  if (!getRecord()) {alert(sqlerr); return;};
+  unProtect('*form:screen2');
   showElement('changebutton');
   hideElement('addbutton','deletebutton');
   displayForm('screen2',40,40);
-  basisOptions();
 }
 
 function deleteRecord() {
-  mode='delete';
-  
   if (!getRecord()) {alert(sqlerr); return;};
   protect('*form:screen2');
-  if (usedOnRegister()) {
-    alert('This Allowance has been used on registers cannot delete');
-    return false;
-  }
   showElement('deletebutton');
   hideElement('addbutton','changebutton');
   displayForm('screen2',40,40);
-  basisOptions();
-}
-
-function usedOnRegister(){  
-  var  sqltxt ="select alid from historyallowance where alid="+numValueOf('alid')+" UNION select alid from registerallowance where alid="+numValueOf('alid');
-  sqlSelect(sqltxt,'$s',1);
-  if (sqlrcdcnt > 0)  return true;
-  else                return false;
 }
 
 function viewRecord() {
-  mode='view'
   if (!getRecord()) {alert(sqlerr); return;};
-  basisOptions();
   protect('*form:screen2');
   hideElement('addbutton','changebutton','deletebutton');
   displayForm('screen2',40,40);
-  
 }
 
 function buildSqlUpdObj() {
   var $s=new Object();
- // $s.alid= sqlNum(valueOf('alid'));
-  $s.amount= sqlNum(valueOf('amount'));
-  $s.altype= valueOf('altype');
-  $s.fromall= valueOf('fromall');
-  $s.frombasic= valueOf('frombasic');
-  $s.stime= valueOf('stime');
-  $s.otime= valueOf('otime');
-  $s.dtime= valueOf('dtime');
-  $s.ttime= valueOf('ttime');
-  $s.alcode= valueOf('alcode');
-  $s.tsbasis= valueOf('tsbasis');
-  $s.alname= valueOf('alname');
-  $s.maxvalue= numValueOf('maxvalue');
-  $s.minvalue= numValueOf('minvalue');
-  $s.effdate= sqlNum(numValueOf('effdate'));
-  $s.expdate= sqlNum(numValueOf('expdate'));
-  $s.emprid=sqlNum(COMPANY);
-  $s.taxable= valueOf('taxable');
-  $s.functionname= valueOf('functionname');
-  $s.altype2= valueOf('altype2');
-  $s.fortimesheet='N';
-  if (document.screen2.fortimesheet.checked==true)   $s.fortimesheet='Y';
-  
+  $s.code= valueOf('code');
+  $s.vesselname= valueOf('vesselname');
+  $s.lloydno= valueOf('lloydno');
   return $s;
 }
 
 function buildSqlWhere() {
   var str='';
-  var k_alid=numValueOfCol('t#alid');
-  var str = "alid = "+k_alid +' and emprid='+COMPANY;
+  var k_vid=numValueOfCol('t#vid');
+  var str = "vid = "+k_vid;
   return str;
 }
 
 function validData1() {
-    if (valueOf('alcode')=='') {
-    alert('Code cannot be blank..!!!');
-    focusOn('alcode','*hi');
-    return false;
-    }
-
-    if (valueOf('alname')=='' ){
-    alert('Allowance description cannot be blank..!!!');
-    focusOn('alname','*hi');
-    return false;
-    }
-
-  if (valueOf('altype') =='Function' && valueOf('functionname')=='') {
-    alert('Function name cannot be blank');
-    focusOn('functionname','*hi');
-    return false;
-   } 
-
-    if (numValueOf('effdate')!=0 && !validDate(numValueOf('effdate'))){
-        alert('Please enter a valid Effective Date');
-        focusOn('effdate','*hi');
-        return false;
-    }
-
-    if (numValueOf('expdate')!=0 && !validDate(numValueOf('expdate'))){
-        alert('Please enter a valid Expiry Date');
-        focusOn('expdate','*hi');
-        return false;
-    }
- 
-    if (numValueOf('expdate')!=0 && numValueOf('effdate')!=0 && (numValueOf('effdate') > numValueOf('expdate'))){
-        alert('Effective date cannot be after expiry date');
-        focusOn('expdate','*hi');
-        return false;
-    }
-
-     if (numValueOf('maxvalue') < numValueOf('minvalue')){
-        alert('Maximun value cannot be less than minimum value');
-        focusOn('maxvalue','*hi');
-        return false;
-    }
-
- 
   return true;
 }
 
 function doAdd() {
   if (!validData1()) return;
   var $s=buildSqlUpdObj();
-  if (sqlInsertUnique('allowance', $s,'alid')) {
+  if (sqlInsert('Vessel', $s)) {
+     var  sqltxt = "select vid from vessel where vesselname='" + valueOf('vesselname')+"'";
+     sqlSelect(sqltxt,'$v',1); 
+     changeVar('vid',$v.vid[0]);
 
      newRow('table1');
      updateTable1();
-     //clearForm('screen2');
-   clearFields('alname','alcode','amount','effdate','expdate','minvalue','maxvalue');
-
+     clearForm('screen2');
      say('Entry added');
   }
   else {alert('Error..'+sqlerr)}
@@ -281,7 +188,7 @@ function doChange() {
   if (!validData1()) return;
   var $s=buildSqlUpdObj();
   var $sqlwhere=buildSqlWhere();
-  if (sqlUpdate('allowance', $s, $sqlwhere)) {
+  if (sqlUpdate('Vessel', $s, $sqlwhere)) {
      updateTable1();
      closeForm();
      say('Entry updated');
@@ -291,13 +198,7 @@ function doChange() {
 
 function doDelete() {
   var $sqlwhere=buildSqlWhere();
-  if (sqlDelete('allowance',$sqlwhere)) {
-     sqlDelete('employeealw','alid='+numValueOf('alid'));  
-     sqlDelete('DepartmentAllowance','alid='+numValueOf('alid')); 
-     sqlDelete('CategoryAlW','alid='+numValueOf('alid'));         
-     sqlDelete('GroupAllowance','alid='+numValueOf('alid'));      
-     sqlDelete('DeductionAll','alid='+ numValueOf('alid'));       
-
+  if (sqlDelete('Vessel',$sqlwhere)) {
      deleteRow();
      closeForm();
      say('Entry Deleted');
@@ -306,110 +207,11 @@ function doDelete() {
 }
 
 function updateTable1() {
-  changeCol('t#alname',valueOf('alname'));
-  changeCol('t#amount',valueOf('amount'));
-  changeCol('t#altype',valueOf('altype'));
-  changeCol('t#alid',valueOf('alid'));
+  changeCol('t#vid',valueOf('vid'));
+  changeCol('t#code',valueOf('code'));
+  changeCol('t#vesselname',valueOf('vesselname'));
+  changeCol('t#lloydno',valueOf('lloydno'));
   return;
-}
-
-function basisOptions() {
- 
- hideElement('functiondiv');
- showElement('basicrow');
- changeContent('ratelabel','Rate');
-
- if (valueOf('altype')=='Fixed')  {
-   hideElement('percentdiv');
-   changeContent('ratelabel','Amount');
- }
- if (valueOf('altype')=='Percentage')  
-   showElement('percentdiv');
-
-
- if (valueOf('altype2')=='TimeHours'){
-     hideElement('basicrow');
-     showElement('percentdiv');
-     deleteSelectOption('altype','Percentage');
- }
- else{
-    if (textOfSelect('altype','Percentage')=='')
-        addSelectOption('altype','Percentage','Percentage(%)');
-
- }
-
- if (valueOf('altype')=='Function'){
-     hideElement('basicrow');
-     hideElement('percentdiv');
-     showElement('functiondiv');
-     //protect('altype2');
-     //changeVar('altype2','Standard');
- }else{ unProtect('altype2');}
-  
-
- if (valueOf('altype2')=='TimeHours')   {
-     hideElement('taxablespan');
-     showElement('timebasis','minmax');
-     if (valueOf('tsbasis')=='H')     showElement('percentdiv');
-     else                             hideElement('percentdiv');
-     
- }else {
-     showElement('taxablespan');
-     hideElement('timebasis','minmax');
- }
-
-
- if (valueOf('altype')=='Function' && valueOf('altype2')=='TimeHours')   {
-    showElement('fortimespan','taxablespan');
-    hideElement('timebasis');
-    hideElement('percentdiv','minmax'); 
- } else {
-    hideElement('fortimespan');
-    document.screen2.fortimesheet.checked=false;
- } 
- if (valueOf('altype2')=='TimeHours')   {
-     if (valueOf('tsbasis')=='H'){
-         showElement('percentdiv');
-     }else {
-         hideElement('percentdiv');
-     }
- }
- 
-}
-
-function chechTaxable(caller) {
-
-//if (mode!='change') return false;
-
-if (caller==1) {
- if (document.screen2.taxablecheck.checked==true) {
-   document.screen2.taxablecheck.checked=false; 
-   changeVar('taxable','N');
- }
- else {
-   document.screen2.taxablecheck.checked=true; 
-   changeVar('taxable','Y');
- }
-}
-else{
-   if (document.screen2.taxablecheck.checked==true)     
-      changeVar('taxable','Y');
-   else
-      changeVar('taxable','N');
- }
-  
-} 
-
-
-function mntRateHist() {
- var obj=new dialogDef();
- obj.top= window.dialogTop;
- obj.left = window.dialogLeft;
- obj.width=600; 
- obj.dialogparm.alid = valueOf('alid');
- obj.dialogparm.emprid = COMPANY;
- displayDialog('AllowanceRateDetail.htm',obj);
-  
 }
 
 </script>
@@ -419,7 +221,7 @@ function mntRateHist() {
 <div id=optionarea2 style="display:none"></div>
 <div id=footer><div id=msgarea></div></div>
 
-<div id=workarea style="display:none; height:690px">
+<div id=workarea style="display:none">
 
 
 
@@ -448,96 +250,26 @@ function mntRateHist() {
 
 <div id="divscreen2" style="display:none" class="window">
 <form name=screen2>
-<div class="titleBar">Maintain Allowance</div>
-<span id=exitbutton class="ximage" onclick="exeFunction('closeForm()');refresh()"></span>
-
-<input style="display:none" name=alid>
-<input style="display:none" name=taxable>
-
+<div class="titleBar"></div>
+<span id=exitbutton class="ximage" onclick="exeFunction('closeForm()')"></span>
+<input name=vid style="display:none" >
 <table>
 <tr><td>
-<span class=label>Allowance Code</span>&nbsp<input type=text name=alcode size=10 maxlength=10
+<span class=label>code</span>&nbsp<input type=text name=code size=10 maxlength=10
  onChange="setupper(this)">
 </td></tr><tr><td>
-<span class=label>Allowance Description</span>&nbsp<input type=text name=alname size=20 maxlength=30>
+<span class=label>Vessel Name</span>&nbsp<input type=text name=vesselname size=50 maxlength=50
+ onChange="setupper(this)">
 </td></tr><tr><td>
-<span id=ratelabel class=label>Amount</span>&nbsp<input type=text name=amount size=12 maxlength=12
- class=numeric readonly onBlur="editField(this,2,'j')"> 
-</td></tr><tr><td>
-<span class=label>Basis</span>
-<select name=altype onChange="basisOptions();">
- <option value="Fixed">Fixed</option> 
- <option value="Percentage"  >Percentage(%)</option>  
- <option value="Function">Function</option>  
-</select>
-</td></tr><tr><td id=functiondiv  style="display:none">
-
- <span class=label>Function name</span>&nbsp<input type=text name=functionname size=20 maxlength=20>
-
-</td></tr><tr><td>
-<span class=label>Type</span>
-<select name=altype2 onChange="basisOptions();">
- <option value="Standard">Standard</option> 
- <option value="TimeHours">Time Sheet </option>  
-</select>
-
-</td></tr><tr><td>
-<span class=label>Effective Date</span>&nbsp<span id=effdate></span> <img src="../image/cal.jpg" onclick="promptCal('effdate',datefmt)" border=1></img>
-</td></tr><tr><td>
-<span class=label>Expiry Date</span>&nbsp<span nolabel type=date field=expdate></span> 
-
+<span class=label>Lloyd No</span>&nbsp<input type=text name=lloydno size=20 maxlength=20
+ onChange="setupper(this)">
 </td></tr>
-</table>
-<div id=timebasis>
- <span class=label>Time Sheet Basis</span>&nbsp<select name=tsbasis  onChange="basisOptions();">
- <option value="D">Per Day</option> 
- <option value="H">Per Hour</option> </select><br>
-</div>
-
-<div id=percentdiv style="display:none">
-<table>
-<tr id="basicrow"><td>
-<span class=label>Apply to Basic</span>&nbsp<select name=frombasic >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr><tr><td>
-<span id=stlabel class=label>Apply to Straight Time</span>&nbsp<select name=stime >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr><tr><td>
-<span id=otlabel class=label>Apply to Over Time</span>&nbsp<select name=otime >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr><tr><td>
-<span id=dtlabel class=label>Apply to Double Time</span>&nbsp<select name=dtime >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr><tr><td>
-<span id=ttlabel class=label>Apply to Triple Time</span>&nbsp<select name=ttime >
- <option value="Y">Yes</option> 
- <option value="N">No</option> </select>
-</td></tr>
-</table></div>
-<div id=minmax style="display:none">
-<span field=minvalue></span><br>
-<span field=maxvalue></span>
-</div>
-<span id=taxablespan>
-<INPUT onclick="chechTaxable()" TYPE=CHECKBOX NAME="taxablecheck"><span onclick="chechTaxable(1)">Taxable / Deductable</span></input>
-</span>
-<br>
-<span id=fortimespan>
-<INPUT  TYPE=CHECKBOX NAME="fortimesheet"><span onclick="document.screen2.fortimesheet.checked ? document.screen2.fortimesheet.checked=false : document.screen2.fortimesheet.checked=true">For timesheet entry</span></input>
-</span>
-<br>
-<br>
-
+</table><br>
 <div class=buttonarea>
-<span style="display:none" button=ratesbutton height=30 onclick="exeFunction('mntRateHist()')">Rates</span>
 <span id=addbutton onclick="exeFunction('doAdd()')"></span>
 <span id=changebutton onclick="exeFunction('doChange()')"></span>
 <span id=deletebutton onclick="exeFunction('doDelete()')"></span>
-<span id=cancelbutton onclick="exeFunction('closeForm()');refresh();"></span>
+<span id=cancelbutton onclick="exeFunction('closeForm()')"></span>
 </div>
 </form>
 </div>
