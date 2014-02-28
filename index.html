@@ -463,7 +463,7 @@ $('#but').click(function() {
 <div id=divscreen1 style='display:xnone'>
 <form name=screen1 >
 <div id=screen1table></div> 
-<input  name="but1" id="but1" type="button" data-icon="plus"  data-transition="pop" value="New Record" onclick="newRecord()"/>
+<input  name="but1" id="but1" type="button" data-icon="plus"  data-transition="pop" value="Page 3" onclick="$.mobile.changePage("#pageone");"/>
 <br>
 
 </form>
@@ -578,6 +578,23 @@ $('#but').click(function() {
 </form>
 <!/div>
 </div><!****END PAGE>
+
+<!****NEW PAGE>
+
+<div data-role="page" id="page3">
+  Page 3
+  <label for="select-choice-0" class="select">Shipping method:</label>
+  <select name="select-choice-0" id="select-choice-0">
+     <option value="standard">Standard: 7 day</option>
+     <option value="rush">Rush: 3 days</option>
+     <option value="express">Express: next day</option>
+     <option value="overnight">Overnight</option>
+   </select>
+
+  <input  type="button" data-icon="arrow-r"    value="Got to Page 4" onclick="$.mobile.changePage('#page4');"/>
+
+</div>
+<!****NEW PAGE>
 
 
 </div>
