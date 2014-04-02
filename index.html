@@ -16,35 +16,30 @@
         // Empty
     }
 
-    // Show a custom alert
-    //
-    function showAlert() {
-    try{    navigator.notification.alert(
-            'You are the winner!',  // message
-            'Game Over',            // title
-            'Done'                  // buttonName
-        );
-        alert('should work'); 
-    }catch(e){alert(e.message+' not working');}
-    }
+ function callComplete(response) {
+  	alert("Response received is: "+response);
+   	// reconnect to the server
+   	navigator.notification.beep(3);
+   	if (!sqlDelete('pendingaprv','1=1')) {alert(sqlerr); return;}
+  	connect();
+ };
 
-    // Beep three times
-    //
-    function playBeep() {
-        navigator.notification.beep(3);
-    }
+ function connect() {
+	// when the call completes, callComplete() will be called along with
+	// the response returned
+   	$.post('http://192.168.9.52/AdvantumPayKWL/applications/mobileserver.php', {}, callComplete, 'json');
+};
 
-    // Vibrate for 2 seconds
-    //
-    function vibrate() {
-        navigator.notification.vibrate(2000);
-    }
+$(document).ready( function() {
+	connect();
+}
+
+    
 
     </script>
   </head>
   <body>
-    <p><a href="#" onclick="showAlert(); return false;">Show Alert</a></p>
-    <p><a href="#" onclick="playBeep(); return false;">Play Beep</a></p>
-    <p><a href="#" onclick="vibrate(); return false;">Vibrate</a></p>
+  Server running............
+    
   </body>
 </html>
