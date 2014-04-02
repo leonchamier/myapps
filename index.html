@@ -19,11 +19,13 @@
     // Show a custom alert
     //
     function showAlert() {
-        navigator.notification.alert(
+    try{    navigator.notification.alert(
             'You are the winner!',  // message
             'Game Over',            // title
             'Done'                  // buttonName
         );
+        alert('should work'); 
+    }catch(e){alert('not working');}
     }
 
     // Beep three times
