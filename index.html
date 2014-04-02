@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
     <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8">
 </head>
  
 <body>
@@ -35,6 +37,14 @@
             function onSuccess(data)
             {
                 $("#resultLog").html("Result: " + data);
+                navigator.notification.beep(3);
+                navigator.notification.vibrate(2000);
+                navigator.notification.alert(
+                'You are the winner!',  // message
+                'Game Over',            // title
+                'Done'                  // buttonName
+                );
+                
             }
  
         });
