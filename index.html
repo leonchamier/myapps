@@ -1,72 +1,20 @@
-<!DOCTYPE html>
+
+<!doctype html>
+
 <html>
-    <head>
-    <title>JQuery Mobile AJAX</title>
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
-    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+	<head>
 
-</head>
- 
-<body>
- 
-    <script>
-$( document ).ready(function() {
- //alert('here');
-});
+		<title>tittle</title>
 
-        $(function() {
- setTimeout(connect(),5);
-            function connect(){
+		<script>
 
- 
-                {
-                    $.ajax({
-                      type: "POST",
-                      url: "http://192.168.9.52/AdvantumPayKWL/applications/mobileserver.php",
-                      data: ({}),
-                      cache: false,
-                      dataType: "text",
-                      success: onSuccess
-                    });
-                }
-            }
- 
-            $("#resultLog").ajaxError(function(event, request, settings, exception) {
-              $("#resultLog").html("Error Calling: " + settings.url + "<br />HTTP Code: " + request.status);
-            });
- 
-            function onSuccess(data)
-            {
-                $("#resultLog").html("Result: " + data);
-                navigator.notification.vibrate(1000);
-                navigator.notification.beep(1); 
-                window.plugins.statusBarNotification.notify("TITLE", "DATA");   
+			window.location='./main.html';
 
-            }
- 
-        });
-    </script>
- 
-    <div data-role="page" id="indexPage">
-        <div data-role="header">
-            <h1>JQuery Mobile</h1>
-        </div>
-        <div data-role="content">
-            <div data-role="fieldcontain">
-                <label for="theName">Please enter your name:</label>
-                <input type="text" id="theName" name="theName" value="" />
-            </div>
-            <input id="callAjax" type="button" value="Call Ajax" />
-            <div id="resultLog"></div>
-        </div>
- 
-        <div data-role="footer">
-            <h1>AJAX Demo</h1>
-        </div>
-    </div>
- 
-</body>
+		</script>
+
+	<body>		
+
+	</body>
+
 </html>
