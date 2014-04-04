@@ -14,36 +14,27 @@
  
 <body>
  
-    <script>
+ <script>
+
 $( document ).ready(function() {
- alert('here');
+  connect();
 });
 
-        $(function() {
- 
-            $("#callAjax").click(function() {
+function connect() {
 
-                var theName = $.trim($("#theName").val());
- 
-                if(theName.length > 0)
-                {
-                    $.ajax({
-                      type: "POST",
-                      url: "http://192.168.2.2/mobileserver.php",
-                      data: ({name: theName}),
-                      cache: false,
-                      dataType: "text",
-                      success: onSuccess
-                    });
+
+                    $.post('http://192.168.2.2/mobileserver.php', {}, onSuccess, 'text');
                 }
-            });
- 
-            $("#resultLog").ajaxError(function(event, request, settings, exception) {
-              $("#resultLog").html("Error Calling: " + settings.url + "<br />HTTP Code: " + request.status);
+           
+
+            $(document).ajaxError(function(event, request, settings, exception) {
+              alert("Error Calling: " + settings.url + "<br />HTTP Code: " + request.status);
+              navigator.app.exitApp(); 
             });
  
             function onSuccess(data)
             {
+                alert(data);
                 $("#resultLog").html("Result: " + data);
                 window.plugins.statusBarNotification.notify("TITLE", "DATA");   
                 navigator.notification.vibrate(1000);
@@ -51,7 +42,7 @@ $( document ).ready(function() {
 
             }
  
-        });
+        
     </script>
  
     <div data-role="page" id="indexPage">
