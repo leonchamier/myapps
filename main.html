@@ -1,68 +1,35 @@
-
 <!DOCTYPE html>
 <html>
-    <head>
-    <title>JQuery Mobile AJAX</title>
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-  
+  <head>
+    <title>Cordova Back Button Example</title>
 
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
-    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova-2.0.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
 
+    // Call onDeviceReady when Cordova is loaded.
+    //
+    // At this point, the document has loaded but cordova-2.0.0.js has not.
+    // When Cordova is loaded and talking with the native device,
+    // it will call the event `deviceready`.
+    //
+    function onLoad() {
+        document.addEventListener("deviceready", onDeviceReady, false);
+    }
 
-</head>
- 
-<body>
- 
- <script>
+    // Cordova is loaded and it is now safe to call Cordova methods
+    //
+    function onDeviceReady() {
+        // Register the event listener
+        document.addEventListener("backbutton", onBackKeyDown, false);
+    }
 
-$( document ).ready(function() {
-  connect();
-});
+    // Handle the back button
+    //
+    function onBackKeyDown() {
+    }
 
-function connect() {
-
-
-                    $.post('http://192.168.2.2/mobileserver.php', {}, onSuccess, 'text');
-                }
-           
-
-            $(document).ajaxError(function(event, request, settings, exception) {
-              alert("Error Calling: " + settings.url + "<br />HTTP Code: " + request.status);
-              navigator.app.exitApp(); 
-            });
- 
-            function onSuccess(data)
-            {
-                alert('Success'+data);
-              // $("#resultLog").html("Result: " + data);
-              // window.plugins.statusBarNotification.notify("TITLE", "DATA");   
-              // navigator.notification.vibrate(1000);
-              // navigator.notification.beep(1);  
-
-            }
- 
-        
     </script>
- 
-    <div data-role="page" id="indexPage">
-        <div data-role="header">
-            <h1>JQuery Mobile</h1>
-        </div>
-        <div data-role="content">
-            <div data-role="fieldcontain">
-                <label for="theName">Please enter your name:</label>
-                <input type="text" id="theName" name="theName" value="" />
-            </div>
-            <input id="callAjax" type="button" value="Call Ajax" />
-            <div id="resultLog"></div>
-        </div>
- 
-        <div data-role="footer">
-            <h1>AJAX Demo</h1>
-        </div>
-    </div>
- 
-</body>
+  </head>
+  <body onload="onLoad()">
+  </body>
 </html>
