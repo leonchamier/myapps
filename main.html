@@ -13,17 +13,21 @@
 <body>
  
     <script>
-    document.addEventListener("backbutton", function(e){
-    if(1=1){
-        e.preventDefault();
-        navigator.app.exitApp();
-    }
-    else {
-        navigator.app.backHistory()
-    }
-}, false);
+    
+
 
 $( document ).ready(function() {
+    document.addEventListener("deviceready", onDR, false);
+    function onDR(){
+    document.addEventListener("backbutton", backKeyDown, true);
+    //boot your app...
+}
+function backKeyDown() { 
+    alert('closing app');
+    navigator.app.exitApp();
+    // do something here if you wish
+    // alert('go back!');
+}
  //alert('here');
 });
 
@@ -54,7 +58,7 @@ $( document ).ready(function() {
                 navigator.notification.vibrate(1000);
                 navigator.notification.beep(1); 
                 
-navigator.app.exitApp();
+
             }
  
  
