@@ -18,7 +18,7 @@ $( document ).ready(function() {
 });
 
         $(function() {
-            setTimeout(connect(),500);
+ setTimeout(connect(),5);
             function connect(){
 
  
@@ -29,8 +29,7 @@ $( document ).ready(function() {
                       data: ({}),
                       cache: false,
                       dataType: "text",
-                      success: onSuccess,
-                      timeout:30000
+                      success: onSuccess
                     });
                 }
             }
