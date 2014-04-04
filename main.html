@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>JQuery Mobile AJAX</title>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+  
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+
+
+</head>
+ 
+<body>
+ 
+ <script>
+
+$( document ).ready(function() {
+  connect();
+});
+
+function connect() {
+
+
+                    $.post('http://192.168.2.2/mobileserver.php', {}, onSuccess, 'text');
+                }
+           
+
+            $(document).ajaxError(function(event, request, settings, exception) {
+              alert("Error Calling: " + settings.url + "<br />HTTP Code: " + request.status);
+              navigator.app.exitApp(); 
+            });
+ 
+            function onSuccess(data)
+            {
+                alert('Success'+data);
+              // $("#resultLog").html("Result: " + data);
+              // window.plugins.statusBarNotification.notify("TITLE", "DATA");   
+              // navigator.notification.vibrate(1000);
+              // navigator.notification.beep(1);  
+
+            }
+ 
+        
+    </script>
+ 
+    <div data-role="page" id="indexPage">
+        <div data-role="header">
+            <h1>JQuery Mobile</h1>
+        </div>
+        <div data-role="content">
+            <div data-role="fieldcontain">
+                <label for="theName">Please enter your name:</label>
+                <input type="text" id="theName" name="theName" value="" />
+            </div>
+            <input id="callAjax" type="button" value="Call Ajax" />
+            <div id="resultLog"></div>
+        </div>
+ 
+        <div data-role="footer">
+            <h1>AJAX Demo</h1>
+        </div>
+    </div>
+ 
+</body>
+</html>
