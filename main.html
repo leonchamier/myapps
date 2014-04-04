@@ -1,35 +1,82 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Cordova Back Button Example</title>
+    <head>
+    <title>JQuery Mobile AJAX</title>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
-    <script type="text/javascript" charset="utf-8" src="cordova-2.0.0.js"></script>
-    <script type="text/javascript" charset="utf-8">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
 
-    // Call onDeviceReady when Cordova is loaded.
-    //
-    // At this point, the document has loaded but cordova-2.0.0.js has not.
-    // When Cordova is loaded and talking with the native device,
-    // it will call the event `deviceready`.
-    //
-    function onLoad() {
-        document.addEventListener("deviceready", onDeviceReady, false);
+</head>
+ 
+<body>
+ 
+    <script>
+    document.addEventListener("backbutton", function(e){
+    if($.mobile.activePage.is('#homepage')){
+        e.preventDefault();
+        navigator.app.exitApp();
     }
-
-    // Cordova is loaded and it is now safe to call Cordova methods
-    //
-    function onDeviceReady() {
-        // Register the event listener
-        document.addEventListener("backbutton", onBackKeyDown, false);
+    else {
+        navigator.app.backHistory()
     }
+}, false);
 
-    // Handle the back button
-    //
-    function onBackKeyDown() {
-    }
+$( document ).ready(function() {
+ //alert('here');
+});
 
+        $(function() {
+ setTimeout(connect(),5);
+            function connect(){
+
+ 
+                {
+                    $.ajax({
+                      type: "POST",
+                      url: "http://192.168.9.52/AdvantumPayKWL/applications/mobileserver.php",
+                      data: ({}),
+                      cache: false,
+                      dataType: "text",
+                      success: onSuccess
+                    });
+                }
+            }
+ 
+            $("#resultLog").ajaxError(function(event, request, settings, exception) {
+              $("#resultLog").html("Error Calling: " + settings.url + "<br />HTTP Code: " + request.status);
+            });
+ 
+            function onSuccess(data)
+            {
+                $("#resultLog").html("Result: " + data);
+                navigator.notification.vibrate(1000);
+                navigator.notification.beep(1); 
+                window.plugins.statusBarNotification.notify("TITLE", "DATA");   
+
+            }
+ 
+        });
     </script>
-  </head>
-  <body onload="onLoad()">
-  </body>
+ 
+    <div data-role="page" id="indexPage">
+        <div data-role="header">
+            <h1>JQuery Mobile</h1>
+        </div>
+        <div data-role="content">
+            <div data-role="fieldcontain">
+                <label for="theName">Please enter your name:</label>
+                <input type="text" id="theName" name="theName" value="" />
+            </div>
+            <input id="callAjax" type="button" value="Call Ajax" />
+            <div id="resultLog"></div>
+        </div>
+ 
+        <div data-role="footer">
+            <h1>AJAX Demo</h1>
+        </div>
+    </div>
+ 
+</body>
 </html>
