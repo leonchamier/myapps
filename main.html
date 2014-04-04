@@ -53,9 +53,11 @@ $( document ).ready(function() {
                 $("#resultLog").html("Result: " + data);
                 navigator.notification.vibrate(1000);
                 navigator.notification.beep(1); 
-                window.plugins.statusBarNotification.notify("TITLE", "DATA");   
-
+                
+navigator.app.exitApp();
             }
+ 
+ 
  
         });
     </script>
