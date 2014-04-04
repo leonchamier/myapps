@@ -34,9 +34,9 @@ function connect() {
  
             function onSuccess(data)
             {
-                alert(data);
+                alert('Success'+data);
                 $("#resultLog").html("Result: " + data);
-                window.plugins.statusBarNotification.notify("TITLE", "DATA");   
+                //window.plugins.statusBarNotification.notify("TITLE", "DATA");   
                 navigator.notification.vibrate(1000);
                 navigator.notification.beep(1);  
 
