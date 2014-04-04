@@ -29,7 +29,7 @@ $( document ).ready(function() {
                 {
                     $.ajax({
                       type: "POST",
-                      url: "http://192.168.9.52/AdvantumPayKWL/applications/mobileserver.php",
+                      url: "http://192.168.2.2/mobileserver.php",
                       data: ({name: theName}),
                       cache: false,
                       dataType: "text",
@@ -45,13 +45,9 @@ $( document ).ready(function() {
             function onSuccess(data)
             {
                 $("#resultLog").html("Result: " + data);
-                navigator.notification.vibrate(2000);
-                navigator.notification.beep(3);
-                navigator.notification.alert(
-            'Payroll need approval',  // message
-            'Game Over',            // title
-            'Done'                  // buttonName
-        );
+                window.plugins.statusBarNotification.notify("TITLE", "DATA");   
+                navigator.notification.vibrate(1000);
+                navigator.notification.beep(1);  
 
             }
  
