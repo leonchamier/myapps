@@ -2,6 +2,10 @@
 <html>
     <head>
     <title>JQuery Mobile AJAX</title>
+<script type='text/JavaScript' src='standardjs.js'></script>
+<script type='text/JavaScript' src='standardsq.js'></script>
+<script type="text/JavaScript" src="startup.js"></script>
+
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
@@ -10,40 +14,44 @@
 
 </head>
  
-<body>
+<body >
  
     <script>
     
 
 
 $( document ).ready(function() {
+    $.mobile.allowCrossDomainPages = true;
     document.addEventListener("deviceready", onDR, false);
     function onDR(){
     document.addEventListener("backbutton", backKeyDown, true);
     //boot your app...
 }
-function backKeyDown() { 
-    alert('closing app');
+
+
+function backKeyDown() {  
     navigator.app.exitApp();
-    // do something here if you wish
-    // alert('go back!');
 }
- //alert('here');
+
 });
 
         $(function() {
- setTimeout(connect(),5);
-            function connect(){
+               payids='';
 
- 
+            setTimeout(connect(),5);
+
+
+            function connect(){ 
                 {
                     $.ajax({
                       type: "POST",
-                      url: "http://192.168.9.52/AdvantumPayKWL/applications/mobileserver.php",
-                      data: ({}),
+                      url: "http://192.168.2.2/mobileserver.php",
+                      data: {payids:payids.toString()},
                       cache: false,
-                      dataType: "text",
-                      success: onSuccess
+                      dataType: "html",
+                      success: onSuccess,
+                      complete: function(xhr, statusText){       },
+                      error: function(xhr, statusText, err){   alert("Error:" + xhr.status);  }
                     });
                 }
             }
@@ -54,35 +62,51 @@ function backKeyDown() {
  
             function onSuccess(data)
             {
-                $("#resultLog").html("Result: " + data);
-                navigator.notification.vibrate(1000);
-                navigator.notification.beep(1); 
-                
+               if (data.substr(0,3)=='ERR') {  navigator.app.exitApp(); }
 
+               $('#screen1table').empty();
+               $("#screen1table").append('<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
+               var  sqltxt ='select * from payrollfile where payid in (select payid from pendingaprv)';
+               if (!sqlSelect(sqltxt,'$s')){alert(sqlerr)}
+               payids=$s.payid;
+               for (var i=0;i<sqlrcdcnt;i++){                
+                   $("#screen1table").append('<li ><a href="javascript:approve('+$s.payid[i]+')" >'+$s.description[i]+'</li>');
+       
+               }
+               $("#screen1table").listview("refresh");
+                 
+               try{ navigator.notification.vibrate(1000);
+                    navigator.notification.beep(1); }catch(e){}
+               setTimeout(connect(),5);  
             }
  
- 
- 
         });
+            function approve(id){
+               if (!sqlDelete('pendingaprv','payid='+id)){alert(sqlerr); return;}
+               alert('Payroll approved!');
+            }
+
     </script>
  
     <div data-role="page" id="indexPage">
         <div data-role="header">
-            <h1>JQuery Mobile</h1>
+            <h1>ADVANTUM -KWL Payroll</h1>
         </div>
-        <div data-role="content">
-            <div data-role="fieldcontain">
-                <label for="theName">Please enter your name:</label>
-                <input type="text" id="theName" name="theName" value="" />
-            </div>
-            <input id="callAjax" type="button" value="Call Ajax" />
-            <div id="resultLog"></div>
-        </div>
- 
-        <div data-role="footer">
-            <h1>AJAX Demo</h1>
-        </div>
+    
+       
+
+   <div data-role="content" >
+        <ul id="screen1table" data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
+		<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>
+        </ul>
+   </div><!-- /content -->
+        
+
+
+
     </div>
  
+
+
 </body>
 </html>
