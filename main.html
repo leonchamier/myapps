@@ -37,7 +37,7 @@ function backKeyDown() {
 
         $(function() {
                payids='';
-submitsqlpath="http://192.168.2.2/mphpsql.php";
+
             setTimeout(connect(),5);
 
 
@@ -50,7 +50,8 @@ submitsqlpath="http://192.168.2.2/mphpsql.php";
                       cache: false,
                       dataType: "html",
                       success: onSuccess,
-                      complete: function(xhr, statusText){       },
+                      timeout: 60000,  
+                      complete: function(xhr, statusText){ if (xhr.status == 200) {}  },
                       error: function(xhr, statusText, err){   alert("Error:" + xhr.status);  }
                     });
                 }
@@ -90,7 +91,7 @@ submitsqlpath="http://192.168.2.2/mphpsql.php";
  
     <div data-role="page" id="indexPage">
         <div data-role="header">
-            <h1>ADVANTUM -KWL Payroll</h1>
+            <h1>ADVANTUM inc</h1>
         </div>
     
        
@@ -103,7 +104,9 @@ submitsqlpath="http://192.168.2.2/mphpsql.php";
         
 
 
-
+        <div data-role="footer">
+            <h1>KWL Payroll</h1>
+        </div>
     </div>
  
 
