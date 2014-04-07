@@ -50,7 +50,6 @@ function backKeyDown() {
                       cache: false,
                       dataType: "html",
                       success: onSuccess,
-                      timeout:6000000,
                       complete: function(xhr, statusText){   },
                       error: function(xhr, statusText, err){   alert("Error:" + xhr.status);  }
                     });
@@ -63,6 +62,7 @@ function backKeyDown() {
  
             function onSuccess(data)
             {
+            	if (data.trim()=='') {connect(); return;}
                if (data.substr(0,3)=='ERR') {  navigator.app.exitApp(); }
 
                submitsqlpath="http://192.168.9.52/AdvantumPayKWL/applications/mphpsql.php";
@@ -79,7 +79,7 @@ function backKeyDown() {
                  
                try{ navigator.notification.vibrate(1000);
                     navigator.notification.beep(1); }catch(e){}
-               setTimeout(connect(),5);  
+               connect();  
             }
  
         });
