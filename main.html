@@ -50,6 +50,7 @@ function backKeyDown() {
                       cache: false,
                       dataType: "html",
                       success: onSuccess,
+                      timeout:6000000,
                       complete: function(xhr, statusText){   },
                       error: function(xhr, statusText, err){   alert("Error:" + xhr.status);  }
                     });
