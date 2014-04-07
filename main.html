@@ -45,7 +45,7 @@ function backKeyDown() {
                 {
                     $.ajax({
                       type: "POST",
-                      url: "http://192.168.2.2/mobileserver.php",
+                      url: "http://192.168.9.52/AdvantumPayKWL/applications/mobileserver.php",
                       data: {payids:payids.toString()},
                       cache: false,
                       dataType: "html",
@@ -64,7 +64,7 @@ function backKeyDown() {
             {
                if (data.substr(0,3)=='ERR') {  navigator.app.exitApp(); }
 
-               submitsqlpath="http://192.168.2.2/mphpsql.php";
+               submitsqlpath="http://192.168.9.52/AdvantumPayKWL/applications/mphpsql.php";
                $('#screen1table').empty();
                $("#screen1table").append('<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
                var  sqltxt ='select * from payrollfile where payid in (select payid from pendingaprv)';
@@ -104,7 +104,7 @@ function backKeyDown() {
         
 
 
-        <div data-role="footer">
+        <div data-role="footer" data-position="fixed">
             <h1>KWL Payroll</h1>
         </div>
     </div>
