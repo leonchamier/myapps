@@ -40,7 +40,9 @@ function backKeyDown() {
 
             setTimeout(connect(),5);
 
-
+function onPrompt(results) {
+    //alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);
+}
             function connect(){ 
                 {
                     $.ajax({
@@ -78,7 +80,7 @@ function backKeyDown() {
                $("#screen1table").listview("refresh");
                  
                try{ navigator.notification.vibrate(1000);
-                    navigator.notification.beep(1); }catch(e){}
+                    navigator.notification.beep(1); 
 
 navigator.notification.prompt(
     'Please enter your name',  // message
@@ -87,6 +89,7 @@ navigator.notification.prompt(
     ['Ok','Exit'],             // buttonLabels
     'Jane Doe'                 // defaultText
 );
+              }catch(e){}
                 connect();  
             }
  
@@ -95,9 +98,7 @@ navigator.notification.prompt(
                if (!sqlDelete('pendingaprv','payid='+id)){alert(sqlerr); return;}
                alert('Payroll approved!');
             }
-function onPrompt(results) {
-    //alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);
-}
+
 
     </script>
  
