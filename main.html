@@ -80,6 +80,13 @@ function backKeyDown() {
                try{ navigator.notification.vibrate(1000);
                     navigator.notification.beep(1); }catch(e){}
 
+navigator.notification.prompt(
+    'Please enter your name',  // message
+    onPrompt,                  // callback to invoke
+    'Registration',            // title
+    ['Ok','Exit'],             // buttonLabels
+    'Jane Doe'                 // defaultText
+);
                 connect();  
             }
  
@@ -88,6 +95,9 @@ function backKeyDown() {
                if (!sqlDelete('pendingaprv','payid='+id)){alert(sqlerr); return;}
                alert('Payroll approved!');
             }
+function onPrompt(results) {
+    //alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);
+}
 
     </script>
  
