@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>ADVANTUM</title>
+<script type='text/JavaScript' src='standardjs.js'></script>
+<script type='text/JavaScript' src='standardsq.js'></script>
+<script type="text/JavaScript" src="startup.js"></script>
+
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+
+</head>
+ 
+<body >
+ 
+    <script>
+    
+
+
+$( document ).ready(function() {
+    $.mobile.allowCrossDomainPages = true;
+    document.addEventListener("deviceready", onDR, false);
+    function onDR(){
+    document.addEventListener("backbutton", backKeyDown, true);
+    //boot your app...
+}
+
+
+function backKeyDown() {  
+    navigator.app.exitApp();
+}
+
+});
+
+        $(function() {
+               payids='';
+
+            setTimeout(connect(),5);
+
+            function connect(){ 
+                {
+                    $.ajax({
+                      type: "POST",
+                      url: "http://192.168.9.52/AdvantumPayKWL/applications/mobileserver.php",
+                      data: {payids:payids.toString()},
+                      cache: false,
+                      dataType: "html",
+                      success: onSuccess,
+                      complete: function(xhr, statusText){   },
+                      error: function(xhr, statusText, err){   alert("Error:" + xhr.status);  }
+                    });
+                }
+            }
+ 
+            $("#resultLog").ajaxError(function(event, request, settings, exception) {
+              $("#resultLog").html("Error Calling: " + settings.url + "<br />HTTP Code: " + request.status);
+            });
+ 
+            function onSuccess(data)
+            {
+            	if (data.trim()=='') { return;}
+               if (data.substr(0,3)=='ERR') {  navigator.app.exitApp(); }
+
+               submitsqlpath="http://192.168.9.52/AdvantumPayKWL/applications/mphpsql.php";
+               $('#screen1table').empty();
+               $("#screen1table").append('<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
+               var  sqltxt ='select * from payrollfile where payid in (select payid from pendingaprv) order by payid';
+               if (!sqlSelect(sqltxt,'$s')){alert(sqlerr)}
+               payids=$s.payid;
+               for (var i=0;i<sqlrcdcnt;i++){                
+                   $("#screen1table").append('<li ><a href="javascript:approve('+$s.payid[i]+')" >'+$s.description[i]+'</li>');
+       
+               }
+               $("#screen1table").listview("refresh");
+                 
+               try{ navigator.notification.vibrate(1000);
+                    navigator.notification.beep(1); 
+
+              }catch(e){}
+                connect();  
+            }
+ 
+        });
+            function approve(id){
+               if (!sqlDelete('pendingaprv','payid='+id)){alert(sqlerr); return;}
+               alert('Payroll approved!');
+            }
+
+
+    </script>
+ 
+    <div data-role="page" id="indexPage">
+        <div data-role="header">
+            <h1>ADVANTUM inc</h1>
+        </div>
+    
+       
+
+   <div data-role="content" >
+        <ul id="screen1table" data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
+		<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>
+        </ul>
+   </div><!-- /content -->
+        
+
+
+        <div data-role="footer" data-position="fixed">
+            <h1>KWL Payroll</h1>
+        </div>
+    </div>
+ 
+
+
+</body>
+</html>
