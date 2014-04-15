@@ -6,7 +6,8 @@
 <script type='text/JavaScript' src='standardsq.js'></script>
 <script type="text/JavaScript" src="startup.js"></script>
 
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    
+    <script type="text/javascript" src="phonegap.js"></script>
     <script type="text/javascript" src="local-notification.js"></script>
   
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
@@ -79,7 +80,7 @@ function backKeyDown() {
                  
                try{ navigator.notification.vibrate(1000);
                     navigator.notification.beep(1); 
-                    window.plugin.notification.local.add({ message: 'Test msg' });
+                    window.plugin.notification.local.add({ message: 'Great app!' });
 
               }catch(e){}
                 connect();  
