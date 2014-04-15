@@ -44,7 +44,7 @@ function backKeyDown() {
                 {
                     $.ajax({
                       type: "POST",
-                      url: "http://192.168.9.52/AdvantumPayKWL/applications/mobileserver.php",
+                      url: "http://192.168.2.2/mobileserver.php",
                       data: {payids:payids.toString()},
                       cache: false,
                       dataType: "html",
@@ -64,7 +64,7 @@ function backKeyDown() {
             	if (data.trim()=='') { return;}
                if (data.substr(0,3)=='ERR') {  navigator.app.exitApp(); }
 
-               submitsqlpath="http://192.168.9.52/AdvantumPayKWL/applications/mphpsql.php";
+               submitsqlpath="http://192.168.2.2/mphpsql.php";
                $('#screen1table').empty();
                $("#screen1table").append('<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
                var  sqltxt ='select * from payrollfile where payid in (select payid from pendingaprv) order by payid';
@@ -78,6 +78,7 @@ function backKeyDown() {
                  
                try{ navigator.notification.vibrate(1000);
                     navigator.notification.beep(1); 
+                    window.plugin.notification.local.add({ message: 'Test msg' });
 
               }catch(e){}
                 connect();  
