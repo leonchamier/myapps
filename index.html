@@ -1,19 +1,57 @@
-<!doctype html>
 
+<!DOCTYPE html>
 <html>
+    <head>
+    <title>ADVANTUM</title>
+<script type='text/JavaScript' src='standardjs.js'></script>
+<script type='text/JavaScript' src='standardsq.js'></script>
+<script type="text/JavaScript" src="startup.js"></script>
 
-	<head>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
-		<title>tittle</title>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
 
-		<script>
+</head>
+ 
+<body >
+ 
+    <script>
+    
 
-			window.location='./main.html';
+    function scanNow(){
+	   cordova.plugins.barcodeScanner.scan(
+         function (result) {
+                 alert("We got a barcode\n" +
+                "Result: " + result.text + "\n" +
+                "Format: " + result.format + "\n" +
+                "Cancelled: " + result.cancelled);
+		  }, 
+		  function (error) {
+			  alert("Scanning failed: " + error);
+		  }
+   	    );
+	}
 
-		</script>
 
-	<body>		
-Loading.....
-	</body>
+    </script>
+ 
+    <div data-role="page" id="indexPage">
+        <div data-role="header">
+            <h1>ADVANTUM inc</h1>
+        </div>
+    
+       
 
+     <div data-role="button" onclick="scanNow()">Scan Now </div>
+
+        <div data-role="footer" data-position="fixed">
+            <h1>Scan Test</h1>
+        </div>
+    </div>
+ 
+
+
+</body>
 </html>
