@@ -19,4 +19,9 @@
 
     <!-- We'll include the Barcode plugin as an example -->
     <gap:plugin name="com.phonegap.plugins.barcodescanner" />
+    
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <plugin name="Camera" value="org.apache.cordova.CameraLauncher" />
+
+
 </widget>
