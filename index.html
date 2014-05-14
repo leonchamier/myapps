@@ -133,6 +133,19 @@
         <div data-role="footer" data-position="fixed">
             <h1>Scan Test</h1>
         </div>
+        
+          <div class="app">
+            <h1>PhoneGap</h1>
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <div class="event received">
+                  <p>Device is Ready</p>
+                </div>
+
+                <button onclick="app.takePicture();">Take Picture</button>
+            </div>
+        </div>
+        
         <button>help</button>
            <input  type="button" data-icon="arrow-r"    value="Got to Page 4" onclick="capturePhotoEdit();"/>
     <button onclick="capturePhotoEdit();">Capture Editable Photo</button> <br>
