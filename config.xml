@@ -5,9 +5,11 @@
     versionCode = "10" 
     version     = "1.0.0" >
 
+   <preference name="phonegap-version" value="3.0.0" />
+
     <!-- versionCode is optional and Android only -->
 
-    <name>PhoneGap Example</name>
+    <name>Oniel App</name>
 
     <description>
       An example for phonegap build docs. 
@@ -19,6 +21,7 @@
 
     <!-- We'll include the Barcode plugin as an example -->
     <gap:plugin name="com.phonegap.plugins.barcodescanner" />
+    <gap:plugin name="org.apache.cordova.core.camera" />    
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <plugin name="Camera" value="org.apache.cordova.CameraLauncher" />
