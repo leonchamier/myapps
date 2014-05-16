@@ -68,6 +68,12 @@
       //
       smallImage.src = "data:image/jpeg;base64," + imageData;
       alert(smallImage.src );
+      var largeImage = document.getElementById('largeImage');
+
+      largeImage.style.display = 'block';
+
+      largeImage.src = imageData;
+    } 
     }
 
     // Called when a photo is successfully retrieved
