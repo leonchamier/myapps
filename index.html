@@ -77,6 +77,16 @@
     } 
   
    function uploadPhoto(imageURI) {
+   	
+   	var win = function (r) {
+        clearCache();
+        retries = 0;
+        alert('Done!');
+    }
+ 
+    var fail = function (error) {
+            alert('Ups. Something wrong happens!');
+    }
    	try{
         var options = new FileUploadOptions();
         options.fileKey="file";
