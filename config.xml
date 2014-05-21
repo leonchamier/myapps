@@ -22,6 +22,8 @@
     <!-- We'll include the Barcode plugin as an example -->
     <gap:plugin name="com.phonegap.plugins.barcodescanner" />
     <gap:plugin name="org.apache.cordova.core.camera" />    
+    <gap:plugin name="org.apache.cordova.file" />  
+    <gap:plugin name="org.apache.cordova.file-transfer" />  
     
     <!--uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /-->
     <!--plugin name="Camera" value="org.apache.cordova.CameraLauncher" -->
