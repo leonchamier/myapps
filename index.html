@@ -1,159 +1,172 @@
-
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-    <head>
-    <title>ADVANTUM</title>
-<script type='text/JavaScript' src='standardjs.js'></script>
-<script type='text/JavaScript' src='standardsq.js'></script>
-<script type="text/JavaScript" src="startup.js"></script>
-
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
-    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
-
-</head>
- 
-<body >
- 
-    <script>
-    
-    var pictureSource;   // picture source
-    var destinationType; // sets the format of returned value 
-
-    // Wait for PhoneGap to connect with the device
-    //
-    document.addEventListener("deviceready",onDeviceReady,false);
-
-    function onDeviceReady() {
-        pictureSource=navigator.camera.PictureSourceType;
-        destinationType=navigator.camera.DestinationType;
-    }
-
-
-    function scanNow(){
-	   cordova.plugins.barcodeScanner.scan(
-         function (result) {
-                 alert("We got a barcode\n" +
-                "Result: " + result.text + "\n" +
-                "Format: " + result.format + "\n" +
-                "Cancelled: " + result.cancelled);
-		  }, 
-		  function (error) {
-			  alert("Scanning failed: " + error);
-		  }
-   	    );
-	}
-
-
- //***************************************************
- //*************PHOTO*****************************
- //***********************************************
- 
-     function onPhotoDataSuccess(imageData) {
-      // Uncomment to view the base64 encoded image data
-      // console.log(imageData);
-
-      // Get image handlefgggggg
-      //
-      var smallImage = document.getElementById('smallImage');
-
-      // Unhide image elements
-      //
-      smallImage.style.display = 'block';
-
-      // Show the captured photo
-      // The inline CSS rules are used to resize the image
-      //
-      smallImage.src = "data:image/jpeg;base64," + imageData;
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>PhoneGap</title>
+    <style type="text/css">
+        div {border: 1px solid black;}
+        input {width: 100%;}
+    </style>
+    <script type="text/javascript" charset="utf-8" src="phonegap-1.1.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
       
-      var largeImage = document.getElementById('largeImage');
+    var deviceReady = false;
 
-      largeImage.style.display = 'block';
+    /**
+* Take picture with camera
+*/
+    function takePicture() {
+        navigator.camera.getPicture(
+            function(uri) {
+                var img = document.getElementById('camera_image');
+                img.style.visibility = "visible";
+                img.style.display = "block";
+                img.src = uri;
+                document.getElementById('camera_status').innerHTML = "Success";
+            },
+            function(e) {
+                console.log("Error getting picture: " + e);
+                document.getElementById('camera_status').innerHTML = "Error getting picture.";
+            },
+            { quality: 50, destinationType: navigator.camera.DestinationType.FILE_URI});
+    };
 
-      largeImage.src = imageData;
-      uploadPhoto(imageData);
-    } 
-  
-   function uploadPhoto(imageURI) {
-   	
-   	var win = function (r) {
-        clearCache();
-        retries = 0;
-        alert('Done!');
-    }
- 
-    var fail = function (error) {
-            alert('Ups. Something wrong happens!');
-    }
-    alert('oniel');
-   	try{
-        var options = new FileUploadOptions();
-        options.fileKey="file";
-	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-	options.mimeType="image/jpeg";
-	var params = new Object();
-	params.img = "test1";
-	params.value2 = "param";
-	options.params = params;
-	options.chunkedMode = false;
-	var ft = new FileTransfer();
-	ft.upload(imageURI, "http://192.168.9.84/myapps/upload.php", win, fail, options);
-   	}catch(e){alert(e.message);}
-	alert('up load success');
-}
-
-
-    // Called when a photo is successfully retrieved
+    /**
+* Select picture from library
+*/
+    function selectPicture() {
+        navigator.camera.getPicture(
+            function(uri) {
+                var img = document.getElementById('camera_image');
+                img.style.visibility = "visible";
+                img.style.display = "block";
+                img.src = uri;
+                document.getElementById('camera_status').innerHTML = "Success";
+            },
+            function(e) {
+                console.log("Error getting picture: " + e);
+                document.getElementById('camera_status').innerHTML = "Error getting picture.";
+            },
+            { quality: 50, destinationType: navigator.camera.DestinationType.FILE_URI, sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY});
+    };
     
-    function capturePhoto() {
-      // Take picture using device camera and retrieve image as base64-encoded string
-      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50 });
-    }
-
-    // A button will call this function
-    //
-    function capturePhotoEdit() {
-      // Take picture using device camera, allow edit, and retrieve image as base64-encoded string  
-	  
-      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20, allowEdit: true }); 
-    }
-
+    /**
+* Upload current picture
+*/
+    function uploadPicture() {
     
+     // Get URI of picture to upload
+        var img = document.getElementById('camera_image');
+        var imageURI = img.src;
+        if (!imageURI || (img.style.display == "none")) {
+            document.getElementById('camera_status').innerHTML = "Take picture or select picture from library first.";
+            return;
+        }
+        
+        // Verify server has been entered
+        server = document.getElementById('serverUrl').value;
+        if (server) {
+        
+            // Specify transfer options
+            var options = new FileUploadOptions();
+            options.fileKey="file";
+            options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+            options.mimeType="image/jpeg";
+            options.chunkedMode = false;
 
-    // Called if something bad happens.
-    // 
-    function onFail(message) {
-      alert('Failed because: ' + message);
+            // Transfer picture to server
+            var ft = new FileTransfer();
+            ft.upload(imageURI, server, function(r) {
+                document.getElementById('camera_status').innerHTML = "Upload successful: "+r.bytesSent+" bytes uploaded.";
+            }, function(error) {
+                document.getElementById('camera_status').innerHTML = "Upload failed: Code = "+error.code;
+            }, options);
+        }
+    }
+
+    /**
+* View pictures uploaded to the server
+*/
+    function viewUploadedPictures() {
+    
+     // Get server URL
+        server = document.getElementById('serverUrl').value;
+        if (server) {
+        
+            // Get HTML that lists all pictures on server using XHR
+            var xmlhttp = new XMLHttpRequest();
+
+            // Callback function when XMLHttpRequest is ready
+            xmlhttp.onreadystatechange=function(){
+                if(xmlhttp.readyState === 4){
+
+                    // HTML is returned, which has pictures to display
+                    if (xmlhttp.status === 200) {
+                     document.getElementById('server_images').innerHTML = xmlhttp.responseText;
+                    }
+
+                    // If error
+                    else {
+                     document.getElementById('server_images').innerHTML = "Error retrieving pictures from server.";
+                    }
+                }
+            };
+            xmlhttp.open("GET", server , true);
+            xmlhttp.send();
+        }	
+    }
+    
+    /**
+* Function called when page has finished loading.
+*/
+    function init() {
+        document.addEventListener("deviceready", function() {deviceReady = true;}, false);
+        window.setTimeout(function() {
+            if (!deviceReady) {
+                alert("Error: PhoneGap did not initialize. Demo will not run correctly.");
+            }
+        },2000);
     }
 
     </script>
- 
-    <div data-role="page" id="indexPage">
-        <div data-role="header">
-            <h1>ADVANTUM inc</h1>
-        </div>
+
+  </head>
+  <body onload="init();">
+    <h3>PhoneGap Camera Upload Demo</h3>
     
-       
-
-        <div data-role="button" onclick="scanNow()">Scan Now </div>
-
-
-
-           <input  type="button" data-icon="arrow-r"    value="Take A Pic" onclick="capturePhotoEdit();"/>
-    
-    
-    <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
-    <img style="display:none;" id="largeImage" src="" />
-
-        <div data-role="footer" data-position="fixed">
-            <h1>Scan Test</h1>
-        </div>
+    <div>
+        <h3>Server URL for upload.php:</h3>
+        <input id="serverUrl" type="text" value="http://192.168.2.3/upload.php" />
     </div>
- 
+    <br/>
 
+<!-- Camera -->
+<div>
+<h3>Camera:</h3>
+<b>Status:</b> <span id="camera_status"></span><br>
+        <b>Image:</b> <img style="width:120px;visibility:hidden;display:none;" id="camera_image" src="" />
+</div>
+        
+    <!-- Actions -->
+    <div>
+        <input type="button" onclick="takePicture();" value="Take Picture" /><br/>
+        <input type="button" onclick="selectPicture();" value="Select Picture from Library" /><br/>
+        <input type="button" onclick="uploadPicture();" value="Upload Picture" />
+    </div>
+    <br/>
+    
+    <!-- Server pictures -->
+    <div>
+        <h3>Server:</h3>
+        <b>Images on server:</b>
+        <div id="server_images"></div>
+    </div>
 
-
-</body>
+    <!-- Actions -->
+    <div>
+        <input type="button" onclick="viewUploadedPictures();" value="View Uploaded Pictures" />
+    </div>
+    
+  </body>
 </html>
