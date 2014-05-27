@@ -104,6 +104,7 @@
 
                     // HTML is returned, which has pictures to display
                     if (xmlhttp.status === 200) {
+                      alert(xmlhttp.responseText);
                      document.getElementById('server_images').innerHTML = xmlhttp.responseText;
                     }
 
