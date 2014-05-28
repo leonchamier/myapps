@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Hello World</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="menu.js"></script>
+        <script type="text/javascript">
+            document.addEventListener("deviceready", function() {debugger;
+                var onSettings = function() {
+                    console.log("settings");
+                };
+     
+                var onHelp = function() {
+                    console.log("help");
+                };
+     
+                var optionsmenu = new OptionsMenu({
+                    id: "optionsmenu",
+                    items: [
+                        [ {
+                            label: "Settings",
+                            image: "menu/settings.png",
+                            action: onSettings
+                        },
+                        {
+                            label: "Help",
+                            image: "menu/help.png",
+                            action: onHelp
+                        } ]
+                    ]
+                });
+            }, false);
+        </script>
+        Oniel Test
+    </body>
+</html>
