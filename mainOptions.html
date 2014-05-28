@@ -13,8 +13,11 @@
         <script type="text/javascript" src="OptionsMenu.js"></script>
         <script type="text/javascript">
             document.addEventListener("deviceready", function() {debugger;
+                document.addEventListener("backbutton", navigator.app.exitApp(), true);
+                
                 var onSettings = function() {
                     console.log("settings");
+                    alert('I am gonna set some stuff');
                 };
      
                 var onHelp = function() {
