@@ -47,8 +47,8 @@ $( document ).ready(function() {
     //boot your app...
 }
 function backKeyDown() { 
-    if (menuDiv.style.display != 'none') {
-        menuDiv.style.display = 'none';
+    if (document.getElementById('optionsmenu').style.display != 'none') {
+        document.getElementById('optionsmenu').style.display = 'none';
         return;
     }    
     navigator.app.exitApp();
