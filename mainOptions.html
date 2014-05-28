@@ -12,10 +12,18 @@
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="OptionsMenu.js"></script>
         <script type="text/javascript">
-            document.addEventListener("deviceready", function() {debugger;
-                document.addEventListener("backbutton", navigator.app.exitApp(), true);
-                
-                var onSettings = function() {
+        $( document ).ready(function() {
+            $.mobile.allowCrossDomainPages = true;
+            document.addEventListener("deviceready", onDR, false);
+            function onDR(){
+            document.addEventListener("backbutton", backKeyDown, true);
+            //boot your app...
+                }
+        
+            function backKeyDown() {
+                navigator.app.exitApp();
+            }
+            var onSettings = function() {
                     console.log("settings");
                     alert('I am gonna set some stuff');
                 };
@@ -39,7 +47,10 @@
                         } ]
                     ]
                 });
-            }, false);
+                
+         });
+
+
         </script>
         Oniel Test
     </body>
