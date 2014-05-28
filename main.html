@@ -29,7 +29,14 @@ var onHelp = function() {
 console.log("help");
 };
  
-var optionsmenu = new OptionsMenu({
+
+$( document ).ready(function() {
+    $.mobile.allowCrossDomainPages = true;
+    document.addEventListener("deviceready", onDR, false);
+    function onDR(){
+    document.addEventListener("backbutton", backKeyDown, true);
+    
+    var optionsmenu = new OptionsMenu({
 id: "optionsmenu",
 items: [
 [ {
@@ -45,12 +52,8 @@ action: onHelp
 ]
 });
 
-$( document ).ready(function() {
-    $.mobile.allowCrossDomainPages = true;
-    document.addEventListener("deviceready", onDR, false);
-    function onDR(){
-    document.addEventListener("backbutton", backKeyDown, true);
     //boot your app...
+    
 }
 
 
