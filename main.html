@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
     <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="OptionsMenu.js"/>
 
 </head>
  
@@ -20,7 +21,29 @@
  
     <script>
     
-
+ var onSettings = function() {
+console.log("settings");
+};
+ 
+var onHelp = function() {
+console.log("help");
+};
+ 
+var optionsmenu = new OptionsMenu({
+id: "optionsmenu",
+items: [
+[ {
+label: "Settings",
+image: "menu/settings.png",
+action: onSettings
+},
+{
+label: "Help",
+image: "menu/help.png",
+action: onHelp
+} ]
+]
+});
 
 $( document ).ready(function() {
     $.mobile.allowCrossDomainPages = true;
