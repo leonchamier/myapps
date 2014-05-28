@@ -1,33 +1,35 @@
-
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
-    </head>
-    <body>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="OptionsMenu.js"></script>
-        <script type="text/javascript">
-        $( document ).ready(function() {
-            $.mobile.allowCrossDomainPages = true;
-            document.addEventListener("deviceready", onDR, false);
-            function onDR(){
-            document.addEventListener("backbutton", backKeyDown, true);
-            //boot your app...
-                }
-        
-            function backKeyDown() {
-                navigator.app.exitApp();
-            }
-            
-                
-                
-         });
+    <title>JQuery Mobile AJAX</title>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+
+</head>
+ 
+<body>
+ 
+    <script>
+    
+
+
+$( document ).ready(function() {
+    document.addEventListener("deviceready", onDR, false);
+    function onDR(){
+    document.addEventListener("backbutton", backKeyDown, true);
+    //boot your app...
+}
+function backKeyDown() { 
+    alert('closing app');
+    navigator.app.exitApp();
+    // do something here if you wish
+    // alert('go back!');
+}
+ //alert('here');
+});
 
         </script>
         Oniel Test
