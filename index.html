@@ -58,11 +58,13 @@ function backKeyDown() {
         return;
     }
     if($.mobile.activePage.is('#page1')){
+        alert('exiting');
         e.preventDefault();
         navigator.app.exitApp();
     }
     else {
-        navigator.app.backHistory()
+        alert('go back');
+        navigator.app.backHistory();
     }
     //navigator.app.exitApp();
     
