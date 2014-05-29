@@ -28,25 +28,15 @@
     // Wait for PhoneGap to connect with the device
     //
    
-$( document ).ready(function() {
-    document.addEventListener("backbutton", function(e){
-       if($.mobile.activePage.is('#page1')){
-           alert('exit app');
-          e.preventDefault();
-          navigator.app.exitApp();
-       }
-       else {
-           alert('go back');
-          navigator.app.backHistory()
-       }
-     }, false);
 
+$( document ).ready(function() {
     document.addEventListener("deviceready", onDR, false);
     function onDR(){
+    document.addEventListener("backbutton", backKeyDown, true);
     //*************************
     var onSettings = function() {
-                   // alert('soon Set you up');
-                    $.mobile.changePage('#page2');
+                    alert('soon Set you up');
+                    console.log("settings");
                 };
      
      
@@ -61,7 +51,18 @@ $( document ).ready(function() {
                     ]
                 });
     //boot your app...
+}
+function backKeyDown() {
+    if (document.getElementById('optionsmenu').style.display != 'none') {
+        document.getElementById('optionsmenu').style.display = 'none';
+        return;
     }
+    alert('closing');
+    navigator.app.exitApp();
+    // do something here if you wish
+    // alert('go back!');
+}
+ //alert('here');
 });
 
     function scanNow(){
