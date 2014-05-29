@@ -30,11 +30,13 @@
    
 $( document ).ready(function() {
     document.addEventListener("backbutton", function(e){
-       if($.mobile.activePage.is('#homepage')){
+       if($.mobile.activePage.is('#page1')){
+           alert('exit app');
           e.preventDefault();
           navigator.app.exitApp();
        }
        else {
+           alert('go back');
           navigator.app.backHistory()
        }
      }, false);
