@@ -59,12 +59,12 @@ function backKeyDown() {
     }
     if($.mobile.activePage.is('#page1')){
         alert('exiting');
-        e.preventDefault();
         navigator.app.exitApp();
     }
     else {
         alert('go back');
-        navigator.app.backHistory();
+        //navigator.app.backHistory();
+        history.back();
     }
     //navigator.app.exitApp();
     
