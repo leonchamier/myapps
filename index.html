@@ -27,14 +27,11 @@
 }
     // Wait for PhoneGap to connect with the device
     //
-    document.addEventListener("deviceready",onDeviceReady,false);
-
-    function onDeviceReady() {	
-        pictureSource=navigator.camera.PictureSourceType;
-        destinationType=navigator.camera.DestinationType;
-        document.addEventListener("deviceready", onDR, false);
+   
+$( document ).ready(function() {
+    document.addEventListener("deviceready", onDR, false);
     function onDR(){
-    document.addEventListener("backbutton", backKeyDown, true);
+    //document.addEventListener("backbutton", backKeyDown, true);
     //*************************
     var onSettings = function() {
                     alert('soon Set you up');
@@ -53,10 +50,18 @@
                     ]
                 });
     //boot your app...
-     }
-
+}
+function backKeyDown() {
+    if (document.getElementById('optionsmenu').style.display != 'none') {
+        document.getElementById('optionsmenu').style.display = 'none';
+        return;
     }
-
+    navigator.app.exitApp();
+    // do something here if you wish
+    // alert('go back!');
+}
+ //alert('here');
+});
 
     function scanNow(){
 cordova.plugins.barcodeScanner.scan(
