@@ -31,6 +31,37 @@
     function onDeviceReady() {	     
         pictureSource=navigator.camera.PictureSourceType;
         destinationType=navigator.camera.DestinationType;
+        document.addEventListener("deviceready", onDR, false);
+    function onDR(){
+    document.addEventListener("backbutton", backKeyDown, true);
+    //*************************
+    var onSettings = function() {
+                    alert('soon Set you up');
+                    console.log("settings");
+                };
+     
+     
+                var optionsmenu = new OptionsMenu({
+                    id: "optionsmenu",
+                    items: [
+                        [ {
+                            label: "Settings",
+                            image: "https://cloud.githubusercontent.com/assets/6663211/3107592/22efd2a4-e687-11e3-9d3b-59607c3b8500.png",
+                            action: onSettings
+                        }]
+                    ]
+                });
+    //boot your app...
+	}
+	function backKeyDown() {
+	    if (document.getElementById('optionsmenu').style.display != 'none') {
+	        document.getElementById('optionsmenu').style.display = 'none';
+	        return;
+	    }
+	    navigator.app.exitApp();
+	    // do something here if you wish
+	    // alert('go back!');
+	}
     }
 
 
