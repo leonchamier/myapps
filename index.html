@@ -57,10 +57,15 @@ function backKeyDown() {
         document.getElementById('optionsmenu').style.display = 'none';
         return;
     }
-    alert('closing');
-    navigator.app.exitApp();
-    // do something here if you wish
-    // alert('go back!');
+    if($.mobile.activePage.is('#page1')){
+        e.preventDefault();
+        navigator.app.exitApp();
+    }
+    else {
+        navigator.app.backHistory()
+    }
+    //navigator.app.exitApp();
+    
 }
  //alert('here');
 });
