@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>ADVANTUM</title>
+<script type='text/JavaScript' src='standardjs.js'></script>
+<script type='text/JavaScript' src='standardsq.js'></script>
+<script type="text/JavaScript" src="startup.js"></script>
+
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+
+</head>
+ 
+<body onload="loadUp()">
+ 
+    <script>
+    
+    var pictureSource;   // picture source
+    var destinationType; // sets the format of returned value 
+     function loadUp(){	 
+		//document.getElementById('scanbut').style.display = 'none';	    
+	 }
+    // Wait for PhoneGap to connect with the device
+    //
+    document.addEventListener("deviceready",onDeviceReady,false);
+
+    function onDeviceReady() {	     
+        pictureSource=navigator.camera.PictureSourceType;
+        destinationType=navigator.camera.DestinationType;
+    }
+
+
+    function scanNow(){
+	   cordova.plugins.barcodeScanner.scan(
+         function (result) {
+                 alert("We got a barcode\n" +
+                "Result: " + result.text + "\n" +
+                "Format: " + result.format + "\n" +
+                "Cancelled: " + result.cancelled);
+		  }, 
+		  function (error) {
+			  alert("Scanning failed: " + error);
+		  }
+   	    );
+	}
+
+
+ //***************************************************
+ //*************PHOTO*****************************
+ //***********************************************
+ 
+     function onPhotoDataSuccess(imageData) {
+      // Uncomment to view the base64 encoded image data
+      // console.log(imageData);
+
+      // Get image handlefgggggg
+      //
+      var smallImage = document.getElementById('smallImage');
+
+      // Unhide image elements
+      //
+      smallImage.style.display = 'block';
+
+      // Show the captured photo
+      // The inline CSS rules are used to resize the image
+      //
+      smallImage.src = "data:image/jpeg;base64," + imageData;
+      
+      var largeImage = document.getElementById('largeImage');
+
+      largeImage.style.display = 'block';
+
+      largeImage.src = imageData;
+      uploadPhoto(imageData);
+    } 
+  
+   function uploadPhoto(imageURI) {
+   	
+   	var win = function (r) {
+        clearCache();
+        retries = 0;
+        alert('Done!');
+    }
+ 
+    var fail = function (error) {
+            alert('Ups. Something wrong happens!');
+    }
+    alert('oniel');
+   	try{
+        var options = new FileUploadOptions();
+        options.fileKey="file";
+	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+	options.mimeType="image/jpeg";
+	var params = new Object();
+	params.img = "test1";
+	params.value2 = "param";
+	options.params = params;
+	options.chunkedMode = false;
+	var ft = new FileTransfer();
+	ft.upload(imageURI, "http://192.168.9.84/myapps/upload.php", win, fail, options);
+   	}catch(e){alert(e.message);}
+	alert('up load success');
+}
+
+
+    // Called when a photo is successfully retrieved
+    
+    function capturePhoto() {
+      // Take picture using device camera and retrieve image as base64-encoded string
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50 });
+    }
+
+    // A button will call this function
+    //
+    function capturePhotoEdit() {
+      // Take picture using device camera, allow edit, and retrieve image as base64-encoded string  
+	  
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20, allowEdit: true }); 
+    }
+
+    
+
+    // Called if something bad happens.
+    // 
+    function onFail(message) {
+      alert('Failed because: ' + message);
+    }
+
+	//**********************************************
+	function updateSettings(){
+	  if ( $('input[name=jobentrytype]:checked').val()=='M')  {
+	       document.getElementById('gobut').style.display = '';	    
+		   document.getElementById('scanbut').style.display = 'none';	    
+      }else{
+	       document.getElementById('gobut').style.display = 'none';	    
+		   document.getElementById('scanbut').style.display = '';	    
+	  }
+	}
+	//**********************************************
+    function scanNow(){
+
+    }	
+    </script>
+ 
+
+    <div data-role="page" id="page1">	
+
+    
+	 <table><tr><td>		 
+	        <label for="jobid">Job ID</label>
+		    <input length=10 type="text" name="jobid" id="jobid" data-mini="true" /> 
+		 </td><td>		 			   
+			   <a style="display:xnone" href="javascript:getRecord()" id='gobut'  data-theme="b"  data-role="button" data-icon="check" data-iconpos="left" data-mini="true" data-inline="true">Go</a>		   
+	           <a style="display:none" href="javascript:scanNow()" id='scanbut'  data-theme="b"  data-role="button" data-icon="grid" data-iconpos="left" data-mini="true" data-inline="true">Scan</a>		   
+		 </td></tr>
+     </table>
+	 
+   
+   <input  type="button" data-icon="arrow-r"    value="Settings" onclick="$.mobile.changePage('#page2');"/>
+   </div> 
+   <! ******END PAGE 1*********************************>
+   <div data-role="page" id="page2">	
+     <div data-role="header"><h1>Settings</h1></div>
+				
+		<div data-role="fieldcontain">
+			<fieldset data-role="controlgroup" >
+				<legend>Input Method:</legend>
+					<input type="radio" name="jobentrytype" id="jobentrytypem" value="M" onclick="updateSettings()" checked="checked" />
+					<label for="jobentrytypem">Manual Entry</label>
+
+					<input type="radio" name="jobentrytype" id="jobentrytypes" value="S"  onclick="updateSettings()" />
+					<label for="jobentrytypes">Scan</label>
+			</fieldset>
+         </div>
+       <input  type="button" data-icon="arrow-r"    value="Got to Page 1" onclick="$.mobile.changePage('#page1');"/>
+   </div>
+   
+   <! ******END PAGE 2*********************************>
+	
+    <div data-role="page" id="indexPage">
+        <div data-role="header">
+            <h1>ADVANTUM inc</h1>
+        </div>
+    
+       
+
+        <div data-role="button" onclick="scanNow()">Scan Now </div>
+
+
+
+           <input  type="button" data-icon="arrow-r"    value="Take A Pic" onclick="capturePhotoEdit();"/>
+    
+    
+    <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+    <img style="display:none;" id="largeImage" src="" />
+
+        <div data-role="footer" data-position="fixed">
+            <h1>Scan Test</h1>
+        </div>
+    </div>
+ 
+
+
+
+</body>
+</html>
