@@ -219,6 +219,22 @@ function getJob(){
                 img.style.visibility = "visible";
                 img.style.display = "block";
                 img.src = uri;
+                    var server ='http://192.168.9.84/myapps/job/upload.php';
+                    var imageURI = document.getElementById('jobimg').src;
+                    var options = new FileUploadOptions();
+	            options.fileKey="file";
+	            options.fileName='job'+numValueOf('jobid')+'bol';
+	            options.mimeType="image/jpeg";
+	            options.chunkedMode = false;
+	
+	            // Transfer picture to server
+	            var ft = new FileTransfer();
+	            ft.upload(imageURI, server, function(r) {
+	                document.getElementById('camera_status').innerHTML = "Upload successful: "+r.bytesSent+" bytes uploaded.";
+	            }, function(error) {
+	                document.getElementById('camera_status').innerHTML = "Upload failed: Code = "+error.code;
+	            }, options);
+	            
             },
             function(e) {
                 console.log("Error getting picture: " + e);
@@ -283,6 +299,7 @@ function getJob(){
 		  <img  height=50 width=50 id="jobimg" src="" />
 	  </div>	  
 	  <button onclick="getPic()"><img   align="absmiddle" src="https://cloud.githubusercontent.com/assets/6663211/3127673/b4ef2f86-e7c4-11e3-8d0c-777d2a0c0ee4.png"/> Get Pic</button>
+	  <div id='camera_status'></div>
    </div>
    <! ******END PAGE 3*********************************>
     <div data-role="page" id="indexPage">
