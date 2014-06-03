@@ -25,6 +25,8 @@
     <gap:plugin name="org.apache.cordova.file" />  
     <gap:plugin name="org.apache.cordova.file-transfer" />  
     
+    <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1" />
+    
     <!--uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /-->
     <!--plugin name="Camera" value="org.apache.cordova.CameraLauncher" -->
 
