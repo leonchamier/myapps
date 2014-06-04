@@ -16,6 +16,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+alert('in index');
 var app = {
     // Application Constructor
     initialize: function() {
