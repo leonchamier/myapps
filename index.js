@@ -20,6 +20,7 @@ alert('in index');
 var app = {
     // Application Constructor
     initialize: function() {
+        alert('inside initialize funct');
         this.bindEvents();
     },
     // Bind Event Listeners
