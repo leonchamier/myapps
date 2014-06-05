@@ -44,16 +44,14 @@ var app = {
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
 
- var pushNotification = window.plugins.pushNotification;
- 
-        listeningElement.setAttribute('style', 'display:none;');
+         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
    alert('about to log receive event');
-       try{ console.log('Received Event: ' + id);
+        console.log('Received Event: ' + id);
         var pushNotification = window.plugins.pushNotification;
-       }catch(e){alert(' def push '+e.message)}
+       
        alert('before device');
-        alert(device.platform);
+       try{ alert(device.platform); }catch(e){alert(' device platform '+e.message)}
         if (device.platform == 'android' || device.platform == 'Android') {
             alert("Register called");
             pushNotification.register(this.successHandler, this.errorHandler,{"senderID":"516002317026","ecb":"app.onNotificationGCM"});
