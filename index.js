@@ -16,11 +16,11 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-alert('in index');
+
 var app = {
     // Application Constructor
     initialize: function() {
-        alert('inside initialize funct');
+        
         this.bindEvents();
     },
     // Bind Event Listeners
@@ -39,6 +39,7 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
+        alert('in receive event');
         var parentElement = document.getElementById(id);
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
