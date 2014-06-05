@@ -46,9 +46,10 @@ var app = {
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
-
+   alert('about to log receive event');
         console.log('Received Event: ' + id);
         var pushNotification = window.plugins.pushNotification;
+        alert(device.platform);
         if (device.platform == 'android' || device.platform == 'Android') {
             alert("Register called");
             pushNotification.register(this.successHandler, this.errorHandler,{"senderID":"516002317026","ecb":"app.onNotificationGCM"});
