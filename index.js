@@ -52,6 +52,7 @@ var app = {
        try{ console.log('Received Event: ' + id);
         var pushNotification = window.plugins.pushNotification;
        }catch(e){alert(' def push '+e.message)}
+       alert('before device');
         alert(device.platform);
         if (device.platform == 'android' || device.platform == 'Android') {
             alert("Register called");
