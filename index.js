@@ -47,8 +47,9 @@ var app = {
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
    alert('about to log receive event');
-        console.log('Received Event: ' + id);
+       try{ console.log('Received Event: ' + id);
         var pushNotification = window.plugins.pushNotification;
+       }catch(e){alert(' def push '+e.message)}
         alert(device.platform);
         if (device.platform == 'android' || device.platform == 'Android') {
             alert("Register called");
