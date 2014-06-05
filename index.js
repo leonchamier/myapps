@@ -44,6 +44,8 @@ var app = {
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
 
+ var pushNotification = window.plugins.pushNotification;
+ 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
    alert('about to log receive event');
