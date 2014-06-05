@@ -8,6 +8,10 @@
    <preference name="phonegap-version" value="3.0.0" />
 
     <!-- versionCode is optional and Android only -->
+    <feature name="Device">
+      <param name="android-package" value="org.apache.cordova.Device" />
+    </feature>
+
 
     <name>Oniel App</name>
 
