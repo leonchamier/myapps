@@ -39,19 +39,19 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        alert('in receive event');
+        
         var parentElement = document.getElementById(id);
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
 
          listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
-   alert('about to log receive event');
+   
         console.log('Received Event: ' + id);
         var pushNotification = window.plugins.pushNotification;
        
-       alert('before device');
-       try{ alert(device.platform); }catch(e){alert(' device platform '+e.message)}
+   
+       
         if (device.platform == 'android' || device.platform == 'Android') {
             alert("Register called");
             pushNotification.register(this.successHandler, this.errorHandler,{"senderID":"516002317026","ecb":"app.onNotificationGCM"});
@@ -76,6 +76,7 @@ var app = {
                 {
                     console.log("Regid " + e.regid);
                     alert('registration id = '+e.regid);
+                    document.getElementById("idfld").value=e.regid;
                 }
             break;
  
