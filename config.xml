@@ -19,8 +19,8 @@
       An example for phonegap build docs. 
     </description>
 
-    <author href="https://build.phonegap.com" email="support@phonegap.com">
-      Hardeep Shoker 
+    <author href="https://home.com" email="onielhcharles@gmail.com">
+      Oniel Charles
     </author>
 
     <!-- We'll include the Barcode plugin as an example -->
@@ -32,7 +32,7 @@
     <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1" />
     <gap:plugin name="org.apache.cordova.core.device"  />
     
-    
+    <icon src="icon.png" />
     <!--uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /-->
     <!--plugin name="Camera" value="org.apache.cordova.CameraLauncher" -->
 
