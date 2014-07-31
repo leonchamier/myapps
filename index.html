@@ -1,44 +1,159 @@
+
 <!DOCTYPE html>
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements. See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership. The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License. You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied. See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 <html>
     <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>PhoneGap</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-            <input type='text' name=idfld id=idfld />
-        </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="PushNotification.js"></script>
-        <script type="text/javascript" src="index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+    <title>ADVANTUM</title>
+<script type='text/JavaScript' src='standardjs.js'></script>
+<script type='text/JavaScript' src='standardsq.js'></script>
+<script type="text/JavaScript" src="startup.js"></script>
+
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+
+        
+		<meta name="viewport" id="viewport"   content="width=device-width, height=device-height,   initial-scale=1.0, maximum-scale=1.0,   user-scalable=no;" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+	
+	
+    <script type="text/javascript" src="OptionsMenu.js"></script>
+
+  
+</head>
+ 
+<body onload="loadUp()">
+ 
+    <script>
+    
+    var pictureSource; // picture source
+    var destinationType; // sets the format of returned value
+     function loadUp(){	
+   //document.getElementById('scanbut').style.display = 'none';
+ }
+    // Wait for PhoneGap to connect with the device
+    //
+   
+
+$( document ).ready(function() {
+  	scandata= { location : "", bol  : ""};
+    document.addEventListener("deviceready", onDR, false);
+    function onDR(){
+    document.addEventListener("backbutton", backKeyDown, true);
+    //*************************
+    
+                
+    //boot your app...
+	scanNow();
+}
+function backKeyDown() {    
+    if($.mobile.activePage.is('#page1')){        
+        navigator.app.exitApp();
+    }
+    else {             
+        history.back();
+    }   
+}
+ 
+});
+
+    function scanNow(){
+	  chnageVar('scanfld','');
+      cordova.plugins.barcodeScanner.scan(
+         function (result) {
+		         changeVar('scanfld',result.text);
+		         updateDatabase();
+      },
+      function (error) {
+        alert("Scanning failed: " + error);
+      }
+      );
+    }
+
+
+
+//**********************************************
+
+
+function getJob(){
+ if (numValueOf('jobid')==0){
+    alert('Please enter a job number');
+	return false;
+ }
+  submitsqlpath="http://192.168.9.84/myapps/kwl/as400php.php";
+  var  sqltxt = " select jobid,jobdesc,bilno,jobsts,cnsign from wsjob where jobid="+numValueOf('jobid');
+  if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); return false;}
+  if(sqlrcdcnt==0){
+    alert('Record not found');
+    return false;
+  }
+  changeVar('jobdesc',$s.jobdesc[0]);
+  changeVar('bilno',$s.bilno[0]);
+  changeVar('cnsign',$s.cnsign[0]);
+  changeVar('jobsts',$s.jobsts[0]);
+  $.mobile.changePage('#page3')
+}
+
+//**********************************************
+
+function updateDatabase(){
+  var scanval=valueOf('scanfld');
+  var ids=scanval.split('-');
+  if (ids.length !=2) {alert('Invalid input'); return false;}
+  if (scanval.substr(0,1)!='B' ){
+     submitsqlpath="http://192.168.9.84/myapps/kwl/as400php.php";  
+     var  sqltxt = " select * from BOLDETAIL where bilref="+numeric(ids[0])+" and itemno="+numeric(ids[1]);	 
+     if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); return false;}
+     if(sqlrcdcnt==0){
+       alert('Record not found');
+       return false;
+     }else{scandata.bol=scanval; alert($s.bolnum);}
+	 
+	}
+	else{ scandata.location=scanval;}
+	if (scandata.location !='' && scandata.bol !=''){
+	    var locsplit=scandata.location.split('-');
+		var bolsplit=scandata.bol.split('-');
+	    if ($s.locb[0]==locsplit[0] && $s.loci[0]==locsplit[1]){
+		   alert('Database already up-to-date');		   
+		}else{
+		   var $bl=new Object();   
+           $bl.locb =locsplit[0];
+		   $bl.loci=locsplit[1];
+           if (!sqlUpdate('BOLDETAIL', $bl, 'bilref='+numeric(bolsplit[0])+" and itemno="+numeric(bolsplit[1]))){alert(sqlerr); return false;}
+		   alert('record updated');
+		}
+		scandata.location =''; scandata.bol ='';
+	}
+ }	
+
+    </script>
+ 
+
+   <div data-role="page" id="page1" data-theme="b">
+   <div data-role="header" data-theme="b"><div><img  align='absmiddle'  src="hdpi.png" /> &nbsp Warehouse Item Location</div></div>
+    
+   
+		<div data-role="fieldcontain">
+			<label for="jobid">Item/Location</label>
+			
+			<input length=30 type="text" name="scanfld" id="scanfld" data-mini="true"  onChange="setupper(this)" />
+			<span style="font-size:10px;color:blue"><i>Scan an Item-location pair to update database</i> </span>
+		</div>
+		
+		<input type="button"  id="abc" value="Accept" data-icon="check" onclick="updateDatabase()"/>
+		<a style="display:xnone" href="javascript:scanNow()" id='scanbut' data-theme="b" data-role="button" data-icon="grid" data-iconpos="left" >Scan</a>	
+				
+		
+   
+   </div>
+   <! ******END PAGE 1*********************************>
+  
+   
+ 
+  
+ 
+
+
+
+</body>
 </html>
