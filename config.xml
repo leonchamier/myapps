@@ -13,10 +13,10 @@
     </feature>
 
 
-    <name>Oniel App</name>
+    <name>KWL Warehouse</name>
 
     <description>
-      An example for phonegap build docs. 
+      App to can and update item location
     </description>
 
     <author href="https://home.com" email="onielhcharles@gmail.com">
@@ -28,6 +28,7 @@
     <gap:plugin name="org.apache.cordova.core.camera" />    
     <gap:plugin name="org.apache.cordova.file" />  
     <gap:plugin name="org.apache.cordova.file-transfer" />  
+    <gap:plugin name="nl.x-services.plugins.toast" version="2.0" />
     
     <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1" />
     <gap:plugin name="org.apache.cordova.core.device"  />
