@@ -56,19 +56,21 @@ function backKeyDown() {
  
 });
 
-    function scanNow(){
-    	alert(valueOf('scanfld'));
-	  chnageVar('scanfld','');
-      cordova.plugins.barcodeScanner.scan(
-         function (result) {
-		         changeVar('scanfld',result.text);
-		         updateDatabase();
-      },
-      function (error) {
-        alert("Scanning failed: " + error);
-      }
-      );
-    }
+        function scanNow(){
+cordova.plugins.barcodeScanner.scan(
+function (result) {
+changeVar('jobid',result.text);
+getJob();
+/* alert("We got a barcode\n" +
+"Result: " + result.text + "\n" +
+"Format: " + result.format + "\n" +
+"Cancelled: " + result.cancelled); */
+},
+function (error) {
+alert("Scanning failed: " + error);
+}
+);
+     }
 
 
 
