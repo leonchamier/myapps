@@ -128,8 +128,9 @@ function updateDatabase(){
  }	
 
 
-function playAudio(src) {
-    var url = src;
+function playAudio(id) {
+    var audioElement = document.getElementById(id);
+    var url = audioElement.getAttribute('src');
     var my_media = new Media(url,
             // success callback
              function () { console.log("playAudio():Audio Success"); alert('success') },
@@ -163,9 +164,12 @@ function beepfunction(){
 		
 		<br><br>
 		<input type="button"  id="beepbut" value="Beep" data-icon="check" onclick="beepfunction();"/>
-		<input type="button"  id="beepbut2" value="Error" data-icon="check" onclick="playAudio('/error.mp3');"/>
-		<input type="button"  id="beepbut3" value="Success" data-icon="check" onclick="playAudio('./success.mp3');"/>
+		<input type="button"  id="beepbut2" value="Error" data-icon="check" onclick="playAudio('errorSound');"/>
+		<input type="button"  id="beepbut3" value="Success" data-icon="check" onclick="playAudio('successSound');"/>
 		
+		 <audio id="successSound" src="/success.mp3" type="audio/mpeg" ></audio>
+		 <audio id="errorSound" src="/error.mp3" type="audio/mpeg" ></audio>
+		 
    
    </div>
    <! ******END PAGE 1*********************************>
