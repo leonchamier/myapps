@@ -32,7 +32,7 @@
     
     <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1" />
     <gap:plugin name="org.apache.cordova.core.device"  />
-    <gap:plugin name="org.apache.cordova.media"  version="0.2.9" />
+    <gap:plugin name="org.apache.cordova.media"   />
     
     <icon src="icon.png" />
     <!--uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /-->
