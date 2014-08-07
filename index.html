@@ -1,55 +1,33 @@
+
 <!DOCTYPE html>
 <html>
-    <head>
-    <title>ADVANTUM</title>
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
-    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
-
+<head>
+<title>ADVANTUM</title>
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+<script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
 </head>
- 
-<body >
- 
-    <script>
-    
+<body onload="donna()">
+<script>
 
-
-$( document ).ready(function() {
-    $.mobile.allowCrossDomainPages = true;
-    //boot your app...
+function donna(){
+alert('finish');
+try{navigator.notification.beep(1);
+navigator.notification.vibrate(1000);
+}catch(e){alert(e.message);}
 }
-
-
-function testfunc(){
-      alert('finish');
-       try{navigator.notification.beep(1);   
-           navigator.notification.vibrate(1000);
-              }catch(e){alert(e.message);}
-              
-}
-    </script>
- 
-    <div data-role="page" id="indexPage">
-        <div data-role="header">
-            <h1>ADVANTUM inc</h1>
-        </div>
-    
-       
-
-   <div data-role="content" >
-        <button onclick="testfunc()">Play Beep</button>
-   </div><!-- /content -->
-        
-
-
-        <div data-role="footer" data-position="fixed">
-            <h1>KWL Payroll</h1>
-        </div>
-    </div>
- 
-
-
+</script>
+<div data-role="page" id="indexPage">
+<div data-role="header">
+<h1>ADVANTUM inc</h1>
+</div>
+<div data-role="content" >
+<button onclick="alert('donna')">Play Beep</button>
+</div><!-- /content -->
+<div data-role="footer" data-position="fixed">
+<h1>KWL Payroll</h1>
+</div>
+</div>
 </body>
 </html>
