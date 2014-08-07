@@ -24,7 +24,7 @@
     </author>
 
     <!-- We'll include the Barcode plugin as an example -->
-  
+  <gap:plugin name="org.apache.cordova.media" />
     
     <icon src="icon.png" />
     <!--uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /-->
