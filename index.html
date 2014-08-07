@@ -139,6 +139,11 @@ function playAudio(src) {
            // Play audio
     my_media.play();
 }
+
+function beepfunction(){
+	try{navigator.notification.beep(1); } catch(e){alert(e.message);}
+	alert('beeping nothing');
+}
     </script>
  
 
@@ -157,9 +162,9 @@ function playAudio(src) {
 		<a style="display:xnone" href="javascript:scanNow()" id='scanbut' data-theme="b" data-role="button" data-icon="grid" data-iconpos="left" >Scan</a>	
 		
 		<br><br>
-		<input type="button"  id="beepbut" value="Beep" data-icon="check" onclick="navigator.notification.beep(1);alert('but nothing');"/>
-		<input type="button"  id="beepbut2" value="Error" data-icon="check" onclick="playAudio('error.mp3');"/>
-		<input type="button"  id="beepbut3" value="Success" data-icon="check" onclick="playAudio('success.mp3');"/>
+		<input type="button"  id="beepbut" value="Beep" data-icon="check" onclick="beepfunction();"/>
+		<input type="button"  id="beepbut2" value="Error" data-icon="check" onclick="playAudio('/error.mp3');"/>
+		<input type="button"  id="beepbut3" value="Success" data-icon="check" onclick="playAudio('./success.mp3');"/>
 		
    
    </div>
