@@ -29,7 +29,7 @@
     // Beep three times
     //
     function playBeep() {
-        navigator.notification.beep(3);
+       try{ navigator.notification.beep(3); }catch(e){alert(e.message);}
     }
 
     // Vibrate for 2 seconds
