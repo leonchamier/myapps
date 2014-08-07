@@ -1,33 +1,48 @@
-
 <!DOCTYPE html>
 <html>
-<head>
-<title>ADVANTUM</title>
-<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
-<script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-<script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
-</head>
-<body onload="donna()">
-<script>
+  <head>
+    <title>Notification Example</title>
 
-function donna(){
-alert('finish');
-try{navigator.notification.beep(1);
-navigator.notification.vibrate(1000);
-}catch(e){alert(e.message);}
-}
-</script>
-<div data-role="page" id="indexPage">
-<div data-role="header">
-<h1>ADVANTUM inc</h1>
-</div>
-<div data-role="content" >
-<button onclick="alert('donna')">Play Beep</button>
-</div><!-- /content -->
-<div data-role="footer" data-position="fixed">
-<h1>KWL Payroll</h1>
-</div>
-</div>
-</body>
+    <script type="text/javascript" charset="utf-8" src="phonegap-1.0.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    // Wait for PhoneGap to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // PhoneGap is ready
+    //
+    function onDeviceReady() {
+        // Empty
+    }
+
+    // Show a custom alert
+    //
+    function showAlert() {
+        navigator.notification.alert(
+            'You are the winner!',  // message
+            'Game Over',            // title
+            'Done'                  // buttonName
+        );
+    }
+
+    // Beep three times
+    //
+    function playBeep() {
+        navigator.notification.beep(3);
+    }
+
+    // Vibrate for 2 seconds
+    //
+    function vibrate() {
+        navigator.notification.vibrate(2000);
+    }
+
+    </script>
+  </head>
+  <body>
+    <p><a href="#" onclick="showAlert(); return false;">Show Alert</a></p>
+    <p><a href="#" onclick="playBeep(); return false;">Play Beep</a></p>
+    <p><a href="#" onclick="vibrate(); return false;">Vibrate</a></p>
+  </body>
 </html>
