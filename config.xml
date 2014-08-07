@@ -24,17 +24,7 @@
     </author>
 
     <!-- We'll include the Barcode plugin as an example -->
-    <gap:plugin name="com.phonegap.plugins.barcodescanner" />
-    <gap:plugin name="org.apache.cordova.core.camera" />    
-    <gap:plugin name="org.apache.cordova.file" />  
-    <gap:plugin name="org.apache.cordova.file-transfer" />  
-    <gap:plugin name="nl.x-services.plugins.toast" version="2.0" />
-    
-    <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1" />
-    <gap:plugin name="org.apache.cordova.core.device"  />
-    <gap:plugin name="org.apache.cordova.media"   />
-    
-
+  
     
     <icon src="icon.png" />
     <!--uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /-->
