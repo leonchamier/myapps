@@ -127,6 +127,18 @@ function updateDatabase(){
 	}
  }	
 
+
+function playAudio(src) {
+    var url = src;
+    var my_media = new Media(url,
+            // success callback
+             function () { console.log("playAudio():Audio Success"); },
+            // error callback
+             function (err) { console.log("playAudio():Audio Error: " + err); }
+    );
+           // Play audio
+    my_media.play();
+}
     </script>
  
 
@@ -143,7 +155,11 @@ function updateDatabase(){
 		
 		<input type="button"  id="abc" value="Accept" data-icon="check" onclick="updateDatabase()"/>
 		<a style="display:xnone" href="javascript:scanNow()" id='scanbut' data-theme="b" data-role="button" data-icon="grid" data-iconpos="left" >Scan</a>	
-				
+		
+		<br><br>
+		<input type="button"  id="beepbut" value="Beep" data-icon="check" onclick="navigator.notification.beep(2);"/>
+		<input type="button"  id="beepbut2" value="Error" data-icon="check" onclick="playAudio('error.mp3');"/>
+		<input type="button"  id="beepbut3" value="Success" data-icon="check" onclick="playAudio('success.mp3');"/>
 		
    
    </div>
