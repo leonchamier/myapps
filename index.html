@@ -32,10 +32,10 @@ function backKeyDown() {
 });
 
 function test(){
-       try{ navigator.notification.vibrate(1000);
-                    navigator.notification.beep(1); 
-
+       try{navigator.notification.beep(1);   
+           navigator.notification.vibrate(1000);
               }catch(e){alert(e.message)}
+              alert('finish');
 }
     </script>
  
@@ -47,7 +47,7 @@ function test(){
        
 
    <div data-role="content" >
-        <button onclick="test()"></button>
+        <button onclick="test()">Play Beep</button>
    </div><!-- /content -->
         
 
