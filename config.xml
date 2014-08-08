@@ -26,8 +26,9 @@ Oniel Charles
 <gap:plugin name="org.apache.cordova.core.device" />
 <gap:plugin name="org.apache.cordova.media" />
 
+
 <feature name="Notification">
-    <param name="android-package" value="org.apache.cordova.Notification" />
+<param name="android-package" value="org.apache.cordova.dialogs.Notification" />
 </feature>
 
 <icon src="icon.png" />
