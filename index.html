@@ -108,8 +108,8 @@ var my_media = new Media(url,
 // success callback
 function () { console.log("playAudio():Audio Success"); alert('success') },
 // error callback
-function (err) { console.log("playAudio():Audio Error: " + err);
- for (x in err) alert(x+ ' ERR:'+err[x]); }
+function (err) { console.log("playAudio():Audio Error: " + err.message);
+ alert(x+ ' ERR:'+err.message); }
 );
 // Play audio
 my_media.play();
