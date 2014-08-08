@@ -79,11 +79,11 @@ if (ids.length !=2) {alert('Invalid input'); return false;}
 if (scanval.substr(0,1)!='B' ){
 submitsqlpath="http://192.168.9.84/myapps/kwl/as400php.php";
 var sqltxt = " select * from BOLDETAIL where bilref="+numeric(ids[0])+" and itemno="+numeric(ids[1]);	
-if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); return false;}
+if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); }
 if(sqlrcdcnt==0){
 alert('Record not found');
-return false;
-}else{scandata.bol=scanval; alert($s.bolnum);}
+
+}else{scandata.bol=scanval; }
 }
 else{ scandata.location=scanval;}
 if (scandata.location !='' && scandata.bol !=''){
@@ -100,6 +100,7 @@ alert('record updated');
 }
 scandata.location =''; scandata.bol ='';
 }
+ scanNow();
 }	
 function playAudio(id) {
 var audioElement = document.getElementById(id);
