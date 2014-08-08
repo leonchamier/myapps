@@ -26,7 +26,9 @@ Oniel Charles
 <gap:plugin name="org.apache.cordova.core.device" />
 <gap:plugin name="org.apache.cordova.media" />
 
-<gap:plugin name="org.apache.cordova.dialogs" />
+<feature name="Notification">
+    <param name="android-package" value="org.apache.cordova.Notification" />
+</feature>
 
 <icon src="icon.png" />
 <!--uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /-->
