@@ -1,176 +1,141 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-    <title>ADVANTUM</title>
+<head>
+<title>ADVANTUM</title>
 <script type='text/JavaScript' src='standardjs.js'></script>
 <script type='text/JavaScript' src='standardsq.js'></script>
 <script type="text/JavaScript" src="startup.js"></script>
-
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-
-        
-		<meta name="viewport" id="viewport"   content="width=device-width, height=device-height,   initial-scale=1.0, maximum-scale=1.0,   user-scalable=no;" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
-	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
-	
-	
-    <script type="text/javascript" src="OptionsMenu.js"></script>
-
-  
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<meta name="viewport" id="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
+<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+<script type="text/javascript" src="OptionsMenu.js"></script>
 </head>
- 
 <body onload="loadUp()">
- 
-    <script>
-    
-    var pictureSource; // picture source
-    var destinationType; // sets the format of returned value
-     function loadUp(){	
-   //document.getElementById('scanbut').style.display = 'none';
- }
-    // Wait for PhoneGap to connect with the device
-    //
-   
-
+<script>
+var pictureSource; // picture source
+var destinationType; // sets the format of returned value
+function loadUp(){	
+//document.getElementById('scanbut').style.display = 'none';
+}
+// Wait for PhoneGap to connect with the device
+//
 $( document ).ready(function() {
-  	scandata= { location : "", bol  : ""};
-    document.addEventListener("deviceready", onDR, false);
-    function onDR(){
-    document.addEventListener("backbutton", backKeyDown, true);
-    //*************************
-    
-                
-    //boot your app...
-	scanNow();
+scandata= { location : "", bol : ""};
+document.addEventListener("deviceready", onDR, false);
+function onDR(){
+document.addEventListener("backbutton", backKeyDown, true);
+//*************************
+//boot your app...
+scanNow();
 }
-function backKeyDown() {    
-    if($.mobile.activePage.is('#page1')){        
-        navigator.app.exitApp();
-    }
-    else {             
-        history.back();
-    }   
+function backKeyDown() {
+if($.mobile.activePage.is('#page1')){
+navigator.app.exitApp();
 }
- 
+else {
+history.back();
+}
+}
 });
-
-     function scanNow(){
-	changeVar('scanfld',''); 
-	  
-      cordova.plugins.barcodeScanner.scan(
-         function (result) {
-		         changeVar('scanfld',result.text);
-		         updateDatabase();
-      },
-      function (error) {
-        alert("Scanning failed: " + error);
-      }
-      );
-    }
-
-
-
+function scanNow(){
+changeVar('scanfld','');
+cordova.plugins.barcodeScanner.scan(
+function (result) {
+changeVar('scanfld',result.text);
+updateDatabase();
+},
+function (error) {
+alert("Scanning failed: " + error);
+}
+);
+}
 //**********************************************
-
-
 function getJob(){
- if (numValueOf('jobid')==0){
-    alert('Please enter a job number');
-	return false;
- }
-  submitsqlpath="http://192.168.9.84/myapps/kwl/as400php.php";
-  var  sqltxt = " select jobid,jobdesc,bilno,jobsts,cnsign from wsjob where jobid="+numValueOf('jobid');
-  if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); return false;}
-  if(sqlrcdcnt==0){
-    alert('Record not found');
-    return false;
-  }
-  changeVar('jobdesc',$s.jobdesc[0]);
-  changeVar('bilno',$s.bilno[0]);
-  changeVar('cnsign',$s.cnsign[0]);
-  changeVar('jobsts',$s.jobsts[0]);
-  $.mobile.changePage('#page3')
+if (numValueOf('jobid')==0){
+alert('Please enter a job number');
+return false;
 }
-
+submitsqlpath="http://192.168.9.84/myapps/kwl/as400php.php";
+var sqltxt = " select jobid,jobdesc,bilno,jobsts,cnsign from wsjob where jobid="+numValueOf('jobid');
+if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); return false;}
+if(sqlrcdcnt==0){
+alert('Record not found');
+return false;
+}
+changeVar('jobdesc',$s.jobdesc[0]);
+changeVar('bilno',$s.bilno[0]);
+changeVar('cnsign',$s.cnsign[0]);
+changeVar('jobsts',$s.jobsts[0]);
+$.mobile.changePage('#page3')
+}
 //**********************************************
-
 function updateDatabase(){
-  var scanval=valueOf('scanfld');
-  var ids=scanval.split('-');
-  if (ids.length !=2) {alert('Invalid input'); return false;}
-  if (scanval.substr(0,1)!='B' ){
-     submitsqlpath="http://192.168.9.84/myapps/kwl/as400php.php";  
-     var  sqltxt = " select * from BOLDETAIL where bilref="+numeric(ids[0])+" and itemno="+numeric(ids[1]);	 
-     if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); return false;}
-     if(sqlrcdcnt==0){
-       alert('Record not found');
-       return false;
-     }else{scandata.bol=scanval; alert($s.bolnum);}
-	 
-	}
-	else{ scandata.location=scanval;}
-	if (scandata.location !='' && scandata.bol !=''){
-	    var locsplit=scandata.location.split('-');
-		var bolsplit=scandata.bol.split('-');
-	    if ($s.locb[0]==locsplit[0] && $s.loci[0]==locsplit[1]){
-		   alert('Database already up-to-date');		   
-		}else{
-		   var $bl=new Object();   
-           $bl.locb =locsplit[0];
-		   $bl.loci=locsplit[1];
-           if (!sqlUpdate('BOLDETAIL', $bl, 'bilref='+numeric(bolsplit[0])+" and itemno="+numeric(bolsplit[1]))){alert(sqlerr); return false;}
-		   alert('record updated');
-		}
-		scandata.location =''; scandata.bol ='';
-	}
- }	
+var scanval=valueOf('scanfld');
+var ids=scanval.split('-');
+if (ids.length !=2) {alert('Invalid input'); return false;}
+if (scanval.substr(0,1)!='B' ){
+submitsqlpath="http://192.168.9.84/myapps/kwl/as400php.php";
+var sqltxt = " select * from BOLDETAIL where bilref="+numeric(ids[0])+" and itemno="+numeric(ids[1]);	
+if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); }
+if(sqlrcdcnt==0){
+alert('Record not found');
 
-
-function playAudio(src) {
-    var url = src;
-    var my_media = new Media(url,
-            // success callback
-             function () { console.log("playAudio():Audio Success"); },
-            // error callback
-             function (err) { console.log("playAudio():Audio Error: " + err); }
-    );
-           // Play audio
-    my_media.play();
+}else{scandata.bol=scanval; }
 }
-    </script>
- 
-
-   <div data-role="page" id="page1" data-theme="b">
-   <div data-role="header" data-theme="b"><div><img  align='absmiddle'  src="hdpi.png" /> &nbsp Warehouse Item Location</div></div>
-    
-   
-		<div data-role="fieldcontain">
-			<label for="jobid">Item/Location</label>
-			
-			<input length=30 type="text" name="scanfld" id="scanfld" data-mini="true"  onChange="setupper(this)" />
-			<span style="font-size:10px;color:blue"><i>Scan an Item-location pair to update database</i> </span>
-		</div>
-		
-		<input type="button"  id="abc" value="Accept" data-icon="check" onclick="updateDatabase()"/>
-		<a style="display:xnone" href="javascript:scanNow()" id='scanbut' data-theme="b" data-role="button" data-icon="grid" data-iconpos="left" >Scan</a>	
-		
-		<br><br>
-		<input type="button"  id="beepbut" value="Beep" data-icon="check" onclick="navigator.notification.beep(2);"/>
-		<input type="button"  id="beepbut2" value="Error" data-icon="check" onclick="playAudio('error.mp3');"/>
-		<input type="button"  id="beepbut3" value="Success" data-icon="check" onclick="playAudio('success.mp3');"/>
-		
-   
-   </div>
-   <! ******END PAGE 1*********************************>
-  
-   
- 
-  
- 
-
-
-
+else{ scandata.location=scanval;}
+if (scandata.location !='' && scandata.bol !=''){
+var locsplit=scandata.location.split('-');
+var bolsplit=scandata.bol.split('-');
+if ($s.locb[0]==locsplit[0] && $s.loci[0]==locsplit[1]){
+alert('Database already up-to-date');	
+}else{
+var $bl=new Object();
+$bl.locb =locsplit[0];
+$bl.loci=locsplit[1];
+if (!sqlUpdate('BOLDETAIL', $bl, 'bilref='+numeric(bolsplit[0])+" and itemno="+numeric(bolsplit[1]))){alert(sqlerr); return false;}
+alert('record updated');
+}
+scandata.location =''; scandata.bol ='';
+}
+ scanNow();
+}	
+function playAudio(id) {
+var audioElement = document.getElementById(id);
+var url = audioElement.getAttribute('src');
+var my_media = new Media(url,
+// success callback
+function () { console.log("playAudio():Audio Success"); alert('success') },
+// error callback
+function (err) { console.log("playAudio():Audio Error: " + err.message);
+ alert(' ERR:'+err.message); }
+);
+// Play audio
+my_media.play();
+}
+function beepfunction(){
+try{navigator.notification.beep(1); } catch(e){alert(e.message);}
+alert('beeping nothing11');
+}
+</script>
+<div data-role="page" id="page1" data-theme="b">
+<div data-role="header" data-theme="b"><div><img align='absmiddle' src="hdpi.png" /> &nbsp Warehouse Item Location</div></div>
+<div data-role="fieldcontain">
+<label for="jobid">Item/Location</label>
+<input length=30 type="text" name="scanfld" id="scanfld" data-mini="true" onChange="setupper(this)" />
+<span style="font-size:10px;color:blue"><i>Scan an Item-location pair to update database</i> </span>
+</div>
+<input type="button" id="abc" value="Accept" data-icon="check" onclick="updateDatabase()"/>
+<a style="display:xnone" href="javascript:scanNow()" id='scanbut' data-theme="b" data-role="button" data-icon="grid" data-iconpos="left" >Scan</a>	
+<br><br>
+<input type="button" id="beepbut" value="Beep" data-icon="check" onclick="beepfunction();"/>
+<input type="button" id="beepbut2" value="Error" data-icon="check" onclick="playAudio('errorSound');"/>
+<input type="button" id="beepbut3" value="Success" data-icon="check" onclick="playAudio('successSound');"/>
+<audio id="successSound" src="/success.mp3" type="audio/mpeg" ></audio>
+<audio id="errorSound" src="/error.mp3" type="audio/mpeg" ></audio>
+</div>
+<! ******END PAGE 1*********************************>
 </body>
 </html>
