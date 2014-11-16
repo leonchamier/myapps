@@ -1,37 +1,18 @@
-
 <!DOCTYPE html>
 <html>
-    <head>
-    <title>ADVANTUM</title>
+  <head>
+    <title>Storage Example</title>
 
-	<script type='text/JavaScript' src='standardjs.js'></script>
-<script type='text/JavaScript' src='standardsq.js'></script>
+    <script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
 
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    // Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
 
-        <meta name="viewport" content="width=device-width, initial-scale=1"> 
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
-	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
-	
-    
-</head>
- 
-<body >
- 
- 
-     <script type="text/javascript" charset="utf-8">
-
-	 
-$( document ).ready(function() {
-  	 $("#gobut").click(createSpellTest);
-	 $("#wordbut").click(addWords);
-	 $("#viewbut").click(viewWords);
-    
-    
-});
-  /*
-	 
+    // Cordova is ready
+    //
+    function onDeviceReady() {
         window.localStorage.setItem("key", "value");
         var keyname = window.localStorage.key(i);
         // keyname is now equal to "key"
@@ -41,142 +22,13 @@ $( document ).ready(function() {
         window.localStorage.setItem("key2", "value2");
         window.localStorage.clear();
         // localStorage is now empty
-   */ 
+    }
 
-	function createSpellTest(){
-	  
-       if (!window.localStorage.setItem["spelling"]) {
-	     spellobj =new Object();
-		 spellkey ='spell1';
-         spellobj[spellkey]=new Object; spellobj[spellkey].words=[];		 
-	   }else{
-         spellobj=window.localStorage.setItem["spelling"];
-	     var i=1;
-	     for (x in spellobj) i++;
-		 spellkey ='spell'+i; 
-		 spellobj[spellkey]=new Object; spellobj[spellkey].words=[];			 
-		 
-       }	   
-	   
-	}
-	
 
-	function addWords(){
-	if (valueOf('spellword')=='') {
-	  alert('Please enter words')
-	  return false;
-	 } 
-	 spellobj[spellkey].words.push(valueOf('spellword'));
-	 window.localStorage.setItem["spelling"]=spellobj;
-	 changeVar('spellword','');
-	}
-	
-	function viewWords(){
-	 if (!window.localStorage.setItem["spelling"]) {
-	   alert('No spell test created');
-	   return false;
-	 } 
-	 var txt='<table>';
-	 for (var x in  spellobj){
-	    for (var y=0; y<spellobj[x].words.length; y++) {		   
-	       txt+='<tr><td>'+x+'</td><td>'+spellobj[x].words[y]+'</td></tr>';
-	    }
-	}
-	txt+='</table>';
-	changeContent('wordssaved',txt);
- }	
-	
     </script>
-
-	
-
- 
-
-   <div data-role="page" id="page1">	
-   <div data-role="header"><h1>Spelling Game</h1></div>
-
-
-   	<a style="display:xnone" href="#" id='viewbut' data-theme="b" data-role="button" data-icon="check" data-iconpos="left" data-mini="true" data-inline="true">View Words</a>	
-<div id='wordssaved'></div>		
-		<a style="display:xnone" href="#" id='gobut' data-theme="b" data-role="button" data-icon="check" data-iconpos="left" data-mini="true" data-inline="true">New Spelling Test</a>	
-		
-		<br><br>
-		<div data-role="fieldcontain">
-			<label for="spellword">Spelling Word</label>
-			<input length=10 type="text" name="spellword" id="spellword" data-mini="true" />
-		</div>
-		<a style="display:xnone" href="#" id='wordbut' data-theme="b" data-role="button" data-icon="check" data-iconpos="left" data-mini="true" data-inline="true">Add Words</a>	
-		
-
-   </div>
-   <! ******END PAGE 1*********************************>
-   <div data-role="page" id="page2">	
-     <div data-role="header"><h1>Settings</h1></div>
-
-<div data-role="fieldcontain">
-<fieldset data-role="controlgroup" >
-<legend>Input Method:</legend>
-<input type="radio" name="jobentrytype" id="jobentrytypem" value="M" onclick="updateSettings()" checked="checked" />
-<label for="jobentrytypem">Manual Entry</label>
-
-<input type="radio" name="jobentrytype" id="jobentrytypes" value="S" onclick="updateSettings()" />
-<label for="jobentrytypes">Scan</label>
-</fieldset>
-         </div>
-       <input type="button" data-icon="arrow-r" value="Got to Page 1" onclick="$.mobile.changePage('#page1');"/>
-   </div>
-   
-   <! ******END PAGE 2*********************************>
-
-   <div data-role="page" id="page3">
-      <div data-role="header"><h1>Job Costing</h1></div>
-	  <div data-role="fieldcontain">
-	      <label for="jobdesc">Job Description</label>
-		  <input  type="text" name="jobdesc" id="jobdesc" data-mini="true" disabled />
-	  </div>	  
-	  <div data-role="fieldcontain">
-	      <label for="bilno">BOL</label>
-		  <input  type="text" name="bilno" id="bilno" data-mini="true" disabled />
-	  </div>	  
-	  <div data-role="fieldcontain">
-	      <label for="cnsign">Consignee</label>
-		  <input  type="text" name="cnsign" id="cnsign" data-mini="true" disabled />
-	  </div>	  
-	  <div data-role="fieldcontain">
-	      <label for="jobsts">Status</label>
-		  <input  type="text" name="jobsts" id="jobsts" data-mini="true" disabled />
-	  </div>	  
-	  <div data-role="fieldcontain">
-	      <label for="jobimg">Picture Of Goods</label>
-		  <img  height=50 width=50 id="jobimg" src="" />
-	  </div>	  
-	  <button><img   align="absmiddle" src="https://cloud.githubusercontent.com/assets/6663211/3127673/b4ef2f86-e7c4-11e3-8d0c-777d2a0c0ee4.png"/> Get Pic</button>
-   </div>
-   <! ******END PAGE 3*********************************>
-    <div data-role="page" id="indexPage">
-        <div data-role="header">
-            <h1>ADVANTUM inc</h1>
-        </div>
-    
-       
-
-        <div data-role="button" onclick="scanNow()">Scan Now </div>
-
-
-
-           <input type="button" data-icon="arrow-r" value="Take A Pic" onclick="capturePhotoEdit();"/>
-    
-    
-    <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
-    <img style="display:none;" id="largeImage" src="" />
-
-        <div data-role="footer" data-position="fixed">
-            <h1>Scan Test</h1>
-        </div>
-    </div>
- 
-
-
-
-</body>
+  </head>
+  <body>
+    <h1>Example</h1>
+    <p>localStorage</p>
+  </body>
 </html>
