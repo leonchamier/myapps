@@ -1,141 +1,182 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-<title>ADVANTUM</title>
-<script type='text/JavaScript' src='standardjs.js'></script>
-<script type='text/JavaScript' src='standardsq.js'></script>
-<script type="text/JavaScript" src="startup.js"></script>
-<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-<meta name="viewport" id="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
-<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
-<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
-<script type="text/javascript" src="OptionsMenu.js"></script>
-</head>
-<body onload="loadUp()">
-<script>
-var pictureSource; // picture source
-var destinationType; // sets the format of returned value
-function loadUp(){	
-//document.getElementById('scanbut').style.display = 'none';
-}
-// Wait for PhoneGap to connect with the device
-//
-$( document ).ready(function() {
-scandata= { location : "", bol : ""};
-document.addEventListener("deviceready", onDR, false);
-function onDR(){
-document.addEventListener("backbutton", backKeyDown, true);
-//*************************
-//boot your app...
-scanNow();
-}
-function backKeyDown() {
-if($.mobile.activePage.is('#page1')){
-navigator.app.exitApp();
-}
-else {
-history.back();
-}
-}
-});
-function scanNow(){
-changeVar('scanfld','');
-cordova.plugins.barcodeScanner.scan(
-function (result) {
-changeVar('scanfld',result.text);
-updateDatabase();
-},
-function (error) {
-alert("Scanning failed: " + error);
-}
-);
-}
-//**********************************************
-function getJob(){
-if (numValueOf('jobid')==0){
-alert('Please enter a job number');
-return false;
-}
-submitsqlpath="http://192.168.9.84/myapps/kwl/as400php.php";
-var sqltxt = " select jobid,jobdesc,bilno,jobsts,cnsign from wsjob where jobid="+numValueOf('jobid');
-if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); return false;}
-if(sqlrcdcnt==0){
-alert('Record not found');
-return false;
-}
-changeVar('jobdesc',$s.jobdesc[0]);
-changeVar('bilno',$s.bilno[0]);
-changeVar('cnsign',$s.cnsign[0]);
-changeVar('jobsts',$s.jobsts[0]);
-$.mobile.changePage('#page3')
-}
-//**********************************************
-function updateDatabase(){
-var scanval=valueOf('scanfld');
-var ids=scanval.split('-');
-if (ids.length !=2) {alert('Invalid input'); return false;}
-if (scanval.substr(0,1)!='B' ){
-submitsqlpath="http://192.168.9.84/myapps/kwl/as400php.php";
-var sqltxt = " select * from BOLDETAIL where bilref="+numeric(ids[0])+" and itemno="+numeric(ids[1]);	
-if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); }
-if(sqlrcdcnt==0){
-alert('Record not found');
+    <head>
+    <title>ADVANTUM</title>
 
-}else{scandata.bol=scanval; }
-}
-else{ scandata.location=scanval;}
-if (scandata.location !='' && scandata.bol !=''){
-var locsplit=scandata.location.split('-');
-var bolsplit=scandata.bol.split('-');
-if ($s.locb[0]==locsplit[0] && $s.loci[0]==locsplit[1]){
-alert('Database already up-to-date');	
-}else{
-var $bl=new Object();
-$bl.locb =locsplit[0];
-$bl.loci=locsplit[1];
-if (!sqlUpdate('BOLDETAIL', $bl, 'bilref='+numeric(bolsplit[0])+" and itemno="+numeric(bolsplit[1]))){alert(sqlerr); return false;}
-alert('record updated');
-}
-scandata.location =''; scandata.bol ='';
-}
- scanNow();
-}	
-function playAudio(id) {
-var audioElement = document.getElementById(id);
-var url = audioElement.getAttribute('src');
-var my_media = new Media(url,
-// success callback
-function () { console.log("playAudio():Audio Success"); alert('success') },
-// error callback
-function (err) { console.log("playAudio():Audio Error: " + err.message);
- alert(' ERR:'+err.message); }
-);
-// Play audio
-my_media.play();
-}
-function beepfunction(){
-try{navigator.notification.beep(1); } catch(e){alert(e.message);}
-alert('beeping nothing11');
-}
-</script>
-<div data-role="page" id="page1" data-theme="b">
-<div data-role="header" data-theme="b"><div><img align='absmiddle' src="hdpi.png" /> &nbsp Warehouse Item Location</div></div>
+	<script type='text/JavaScript' src='standardjs.js'></script>
+<script type='text/JavaScript' src='standardsq.js'></script>
+
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+	
+    
+</head>
+ 
+<body >
+ 
+ 
+     <script type="text/javascript" charset="utf-8">
+
+	 
+$( document ).ready(function() {
+  	 $("#gobut").click(createSpellTest);
+	 $("#wordbut").click(addWords);
+	 $("#viewbut").click(viewWords);
+    
+    
+});
+  /*
+	 
+        window.localStorage.setItem("key", "value");
+        var keyname = window.localStorage.key(i);
+        // keyname is now equal to "key"
+        var value = window.localStorage.getItem("key");
+        // value is now equal to "value"
+        window.localStorage.removeItem("key");
+        window.localStorage.setItem("key2", "value2");
+        window.localStorage.clear();
+        // localStorage is now empty
+   */ 
+
+	function createSpellTest(){
+	  
+       if (!window.localStorage.setItem["spelling"]) {
+	     spellobj =new Object();
+		 spellkey ='spell1';
+         spellobj[spellkey]=new Object; spellobj[spellkey].words=[];		 
+	   }else{
+         spellobj=window.localStorage.setItem["spelling"];
+	     var i=1;
+	     for (x in spellobj) i++;
+		 spellkey ='spell'+i; 
+		 spellobj[spellkey]=new Object; spellobj[spellkey].words=[];			 
+		 
+       }	   
+	   
+	}
+	
+
+	function addWords(){
+	if (valueOf('spellword')=='') {
+	  alert('Please enter words')
+	  return false;
+	 } 
+	 spellobj[spellkey].words.push(valueOf('spellword'));
+	 window.localStorage.setItem["spelling"]=spellobj;
+	 changeVar('spellword','');
+	}
+	
+	function viewWords(){
+	 if (!window.localStorage.setItem["spelling"]) {
+	   alert('No spell test created');
+	   return false;
+	 } 
+	 var txt='<table>';
+	 for (var x in  spellobj){
+	    for (var y=0; y<spellobj[x].words.length; y++) {		   
+	       txt+='<tr><td>'+x+'</td><td>'+spellobj[x].words[y]+'</td></tr>';
+	    }
+	}
+	txt+='</table>';
+	changeContent('wordssaved',txt);
+ }	
+	
+    </script>
+
+	
+
+ 
+
+   <div data-role="page" id="page1">	
+   <div data-role="header"><h1>Spelling Game</h1></div>
+
+
+   	<a style="display:xnone" href="#" id='viewbut' data-theme="b" data-role="button" data-icon="check" data-iconpos="left" data-mini="true" data-inline="true">View Words</a>	
+<div id='wordssaved'></div>		
+		<a style="display:xnone" href="#" id='gobut' data-theme="b" data-role="button" data-icon="check" data-iconpos="left" data-mini="true" data-inline="true">New Spelling Test</a>	
+		
+		<br><br>
+		<div data-role="fieldcontain">
+			<label for="spellword">Spelling Word</label>
+			<input length=10 type="text" name="spellword" id="spellword" data-mini="true" />
+		</div>
+		<a style="display:xnone" href="#" id='wordbut' data-theme="b" data-role="button" data-icon="check" data-iconpos="left" data-mini="true" data-inline="true">Add Words</a>	
+		
+
+   </div>
+   <! ******END PAGE 1*********************************>
+   <div data-role="page" id="page2">	
+     <div data-role="header"><h1>Settings</h1></div>
+
 <div data-role="fieldcontain">
-<label for="jobid">Item/Location</label>
-<input length=30 type="text" name="scanfld" id="scanfld" data-mini="true" onChange="setupper(this)" />
-<span style="font-size:10px;color:blue"><i>Scan an Item-location pair to update database</i> </span>
-</div>
-<input type="button" id="abc" value="Accept" data-icon="check" onclick="updateDatabase()"/>
-<a style="display:xnone" href="javascript:scanNow()" id='scanbut' data-theme="b" data-role="button" data-icon="grid" data-iconpos="left" >Scan</a>	
-<br><br>
-<input type="button" id="beepbut" value="Beep" data-icon="check" onclick="beepfunction();"/>
-<input type="button" id="beepbut2" value="Error" data-icon="check" onclick="playAudio('errorSound');"/>
-<input type="button" id="beepbut3" value="Success" data-icon="check" onclick="playAudio('successSound');"/>
-<audio id="successSound" src="/android_asset/www/success.mp3" type="audio/mpeg" ></audio>
-<audio id="errorSound" src="/android_asset/www/error.mp3" type="audio/mpeg" ></audio>
-</div>
-<! ******END PAGE 1*********************************>
+<fieldset data-role="controlgroup" >
+<legend>Input Method:</legend>
+<input type="radio" name="jobentrytype" id="jobentrytypem" value="M" onclick="updateSettings()" checked="checked" />
+<label for="jobentrytypem">Manual Entry</label>
+
+<input type="radio" name="jobentrytype" id="jobentrytypes" value="S" onclick="updateSettings()" />
+<label for="jobentrytypes">Scan</label>
+</fieldset>
+         </div>
+       <input type="button" data-icon="arrow-r" value="Got to Page 1" onclick="$.mobile.changePage('#page1');"/>
+   </div>
+   
+   <! ******END PAGE 2*********************************>
+
+   <div data-role="page" id="page3">
+      <div data-role="header"><h1>Job Costing</h1></div>
+	  <div data-role="fieldcontain">
+	      <label for="jobdesc">Job Description</label>
+		  <input  type="text" name="jobdesc" id="jobdesc" data-mini="true" disabled />
+	  </div>	  
+	  <div data-role="fieldcontain">
+	      <label for="bilno">BOL</label>
+		  <input  type="text" name="bilno" id="bilno" data-mini="true" disabled />
+	  </div>	  
+	  <div data-role="fieldcontain">
+	      <label for="cnsign">Consignee</label>
+		  <input  type="text" name="cnsign" id="cnsign" data-mini="true" disabled />
+	  </div>	  
+	  <div data-role="fieldcontain">
+	      <label for="jobsts">Status</label>
+		  <input  type="text" name="jobsts" id="jobsts" data-mini="true" disabled />
+	  </div>	  
+	  <div data-role="fieldcontain">
+	      <label for="jobimg">Picture Of Goods</label>
+		  <img  height=50 width=50 id="jobimg" src="" />
+	  </div>	  
+	  <button><img   align="absmiddle" src="https://cloud.githubusercontent.com/assets/6663211/3127673/b4ef2f86-e7c4-11e3-8d0c-777d2a0c0ee4.png"/> Get Pic</button>
+   </div>
+   <! ******END PAGE 3*********************************>
+    <div data-role="page" id="indexPage">
+        <div data-role="header">
+            <h1>ADVANTUM inc</h1>
+        </div>
+    
+       
+
+        <div data-role="button" onclick="scanNow()">Scan Now </div>
+
+
+
+           <input type="button" data-icon="arrow-r" value="Take A Pic" onclick="capturePhotoEdit();"/>
+    
+    
+    <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+    <img style="display:none;" id="largeImage" src="" />
+
+        <div data-role="footer" data-position="fixed">
+            <h1>Scan Test</h1>
+        </div>
+    </div>
+ 
+
+
+
 </body>
 </html>
