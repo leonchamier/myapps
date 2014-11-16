@@ -4,34 +4,23 @@ xmlns:gap = "http://phonegap.com/ns/1.0"
 id = "com.phonegap.example"
 versionCode = "10"
 version = "1.0.0" >
-<preference name="phonegap-version" value="3.0.0" />
+<preference name="phonegap-version" value="3.6.3" />
 <!-- versionCode is optional and Android only -->
 <feature name="Device">
 <param name="android-package" value="org.apache.cordova.Device" />
 </feature>
-<name>KWL Warehouse</name>
+<name>Spelling</name>
 <description>
 App to can and update item location
 </description>
 <author href="https://home.com" email="onielhcharles@gmail.com">
 Oniel Charles
 </author>
-<!-- We'll include the Barcode plugin as an example -->
-<gap:plugin name="com.phonegap.plugins.barcodescanner" />
-<gap:plugin name="org.apache.cordova.core.camera" />
-<gap:plugin name="org.apache.cordova.file" />
-<gap:plugin name="org.apache.cordova.file-transfer" />
-<gap:plugin name="nl.x-services.plugins.toast" version="2.0" />
-<gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1" />
 
-<gap:plugin name="org.apache.cordova.device" version="0.2.8" />
-<gap:plugin name="org.apache.cordova.media" version="0.2.8" />
 
 <icon src="icon.png" />
 
-<feature name="Notification">
-<param name="android-package" value="org.apache.cordova.dialogs.Notification" />
-</feature>
+
 <!--uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /-->
 <!--plugin name="Camera" value="org.apache.cordova.CameraLauncher" -->
 </widget>
