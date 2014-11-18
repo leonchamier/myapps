@@ -45,12 +45,12 @@ $( document ).ready(function() {
 
 	function createSpellTest(){
 	  
-       if (!window.localStorage.setItem["spelling"]) {
+       if (!localStorage.setItem["spelling"]) {
 	     spellobj =new Object();
 		 spellkey ='spell1';
          spellobj[spellkey]=new Object; spellobj[spellkey].words=[];		 
 	   }else{
-         spellobj=window.localStorage.setItem["spelling"];
+         spellobj=localStorage.setItem["spelling"];
 	     var i=1;
 	     for (x in spellobj) i++;
 		 spellkey ='spell'+i; 
@@ -67,12 +67,12 @@ $( document ).ready(function() {
 	  return false;
 	 } 
 	 spellobj[spellkey].words.push(valueOf('spellword'));
-	 window.localStorage.setItem["spelling"]=spellobj;
+	 localStorage.setItem["spelling"]=spellobj;
 	 changeVar('spellword','');
 	}
 	
 	function viewWords(){
-	 if (!window.localStorage.setItem["spelling"]) {
+	 if (!localStorage.setItem["spelling"]) {
 	   alert('No spell test created');
 	   return false;
 	 } 
