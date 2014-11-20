@@ -20,6 +20,6 @@ Oniel Charles
 
 <icon src="icon.png" />
 
-<plugin name="Storage" value="org.apache.cordova.Storage" />
+<gap:plugin name="Storage" value="org.apache.cordova.Storage" />
 
 </widget>
