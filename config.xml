@@ -1,1 +1,25 @@
 
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns = "http://www.w3.org/ns/widgets"
+xmlns:gap = "http://phonegap.com/ns/1.0"
+id = "com.phonegap.spelling"
+versionCode = "10"
+version = "1.0.0" >
+<preference name="phonegap-version"  />
+<!-- versionCode is optional and Android only -->
+<feature name="Device">
+<param name="android-package" value="org.apache.cordova.Device" />
+</feature>
+<name>Spelling </name>
+<description>
+App to generate spelling test
+</description>
+<author href="https://home.com" email="onielhcharles@gmail.com">
+Oniel Charles
+</author>
+
+<icon src="icon.png" />
+
+<plugin name="Storage" value="org.apache.cordova.Storage" />
+
+</widget>
