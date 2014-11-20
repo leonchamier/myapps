@@ -20,7 +20,8 @@ Oniel Charles
 
 <icon src="icon.png" />
 
-<gap:plugin name="Storage" value="org.apache.cordova.Storage" />
+
 <gap:plugin name="com.phonegap.plugins.barcodescanner" />
+<plugin name="org.apache.cordova.Storage" />
 
 </widget>
