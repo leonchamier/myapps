@@ -12,13 +12,13 @@
 
 
     function onDeviceReady() {
-        
+        alert('11100');
   var db = window.sqlitePlugin.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
-
-  db.transaction(function(tx) {
+alert('22100');
+  db.transaction(function(tx) {alert('100');
     try{tx.executeSql('DROP TABLE IF EXISTS test_table');
     tx.executeSql('CREATE TABLE IF NOT EXISTS test_table (id integer primary key, data text, data_num integer)'); }catch(e){alert(e.message+'   occc');}
-
+alert('200');
     try{tx.executeSql("INSERT INTO test_table (data, data_num) VALUES (?,?)", ["test", 100], function(tx, res) {
       alert("insertId: " + res.insertId + " -- probably 1");
       alert("rowsAffected: " + res.rowsAffected + " -- should be 1");
