@@ -16,10 +16,10 @@
   var db = window.sqlitePlugin.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
 
   db.transaction(function(tx) {
-    tx.executeSql('DROP TABLE IF EXISTS test_table');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS test_table (id integer primary key, data text, data_num integer)');
+    try{tx.executeSql('DROP TABLE IF EXISTS test_table');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS test_table (id integer primary key, data text, data_num integer)'); }catch(e){alert(e.message+'   occc');}
 
-    tx.executeSql("INSERT INTO test_table (data, data_num) VALUES (?,?)", ["test", 100], function(tx, res) {
+    try{tx.executeSql("INSERT INTO test_table (data, data_num) VALUES (?,?)", ["test", 100], function(tx, res) {
       alert("insertId: " + res.insertId + " -- probably 1");
       alert("rowsAffected: " + res.rowsAffected + " -- should be 1");
       db.transaction(function(tx) {
@@ -28,7 +28,7 @@
           alert("res.rows.item(0).cnt: " + res.rows.item(0).cnt + " -- should be 1");
         });
       });
-
+    }catch(e){alert(e.message+'    secound');}
     }, function(e) {
       alert("ERROR: " + e.message);
     });
