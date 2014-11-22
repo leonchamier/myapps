@@ -60,11 +60,32 @@
     }
 
     </script>
+<script>
+function saveWord(){
+     var fileTransfer = new FileTransfer();
+     var wordmp3=document.getElementById('spellword').value+'.mp3';
+     var uri = encodeURI("https://ssl.gstatic.com/dictionary/static/sounds/de/0/"+wordmp3);
+
+   fileTransfer.download(
+      uri,
+      wordmp3,
+      function(entry) {
+          alert("download complete: " + entry.toURL());
+      },
+      function(error) {
+          alert("download error source " + error.source);
+          alert("download error target " + error.target);
+          alert("upload error code" + error.code);
+      }
+    ); 
+    
+  }
+    </script>
   </head>
   <body>
     <h1>Example</h1>
     <p>Database</p>
-   
+    Enter Word<input name=spellword length=30 id=spellword/><br><br>
     <button onclick="createDatabase()">create db </button>
     <button onclick="queryDB()">Query db </button>
   </body>
