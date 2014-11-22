@@ -29,9 +29,9 @@
     //
     function querySuccess(tx, results) {
         var len = results.rows.length;
-        console.log("DEMO table: " + len + " rows found.");
+        alert("DEMO table: " + len + " rows found.");
         for (var i=0; i<len; i++){
-            console.log("Row = " + i + " ID = " + results.rows.item(i).id + " Data =  " + results.rows.item(i).data);
+            alert("Row = " + i + " ID = " + results.rows.item(i).id + " Data =  " + results.rows.item(i).data);
         }
     }
 
@@ -62,5 +62,8 @@
   <body>
     <h1>Example</h1>
     <p>Database</p>
+   
+    <button onclick="createDatabase()">create db </button>
+    <button onclick="queryDB">Query db </button>
   </body>
 </html>
