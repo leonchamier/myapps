@@ -26,6 +26,7 @@ var localPath = fileEntry.fullPath;
 if (device.platform === "Android" && localPath.indexOf("file://") === 0) {
 localPath = localPath.substring(7);
 }
+alert(localPath);
 var ft = new FileTransfer();
 ft.download(remoteFile,
 localPath, function(entry) {
