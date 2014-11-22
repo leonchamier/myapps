@@ -71,7 +71,7 @@ function saveWord(){
      var uri = encodeURI("https://ssl.gstatic.com/dictionary/static/sounds/de/0/"+wordmp3);
   
      var store = cordova.file.dataDirectory;
-     store='file:///sdcard/spelling/';
+     //store='file:///sdcard/spelling/';
      alert(store);
    fileTransfer.download(
       uri,
