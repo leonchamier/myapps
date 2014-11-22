@@ -23,6 +23,7 @@ Oniel Charles
 
 <gap:plugin name="com.phonegap.plugins.barcodescanner" />
 <gap:plugin name="org.apache.cordova.file-transfer" />
+<gap:plugin name="org.apache.cordova.file" />
 <gap:plugin name="org.apache.cordova.media" version="0.2.8" />
 
 </widget>
