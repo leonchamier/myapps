@@ -18,6 +18,7 @@ function ready() {
 alert("Thunderbirds are go!");
 }
 function download() {
+ try{
 var remoteFile = "http://i3.kym-cdn.com/entries/icons/original/000/000/080/doubt.jpg";
 var localFileName = remoteFile.substring(remoteFile.lastIndexOf('/')+1);
 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
@@ -37,6 +38,7 @@ dwnldImg.style.display = "block";
 }, fail);
 }, fail);
 }, fail);
+}catch(e){alert(e.message);}
 }
 function fail(error) {
 alert(error.code);
