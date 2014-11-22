@@ -62,10 +62,13 @@
     </script>
 <script>
 function saveWord(){
+  
+    alert('attemp download');
+    try{
      var fileTransfer = new FileTransfer();
      var wordmp3=document.getElementById('spellword').value+'.mp3';
      var uri = encodeURI("https://ssl.gstatic.com/dictionary/static/sounds/de/0/"+wordmp3);
-
+  
    fileTransfer.download(
       uri,
       wordmp3,
@@ -78,7 +81,7 @@ function saveWord(){
           alert("upload error code" + error.code);
       }
     ); 
-    
+    }catch(e){alert(e.message+'   -downing');}  
   }
     </script>
   </head>
