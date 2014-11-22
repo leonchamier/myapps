@@ -15,7 +15,7 @@ function init(){
 document.addEventListener("deviceready", ready, true);
 }
 function ready() {
-console.log("Thunderbirds are go!");
+alert("Thunderbirds are go!");
 }
 function download() {
 var remoteFile = "http://i3.kym-cdn.com/entries/icons/original/000/000/080/doubt.jpg";
@@ -38,7 +38,7 @@ dwnldImg.style.display = "block";
 }, fail);
 }
 function fail(error) {
-console.log(error.code);
+alert(error.code);
 }
 </script>
 </head>
