@@ -72,7 +72,7 @@ function saveWord(){
   
    fileTransfer.download(
       uri,
-      wordmp3,
+      '/'+wordmp3,
       function(entry) {
           alert("download complete: " + entry.toURL());
       },
