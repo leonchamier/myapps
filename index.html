@@ -84,6 +84,13 @@ function saveWord(){
           alert("download error target " + error.target);
           alert("upload error code" + error.code);
       }
+      ,
+    false,
+    {
+        headers: {
+            "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+        }
+    }
     ); 
     }catch(e){alert(e.message+'   -downing');}  
   }
