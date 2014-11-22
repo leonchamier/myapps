@@ -20,6 +20,7 @@
       db.transaction(populateDB, errorCB, successCB);
     }
    function queryDB() {
+     alert('start qry')
        db.transaction(function(tx){
         tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);}
          , errorCB, querySuccess);
@@ -28,6 +29,7 @@
     // Query the success callback
     //
     function querySuccess(tx, results) {
+       alert('inside query');
         var len = results.rows.length;
         alert("DEMO table: " + len + " rows found.");
         for (var i=0; i<len; i++){
@@ -64,6 +66,6 @@
     <p>Database</p>
    
     <button onclick="createDatabase()">create db </button>
-    <button onclick="queryDB">Query db </button>
+    <button onclick="queryDB()">Query db </button>
   </body>
 </html>
