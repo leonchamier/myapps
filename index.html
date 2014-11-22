@@ -61,6 +61,11 @@
 
     </script>
 <script>
+function sayWord(){
+    var store = cordova.file.dataDirectory;
+    var wordmp3=store+document.getElementById('spellword').value+'.mp3';
+     
+}
 function saveWord(){
   
     alert('attemp download');
@@ -99,6 +104,7 @@ options.chunkedMode = false;
   <body>
     <h1>Example</h1>
     <p>Database</p>
+    <button onclick="sayWord()">Save word </button>
     Enter Word<input name=spellword length=30 id='spellword' /><button onclick="saveWord()">Save word </button><br><br>
     <button onclick="createDatabase()">create db </button>
     <button onclick="queryDB()">Query db </button>
