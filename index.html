@@ -62,9 +62,20 @@
     </script>
 <script>
 function sayWord(){
+   try{
     var store = cordova.file.dataDirectory;
     var wordmp3=store+document.getElementById('spellword').value+'.mp3';
-     
+    var my_media = new Media(wordmp3,
+        function() {
+            alert("playAudio():Audio Success");
+        },
+        function(err) {
+            alert("playAudio():Audio Error: "+err);
+    });
+
+    // Play audio
+    my_media.play();
+   }catch(e){alert(e.message);}
 }
 function saveWord(){
   
