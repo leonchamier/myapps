@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -30,15 +31,16 @@
     // Wait for PhoneGap to connect with the device
     //
    
+
 $( document ).ready(function() {
   	$("#gobut").click(getJob);
+
     document.addEventListener("deviceready", onDR, false);
     function onDR(){
     document.addEventListener("backbutton", backKeyDown, true);
     //*************************
     var onSettings = function() {
-                    //alert('soon Set you up');
-                    $.mobile.changePage('#page2')
+                    alert('soon Set you up');
                     console.log("settings");
                 };
      
@@ -74,25 +76,22 @@ function backKeyDown() {
 }
  //alert('here');
 });
- //***************************************************
- //*************SCAN*****************************
- //***********************************************
- 
+
     function scanNow(){
-	cordova.plugins.barcodeScanner.scan(
-	         function (result) {
-	         	changeVar('jobid',result.text);
-	         	getJob();
-	            /*     alert("We got a barcode\n" +
-	                "Result: " + result.text + "\n" +
-	                "Format: " + result.format + "\n" +
-	                "Cancelled: " + result.cancelled); */
-	},
-	function (error) {
-	alert("Scanning failed: " + error);
-	}
-	    );
-     }
+cordova.plugins.barcodeScanner.scan(
+         function (result) {
+                 alert("We got a barcode\n" +
+                "Result: " + result.text + "\n" +
+                "Format: " + result.format + "\n" +
+                "Cancelled: " + result.cancelled);
+},
+function (error) {
+alert("Scanning failed: " + error);
+}
+    );
+}
+
+
  //***************************************************
  //*************PHOTO*****************************
  //***********************************************
@@ -100,19 +99,24 @@ function backKeyDown() {
      function onPhotoDataSuccess(imageData) {
       // Uncomment to view the base64 encoded image data
       // console.log(imageData);
+
       // Get image handlefgggggg
       //
       var smallImage = document.getElementById('smallImage');
+
       // Unhide image elements
       //
       smallImage.style.display = 'block';
+
       // Show the captured photo
       // The inline CSS rules are used to resize the image
       //
       smallImage.src = "data:image/jpeg;base64," + imageData;
       
       var largeImage = document.getElementById('largeImage');
+
       largeImage.style.display = 'block';
+
       largeImage.src = imageData;
       uploadPhoto(imageData);
     }
@@ -140,28 +144,35 @@ params.value2 = "param";
 options.params = params;
 options.chunkedMode = false;
 var ft = new FileTransfer();
-ft.upload(imageURI, "http://192.168.9.84/myapps/upload.php", win, fail, options);
+ft.upload(imageURI, "http://192.168.9.58/myapps/upload.php", win, fail, options);
     }catch(e){alert(e.message);}
 alert('up load success');
 }
+
+
     // Called when a photo is successfully retrieved
     
     function capturePhoto() {
       // Take picture using device camera and retrieve image as base64-encoded string
       navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50 });
     }
+
     // A button will call this function
     //
     function capturePhotoEdit() {
       // Take picture using device camera, allow edit, and retrieve image as base64-encoded string
+
       navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20, allowEdit: true });
     }
+
     
+
     // Called if something bad happens.
     //
     function onFail(message) {
       alert('Failed because: ' + message);
     }
+
 //**********************************************
 function updateSettings(){
 if ( $('input[name=jobentrytype]:checked').val()=='M') {
@@ -172,13 +183,13 @@ document.getElementById('gobut').style.display = 'none';
 document.getElementById('scanbut').style.display = '';	
 }
 }
+
 function getJob(){
-	
  if (numValueOf('jobid')==0){
     alert('Please enter a job number');
 	return false;
  }
-  submitsqlpath="http://192.168.9.84/myapps/job/mphpsql.php";
+  submitsqlpath="http://192.168.9.58/myapps/job/mphpsql.php";
   var  sqltxt = " select jobid,jobdesc,bilno,jobsts,cnsign from wsjob where jobid="+numValueOf('jobid');
   if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); return false;}
   if(sqlrcdcnt==0){
@@ -191,37 +202,13 @@ function getJob(){
   changeVar('jobsts',$s.jobsts[0]);
   $.mobile.changePage('#page3')
 }
+
 //**********************************************
-    function getPic() {
-        navigator.camera.getPicture(
-            function(uri) {
-                var img = document.getElementById('jobimg');
-                img.style.visibility = "visible";
-                img.style.display = "block";
-                img.src = uri;
-                    var server ='http://192.168.9.84/myapps/job/upload.php';
-                    var imageURI = document.getElementById('jobimg').src;
-                    var options = new FileUploadOptions();
-	            options.fileKey="file";
-	            options.fileName='job'+numValueOf('jobid')+'bol.jpg';
-	            options.mimeType="image/jpeg";
-	            options.chunkedMode = false;
+    function scanNow(){
+
+    }	
 	
-	            // Transfer picture to server
-	            var ft = new FileTransfer();
-	            ft.upload(imageURI, server, function(r) {
-	                document.getElementById('camera_status').innerHTML = "Upload successful: "+r.bytesSent+" bytes uploaded.";
-	            }, function(error) {
-	                document.getElementById('camera_status').innerHTML = "Upload failed: Code = "+error.code;
-	            }, options);
-	            
-            },
-            function(e) {
-                console.log("Error getting picture: " + e);
-                //document.getElementById('camera_status').innerHTML = "Error getting picture.";
-            },
-            { quality: 50, destinationType: navigator.camera.DestinationType.FILE_URI});
-    };
+
     </script>
  
 
@@ -278,8 +265,7 @@ function getJob(){
 	      <label for="jobimg">Picture Of Goods</label>
 		  <img  height=50 width=50 id="jobimg" src="" />
 	  </div>	  
-	  <button onclick="getPic()"><img   align="absmiddle" src="https://cloud.githubusercontent.com/assets/6663211/3127673/b4ef2f86-e7c4-11e3-8d0c-777d2a0c0ee4.png"/> Get Pic</button>
-	  <div id='camera_status'></div>
+	  <button><img   align="absmiddle" src="https://cloud.githubusercontent.com/assets/6663211/3127673/b4ef2f86-e7c4-11e3-8d0c-777d2a0c0ee4.png"/> Get Pic</button>
    </div>
    <! ******END PAGE 3*********************************>
     <div data-role="page" id="indexPage">
