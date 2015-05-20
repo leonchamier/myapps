@@ -10,7 +10,7 @@ version = "1.0.0" >
 <feature name="Device">
 <param name="android-package" value="org.apache.cordova.Device" />
 </feature>
-<name>KWL </name>
+<name>KWL App</name>
 <description>
 KWL Warehouse Maintenance
 </description>
