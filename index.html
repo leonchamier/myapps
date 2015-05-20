@@ -185,6 +185,7 @@ function getJob(){
     alert('Record not found');
     return false;
   }
+  document.getElementById('jobimg').src="http://192.168.9.58/myapps/job/job"+numValueOf('jobid')+"2bol.jpg";
   changeVar('jobdesc',$s.jobdesc[0]);
   changeVar('bilno',$s.bilno[0]);
   changeVar('cnsign',$s.cnsign[0]);
@@ -233,8 +234,8 @@ function getJob(){
 			<label for="jobid">Job ID</label>
 			<input length=10 type="text" name="jobid" id="jobid" data-mini="true" />
 		</div>
-		<a style="display:xnone" href="#" id='gobut' data-theme="b" data-role="button" data-icon="check" data-iconpos="left" data-mini="true" data-inline="true">Go</a>	
-		<a style="display:xnone" href="javascript:scanNow()" id='scanbut' data-theme="b" data-role="button" data-icon="grid" data-iconpos="left" data-mini="true" data-inline="true">Scan</a>	
+		<a style="display:xnone" href="#" id='gobut' data-theme="b" data-role="button" data-icon="check" data-iconpos="left" data-mini="false" data-inline="true">Go</a>	
+		<a style="display:xnone" href="javascript:scanNow()" id='scanbut' data-theme="b" data-role="button" data-icon="grid" data-iconpos="left" data-mini="false" data-inline="true">Scan</a>	
 
    </div>
    <! ******END PAGE 1*********************************>
