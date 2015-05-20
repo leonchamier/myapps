@@ -9,7 +9,7 @@ version = "1.0.0" >
 <feature name="Device">
 <param name="android-package" value="org.apache.cordova.Device" />
 </feature>
-<name>Spelling </name>
+<name>KWL Agent </name>
 <description>
 App to generate spelling test
 </description>
