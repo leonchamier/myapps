@@ -144,7 +144,7 @@ params.value2 = "param";
 options.params = params;
 options.chunkedMode = false;
 var ft = new FileTransfer();
-ft.upload(imageURI, "http://192.168.9.58/myapps/upload.php", win, fail, options);
+ft.upload(imageURI, "http://192.168.2.4/myapps/upload.php", win, fail, options);
     }catch(e){alert(e.message);}
 alert('up load success');
 }
@@ -189,7 +189,7 @@ function getJob(){
     alert('Please enter a job number');
 	return false;
  }
-  submitsqlpath="http://192.168.9.58/myapps/job/mphpsql.php";
+  submitsqlpath="http://192.168.2.4/myapps/job/mphpsql.php";
   var  sqltxt = " select jobid,jobdesc,bilno,jobsts,cnsign from wsjob where jobid="+numValueOf('jobid');
   if (!sqlSelect(sqltxt,'$s',1)){alert('Error..'+sqlerr); return false;}
   if(sqlrcdcnt==0){
