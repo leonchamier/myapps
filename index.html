@@ -192,9 +192,9 @@ function getJob(){
   $.mobile.changePage('#page3')
 }
 //**********************************************
-    function getPic() {
+    function getPic() {alert('here oniel');
         navigator.camera.getPicture(
-            function(uri) {alert('oniel');
+            function(uri) {
                 var img = document.getElementById('jobimg');
                 img.style.visibility = "visible";
                 img.style.display = "block";
@@ -221,7 +221,7 @@ function getJob(){
                 //document.getElementById('camera_status').innerHTML = "Error getting picture.";
             },
             { quality: 50, destinationType: navigator.camera.DestinationType.FILE_URI});
-    };
+    }
     </script>
  
 
