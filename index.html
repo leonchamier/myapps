@@ -77,7 +77,7 @@ function backKeyDown() {
  //alert('here');
 });
 
-    function scanNow(){
+    function scanNow(){ try{
 cordova.plugins.barcodeScanner.scan(
          function (result) {
                  alert("We got a barcode\n" +
@@ -89,6 +89,7 @@ function (error) {
 alert("Scanning failed: " + error);
 }
     );
+    }catch(e){alert(e.message);}
 }
 
 
