@@ -9,7 +9,7 @@ version = "1.0.0" >
 <feature name="Device">
 <param name="android-package" value="org.apache.cordova.Device" />
 </feature>
-<name>KWL Agent </name>
+<name>School Challenge</name>
 <description>
 Update warehouse information
 </description>
