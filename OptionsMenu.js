@@ -1,3 +1,4 @@
+//menu js
 var OptionsMenu = function(menu) {
     var detectIconSize = function() {
         var width = screen.width;
