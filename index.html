@@ -72,6 +72,7 @@
                     $('#screen1table').empty();
                     $("#screen1table").append('<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
                     var sqltxt = "select * from payrollfile where status='pending'";
+                    alert(sqltxt);
                     if (!sqlSelect(sqltxt, '$s')) { alert(sqlerr) }
                     alert(sqlerr+'  '+$s.description);
                     payids = $s.payid;
