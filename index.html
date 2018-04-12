@@ -26,10 +26,10 @@
         var onHelp = function () {
             console.log("help");
         };
-alert('here in script');
+
 
         $(document).ready(function () {
-alert('ready');
+
             $.mobile.allowCrossDomainPages = true;
             document.addEventListener("deviceready", onDR, false);
             function onDR() {
@@ -64,7 +64,7 @@ alert('ready');
 
         });
 
-        //connect();
+        connect();
             function connect() {
                 setTimeout(function () {
                     submitsqlpath = "http://192.168.1.18/mobilepay/mphpsql.php";
