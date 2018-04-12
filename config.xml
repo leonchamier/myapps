@@ -23,7 +23,7 @@ Oniel Charles
 
 
 <plugin name="cordova-plugin-file" spec="~6.0.1" />
-<access origin="http://192.168.1.18/" />
+<access origin="http://192.168.1.18/mobilepay/mphpsql.php" />
 
 
 
