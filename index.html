@@ -72,6 +72,7 @@
                     $("#screen1table").append('<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
                     var sqltxt = "select * from payrollfile where status='pending'";
                     if (!sqlSelect(sqltxt, '$s')) { alert(sqlerr) }
+                    alert(sqlerr+'  '+$s.description);
                     payids = $s.payid;
                     for (var i = 0; i < sqlrcdcnt; i++) {
                         $("#screen1table").append('<li ><a href="javascript:approve(' + $s.payid[i] + ')" >' + $s.description[i] + '</li>');
