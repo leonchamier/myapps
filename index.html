@@ -67,6 +67,7 @@
         connect();
             function connect() {
                 setTimeout(function () {
+                    alert('inside connect');
                     submitsqlpath = "http://192.168.1.18/mobilepay/mphpsql.php";
                     $('#screen1table').empty();
                     $("#screen1table").append('<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
