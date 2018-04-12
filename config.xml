@@ -9,9 +9,9 @@ version = "1.0.0" >
 <feature name="Device">
 <param name="android-package" value="org.apache.cordova.Device" />
 </feature>
-<name>School Challenge</name>
+<name>Payroll Approval</name>
 <description>
-Helping Student Practice
+Payroll Mobile
 </description>
 <author href="https://home.com" email="onielhcharles@gmail.com">
 Oniel Charles
