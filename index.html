@@ -72,6 +72,17 @@
                     $('#screen1table').empty();
                     $("#screen1table").append('<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
                     var sqltxt = "select * from payrollfile where status='pending'";
+                    $.ajax({
+                      type: "GET",
+                      url: "http://192.168.1.18/mobilepay/mphpsql.php?directive=select&sqlodbc=&sqlstring=select%20*%20from%20payrollfile%20where%20status%3D%27pending%27&sqlrcds=99999999",
+                      cache: false,
+                      dataType: "text",
+                      success: function (data) {alert(data)},
+                      complete: function(xhr, statusText){   },
+                      error: function(xhr, statusText, err){   alert(statusText+'  '+err+" Error:" + xhr.status);  }
+                    });
+
+
                     alert(sqltxt);
                     if (!sqlSelect(sqltxt, '$s')) { alert(sqlerr) }
                     alert(sqlerr+'  '+$s.description);
