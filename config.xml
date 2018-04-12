@@ -22,7 +22,8 @@ Oniel Charles
 
 
 
-<gap:plugin name="org.apache.cordova.file"  />
+<plugin name="org.apache.cordova.file" source="pgb" spec="1.3.3" />
+
 
 
 
