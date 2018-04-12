@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>School Challenge</title>
+
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+
+    <link rel="stylesheet" href="jquery.mobile-1.0a2.min.css" />
+	
+    <script src="jquery-1.4.4.min.js"></script>
+    <script src="jquery.mobile-1.0a2.min.js"></script>
+    <script type="text/JavaScript" src="quizz.js"></script>
+
+</head>
+ 
+<body onload="loadUp()">
+ 
+    <script>
+
+	$(document).ready(function(){
+	//document.getElementById("timebutton").addEventListener("click", function(){
+   ///// alert(666);
+
+	
+$("#answerbutton").click(function() {
+   $('#answerarea').show();
+   document.getElementById('answerarea').innerHTML=ANSWER;
+   questionanswered=true;
+});
+	
+$("#timebutton").click(function() {
+  if (questionanswered==true) return false;
+   var count=5;
+	 if (document.getElementById('subjectspan').innerHTML=='MATH') count=10;
+	 counter(count);
+});
+	
+});
+	
+  function loadUp(){
+  
+   quizzarray=[];
+   if ($("#checkboxa").is(":checked")){
+     var subj= "BIBLE KNOWLEDGE";
+	 if ( quizzobj[subj]){
+		 for (x in  quizzobj[subj]){
+			quizzarray.push(quizzobj[subj][x]);
+			quizzarray[quizzarray.length-1].subject=subj;
+		 }
+	 }
+   }
+   if ($("#checkboxb").is(":checked")){
+     var subj= "SCOCIAL STUDIES";
+	 if ( quizzobj[subj]){
+		 for (x in  quizzobj[subj]){
+			quizzarray.push(quizzobj[subj][x]);
+			quizzarray[quizzarray.length-1].subject=subj;
+		 }
+	 }
+   }
+   if ($("#checkboxc").is(":checked")){
+     var subj= "MATH";
+	 if ( quizzobj[subj]){
+		 for (x in  quizzobj[subj]){
+			quizzarray.push(quizzobj[subj][x]);
+			quizzarray[quizzarray.length-1].subject=subj;
+		 }
+	 }
+   }
+   if ($("#checkboxd").is(":checked")){
+     var subj= "SCIENCE";
+	 if ( quizzobj[subj]){
+		 for (x in  quizzobj[subj]){
+			quizzarray.push(quizzobj[subj][x]);
+			quizzarray[quizzarray.length-1].subject=subj;
+		 }
+	 }
+   }
+   if ($("#checkboxe").is(":checked")){
+     var subj= "MUSIC";
+	 if ( quizzobj[subj]){
+		 for (x in  quizzobj[subj]){
+			quizzarray.push(quizzobj[subj][x]);
+			quizzarray[quizzarray.length-1].subject=subj;
+		 }
+	 }
+   }
+   if ($("#checkboxf").is(":checked")){
+     var subj= "ENGLISH";
+	 if ( quizzobj[subj]){
+		 for (x in  quizzobj[subj]){
+			quizzarray.push(quizzobj[subj][x]);
+			quizzarray[quizzarray.length-1].subject=subj;
+		 }
+	 }
+   }
+
+    
+    $('#timebutton').hide();
+   $('#answerbutton').hide();
+ }  
+    var pictureSource;   // picture source
+    var destinationType; // sets the format of returned value 
+function loadQuestion(){
+   questionanswered=false;
+   var x= quizzarray.length;
+   if (x==0) alert('Sorry no more questions');
+   x=Math.floor((Math.random() * x) + 1); 
+   document.getElementById('subjectspan').innerHTML=quizzarray[x-1].subject;
+   $('#qarea').val(quizzarray[x-1].quizz);
+   ANSWER=quizzarray[x-1].answer;
+   document.getElementById('answerarea').innerHTML='';;
+   quizzarray.splice(x-1, 1);
+   $('#timebutton').show();
+   $('#answerbutton').show();
+    $('#answerarea').hide();
+   
+    //document.getElementById('answerbuttonspan').style.display='';  
+	//document.getElementById('timebuttonspan').style.display=''; 
+}
+
+    // Wait for PhoneGap to connect with the device
+    //
+    document.addEventListener("deviceready",onDeviceReady,false);
+
+    function onDeviceReady() {
+        
+    }
+
+
+	function countDown(){
+	 var count=5;
+	 if (document.getElementById('subjectspan').innerHTML=='MATH') count=10;
+	 counter(count);
+	}
+	function counter(x){
+	 document.getElementById('qclock').style.display='';
+	 document.getElementById('qclock').innerHTML=x;
+	 if(x>0){
+	   setTimeout(function(){counter(x-1); }, 1000);
+	  }else{
+	  document.getElementById('qclock').style.display='none';
+	  document.getElementById('answerarea').style.display='';
+	  document.getElementById('answerarea').innerHTML=ANSWER;
+	  questionanswered=true;
+	  }
+	}
+    </script>
+ 
+    <div data-role="page" id="indexPage">
+        <div  data-role="header">
+            <h1 style="font-size:10px" >School Challenge</h1>
+        </div>
+        <fieldset   data-mini="true"  data-role="controlgroup" data-type="horizontal">
+        <legend></legend>
+        <input onchange="loadUp()" name="checkboxa" id="checkboxa" type="checkbox">        <label  style="font-size:10px" for="checkboxa">Bible Knowledge</label>
+        <input onchange="loadUp()"  checked="true" name="checkboxb" id="checkboxb" type="checkbox">        <label  style="font-size:10px" for="checkboxb">Scocial Studies</label>
+        <input onchange="loadUp()" checked="true"  name="checkboxc" id="checkboxc" type="checkbox">        <label  style="font-size:10px" for="checkboxc">Math</label>
+		<input onchange="loadUp()"  name="checkboxd" id="checkboxd" type="checkbox">        <label  style="font-size:10px" for="checkboxd">Science</label>
+		<input onchange="loadUp()" checked="true" name="checkboxe" id="checkboxe" type="checkbox">        <label  style="font-size:10px" for="checkboxe">Music</label>
+		<input onchange="loadUp()"  name="checkboxf" id="checkboxf" type="checkbox">        <label  style="font-size:10px" for="checkboxf">English</label>
+    </fieldset>
+
+        <div data-role="button"  data-mini="true" onclick="loadQuestion()">Next Question </div>
+<div style="text-align:center; color:green; margin-left:10px; font-size:10px" id=subjectspan></div>
+    <textarea   data-mini="true"  disabled name="qarea" id="qarea"  ></textarea>
+
+<div >
+<a href="#" data-inline="true"  id="timebutton" data-role="button" data-theme="b">Time</a>	
+<a href="#" data-inline="true"  id="answerbutton" data-role="button" data-theme="b">Answer</a>	
+
+</div>
+     <div id=qclock style="font-weight:bold; color:red; z-index:1000;position:absolute; top:50%; left:50%; font-size:50px; display:none"></div>
+    <textarea   data-mini="true"  style="display:none" name="answerarea" id="answerarea"  ></textarea>
+
+
+
+    </div>
+ 
+
+
+
+</body>
+</html>
