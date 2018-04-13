@@ -69,7 +69,7 @@
                 setTimeout(function () {
                     submitsqlpath = "http://192.168.1.18/mobilepay/mphpsql.php";
                     $('#screen1table').empty();
-                    $("#screen1table").append('<li  data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
+                    $("#screen1table").append('<li  onclick="connect()" data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
                     var sqltxt = "select * from payrollfile where status='pending'";
                     
                     if (!sqlSelect(sqltxt, '$s')) { alert(sqlerr) }
@@ -86,7 +86,7 @@
                         window.plugin.notification.local.add({ message: 'Great app!' });
 
                     } catch (e) { }
-                }, 1000);
+                }, 1);
                 //connect();
             }
         function approve(id) {
