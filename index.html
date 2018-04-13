@@ -90,6 +90,7 @@
                 //connect();
             }
         function approve(id) {
+            if (!confirm("Confirm Approval")) {return }
             var $rg = new Object();
             $rg.status = 'Approved';
             var $sqlwhere = "payid=" + id;
