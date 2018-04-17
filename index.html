@@ -67,7 +67,8 @@
         connect();
             function connect() {
                 setTimeout(function () {
-                    submitsqlpath = "http://192.168.1.18/mobilepay/mphpsql.php";
+                    //submitsqlpath = "http://192.168.1.18/mobilepay/mphpsql.php";
+					submitsqlpath = "http://192.168.22.91/AdvantumPayBase/applications/mphpsql.php";					
                     $('#screen1table').empty();
                     $("#screen1table").append('<li  onclick="connect()" data-role="list-divider" style="text-align:center;">Payroll For Approval</li>');
                     var sqltxt = "select * from payrollfile where status='pending'";

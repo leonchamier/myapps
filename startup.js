@@ -29,6 +29,7 @@ glo_dedbasis['YTD']='Year-To-Date';
 
 
 dbasetype='sqlserver';
-submitsqlpath="http://192.168.1.18/mobilepay/mphpsql.php";
+submitsqlpath="http://192.168.22.91/AdvantumPayBase/applications/mphpsql.php";
+
 
 
